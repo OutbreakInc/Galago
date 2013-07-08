@@ -72,11 +72,11 @@ void	appCommand(u8 method)
 		break;
 		
 	case 0x12:	//connect the TXD/RXD pins to the Bluetooth module
-		gIOState &= ~PIN_APP_nBT_SEL;
+		gIOState &= ~PINMASK_APP_nBT_SEL;
 		break;
 		
 	case 0x13:	//disconnect the TXD/RXD pins from the Bluetooth module
-		gIOState |= PIN_APP_nBT_SEL;
+		gIOState |= PINMASK_APP_nBT_SEL;
 		break;
 		
 	case 0x14:	//LED on

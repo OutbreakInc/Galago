@@ -69,11 +69,11 @@ void	appCommand(u8 method)
 	case 0x10:	//connect the P1,P2,P3,P5 GPIO lines to the DAC for a software SPI interface
 				// that doesn't interfere with the main SPI port (so it can read audio data
 				//simultaneously)
-		gIOState &= ~PIN_APP_DAC_nEN;
+		gIOState &= ~PINMASK_APP_DAC_nEN;
 		break;
 	
-	case 0x11:	//assert !reset on the ENC28J60 Ethernet interface
-		gIOState |= PIN_APP_DAC_nEN;
+	case 0x11:	//release DAC interface
+		gIOState |= PINMASK_APP_DAC_nEN;
 		break;
 		
 	case 0x85:	//read test string

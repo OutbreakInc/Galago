@@ -65,11 +65,11 @@ void	appCommand(u8 method)
 	switch(method)
 	{
 	case 0x00:	//enable the GPS module
-		gIOState |= PIN_APP_GPS_ON;
+		gIOState |= PINMASK_APP_GPS_ON;
 		break;
 		
 	case 0x01:	//disable the GPS module
-		gIOState &= ~PIN_APP_GPS_ON;
+		gIOState &= ~PINMASK_APP_GPS_ON;
 		break;
 		
 	case 0x02:	//read test string

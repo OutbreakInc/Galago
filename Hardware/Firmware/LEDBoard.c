@@ -63,15 +63,15 @@ void	appCommand(u8 method)
 	switch(method)
 	{
 	case 0x00:	//select the TLC5940 interface, deselected on rising SEL in appReleaseBus()
-		gIOState &= ~PIN_APP_TLC_nCS;
+		gIOState &= ~PINMASK_APP_TLC_nCS;
 		break;
 		
 	case 0x10:	//connect the timing pins GSCLK, BLANK and XLAT to P1, P3 and P5 respectively
-		gIOState &= ~PIN_APP_TLC_nTIMING;
+		gIOState &= ~PINMASK_APP_TLC_nTIMING;
 		break;
 		
 	case 0x11:	//disconnect the timing pins GSCLK, BLANK and XLAT
-		gIOState |= PIN_APP_TLC_nTIMING;
+		gIOState |= PINMASK_APP_TLC_nTIMING;
 		break;
 		
 	case 0x85:	//read test string
