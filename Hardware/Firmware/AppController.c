@@ -60,9 +60,20 @@ u8		SPIExchangeSlave(u8 byte, u8 output)
 	if(output)
 		USIDR = byte;
 	
-	USISR = 0xE0;
+	u8 out;
+	
+	//tricky - after 4 bits, fill the next 4 with the appropriate constant value to prevent output glitches
+	USISR = 0xE8;
 	while(!(USISR & 0x40));	//wait until USIOIF is 1
-	return(USIDR);
+	
+	out = USIDR;
+	if(gIOState & (1 << 1))	USIDR |= 0x0F;
+	else					USIDR &= ~0x0F;
+	
+	USISR = 0xE8;	//count another 8 edges
+	while(!(USISR & 0x40));	//wait for the remaining 4 bits
+	
+	return(((out << 4) & 0xF0) | (USIDR & 0x0F));	//fuse the nibbles together
 }
 
 
@@ -235,9 +246,9 @@ void	core(void)
 					//we're in addressing mode so take an address assignment.
 					SPISetupSlave();
 					addr = SPIExchangeSlave(0, 0);
+					SPIDisableSlave();
 					SPIAckGXB();
 					cli();	//disable interrupts until the outer loop repeats, so that we're hardened against race conditions
-					SPIDisableSlave();
 					
 					if(addr < BUS_BROADCAST_ADDRESS)	//don't accept invalid addresses (0 is ok, becuase that unassigns us)
 						gAddress = addr;
