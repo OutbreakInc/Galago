@@ -47,7 +47,7 @@ u8		SPIExchangeMaster(u8 byte)
 void	SPISetupSlave(void)
 {
 	USIDR = (gIOState & (1 << 1))? 0xFF : 0x00;
-	USICR = 0x1C;	//3-wire bus, external clock, shift on falling, read on rising edge, interrupt armed
+	USICR = 0x18;	//3-wire bus, external clock, shift on falling, read on rising edge, interrupt armed
 }
 void	SPIDisableSlave(void)
 {
@@ -112,6 +112,19 @@ u8		SPIExchangeGXB(u8 byte)
 	while((PINB & PINMASK_SPI_SCK));	//wait while SCK is high on the final bit
 	return(1);	//success!
 }
+
+void	SPIAckGXB(void)
+{
+	//ack bits are logic 0
+	DDRB |= PINMASK_SPI_MOSI;	//sink line for 0
+	PORTB &= ~PINMASK_SPI_MOSI;
+
+	while(!(PINB & PINMASK_SPI_SCK));	//wait while SCK is low
+	while((PINB & PINMASK_SPI_SCK));	//wait while SCK is high
+	
+	DDRB &= ~PINMASK_SPI_MOSI;
+}
+
 
 u8		ExchangeROM(void)
 {
@@ -208,9 +221,11 @@ void	core(void)
 		u8 addr = SPIExchangeSlave(0, 0);
 		SPIDisableSlave();
 		
-		//if the address matches us (our address is initialized to the bus-probe address)
+		//if the address matches us - our address is initialized to the bus-probe address, so
+		//  if we're not enumerated and the probe address is sent, respond to that
 		if(addr == gAddress)
 		{
+			SPIAckGXB();
 			if(addr == BUS_PROBE_ADDRESS)
 			{
 				//exchange the ROM.  If a bus conflict occurs, we're not the highest-ranking unaddressed
@@ -220,6 +235,7 @@ void	core(void)
 					//we're in addressing mode so take an address assignment.
 					SPISetupSlave();
 					addr = SPIExchangeSlave(0, 0);
+					SPIAckGXB();
 					cli();	//disable interrupts until the outer loop repeats, so that we're hardened against race conditions
 					SPIDisableSlave();
 					
@@ -234,7 +250,7 @@ void	core(void)
 			{
 				SPISetupSlave();
 				u8 method = SPIExchangeSlave(0, 0);
-				
+				SPIAckGXB();
 				if(method == 0xFF)
 				{
 					//de-enumerate from the bus
@@ -247,10 +263,14 @@ void	core(void)
 		}
 		else if(addr == BUS_BROADCAST_ADDRESS)
 		{
+			SPIAckGXB();
 			SPISetupSlave();
 			u8 match = 1;
 			for(u8 i = 0; i < 4; i++)
+			{
 				match = match && (pgm_read_byte(kBusResetKey + i) == SPIExchangeSlave(0, 0));
+				SPIAckGXB();
+			}
 			cli();	//harden against race conditions
 			SPIDisableSlave();
 			
