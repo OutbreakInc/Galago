@@ -1,0 +1,11 @@
+{
+	"name":"galago-shield-adapter",
+	"version":"0.0.1",
+	"tags":["galago","shield","arduino","0bac0805","app","board"],
+	"description":"Arduino-style I/O layer for the Galago Shield Adapter board.",
+	"files":
+	[
+		{"name":"Shield.cpp"},
+		{"name":"Shield.h", "build":false}
+	]
+}

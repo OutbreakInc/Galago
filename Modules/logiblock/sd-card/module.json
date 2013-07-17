@@ -1,0 +1,15 @@
+{
+	"name":"sd-card",
+	"version":"0.0.1",
+	"tags":["galago","sd","card"],
+	"description":"",
+	"dependencies":
+	{
+		"logiblock/galago": ">0"
+	},
+	"files":
+	[
+		{"name":"SDCard.cpp"},
+		{"name":"SDCard.h", "build":false}
+	]
+}

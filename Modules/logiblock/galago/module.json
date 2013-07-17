@@ -1,0 +1,26 @@
+{
+	"name":"galago",
+	"version":"0.9.20",
+	"tags":["galago"],
+	"description":"Placeholder module for the GalagoAPI.",
+	"dependencies":
+	{
+	},
+	"include":
+	[
+		{"base": "project", "dir": ".", "export":true}
+	],
+	"linkFile": {"base": "project", "name": "LPC1343.x"},
+	"definitions":
+	{
+		"PART": "lpc1343"
+	},
+	"files":
+	[
+		{"name":"LPC13xx.cpp"},
+		{"name":"LPC13xx.h", "build":false},
+		{"name":"LPC13xx.x", "build":false},
+		{"name":"GalagoAPI.cpp"},
+		{"name":"GalagoAPI.h", "build":false}
+	]
+}
