@@ -48,14 +48,14 @@ u8 volatile gIOState;
 void	appInit(void)
 {
 	//initial state is logic high driven to all three endpoints
-	gIOState = (PINMASK_APP_TLC_nTIMING | PIN_APP_TLC_nCS);
-	gIODir = (PINMASK_APP_TLC_nTIMING | PIN_APP_TLC_nCS);
+	gIOState = (PINMASK_APP_TLC_nTIMING | PINMASK_APP_TLC_nCS);
+	gIODir = (PINMASK_APP_TLC_nTIMING | PINMASK_APP_TLC_nCS);
 }
 
 void	appReleaseBus(void)
 {
 	//when the bus is released, drive nCS lines high, removing them from the SPI bus
-	gIOState |= (PIN_APP_TLC_nCS);
+	gIOState |= (PINMASK_APP_TLC_nCS);
 }
 
 void	appCommand(u8 method)
