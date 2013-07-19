@@ -88,7 +88,7 @@ void	appCommand(u8 method)
 		break;
 		
 	case 0x11:	//disconnect TXD/RXD from the GPS module
-		gIOState &= ~PINMASK_APP_GPS_nEN;
+		gIOState |= PINMASK_APP_GPS_nEN;
 		break;
 		
 	case 0x20:	//select the microSD card, deselected on rising SEL in appReleaseBus()
