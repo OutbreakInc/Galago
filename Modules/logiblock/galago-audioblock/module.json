@@ -1,0 +1,20 @@
+{
+	"name":"galago-audioblock",
+	"version":"0.0.1",
+	"tags":["galago","audioblock","audio","app","board","dac","amplifier","microsd"],
+	"description":"Application board library for the Galago Audio App Board.",
+	"dependencies":
+	{
+		"logiblock/app-board": ">0",
+		"logiblock/sd-card": ">0"
+	},
+	"include":
+	[
+		{"base": "project", "dir": ".", "export":true}
+	],
+	"files":
+	[
+		{"name":"AudioBlock.cpp"},
+		{"name":"AudioBlock.h", "build":false, "export":true}
+	]
+}
