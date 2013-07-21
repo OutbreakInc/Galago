@@ -414,6 +414,9 @@ public:
 	
 	Task			delay(unsigned int milliseconds);
 	Task			delayMicro(unsigned int microseconds);
+
+private:
+	static void		invokeDeferredCallbacks(void);
 };
 
 extern IO		io;

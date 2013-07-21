@@ -35,10 +35,20 @@ int		stringZeroLength(byte const* s)
 extern "C"
 void	memcpy(void* dest, void const* source, size_t length)
 {
-	byte* d = (byte*)dest;
-	byte const* s = (byte const*)source;
-	while(length--)
-		*d++ = *s++;
+	if((((unsigned int)dest) | ((unsigned int)source) | length) & 3)
+	{
+		byte* d = (byte*)dest;
+		byte const* s = (byte const*)source;
+		while(length--)
+			*d++ = *s++;
+	}
+	else
+	{
+		unsigned int* d = (unsigned int*)dest;
+		unsigned int const* s = (unsigned int const*)source;
+		for(; length > 0; length -= 4)
+			*d++ = *s++;
+	}
 }
 
 ////////////////////////////////////////////////////////////////
@@ -589,6 +599,10 @@ struct IOCore
 	
 	SPITask* volatile			spiCurrentTask;
 	
+	Task*						deferredTasks;
+	int							deferredTaskIdx;
+	int							deferredTaskLen;
+	
 								IOCore(void):
 									irqSystick(System_onSysTickInterruptStub),
 									irqUART(0),
@@ -598,7 +612,10 @@ struct IOCore
 									uartReceiveBuffer(0),
 									uartCurrentWriteTask(0),
 									i2cCurrentTask(0),
-									spiCurrentTask(0)
+									spiCurrentTask(0),
+									deferredTasks(0),
+									deferredTaskLen(0),
+									deferredTaskIdx(0)
 	{
 	}
 	
@@ -987,18 +1004,19 @@ bool			System::completeTask(Task t, bool success)
 	
 	t._t->_flags |= (success? (1 << 14) : (1 << 15));	//status
 	
-	//@@defer until not in the NVIC stack any longer, then call user callbacks
-	InternalTaskCallback* callbacks = t._t->_c;
-	if(callbacks != 0)
+	if(IOCore.deferredTaskIdx == IOCore.deferredTaskLen)
 	{
-		int numCallbacks = t._t->_flags & 0x3FFF;
-		t._t->_flags &= ~0x3FFF;
-		for(int i = 0; i < numCallbacks; i++)
-			callbacks[i].f(callbacks[i].c, t, success);
-		
-		delete[] callbacks;
-		t._t->_c = 0;
+		//expand
+		Task* a = new Task[IOCore.deferredTaskLen + 4];
+		if(IOCore.deferredTasks != 0)
+		{
+			memcpy(a, IOCore.deferredTasks, IOCore.deferredTaskLen);
+			delete[] IOCore.deferredTasks;
+		}
+		IOCore.deferredTasks = a;
+		IOCore.deferredTaskLen += 4;
 	}
+	IOCore.deferredTasks[IOCore.deferredTaskIdx++] = t;
 	
 	return(true);
 }
@@ -1042,10 +1060,38 @@ bool			System::when(Task t, void (*completion)(void* context, Task, bool success
 	return(true);
 }
 
+void	System::invokeDeferredCallbacks(void)
+{
+	for(int i = 0; i < IOCore.deferredTaskIdx; i++)
+	{
+		Task& t = IOCore.deferredTasks[i];
+		InternalTaskCallback* callbacks = t._t->_c;
+		bool success = (t._t->_flags < (1 << 15));
+		if(callbacks != 0)
+		{
+			int numCallbacks = t._t->_flags & 0x3FFF;
+			t._t->_flags &= ~0x3FFF;
+			for(int i = 0; i < numCallbacks; i++)
+				callbacks[i].f(callbacks[i].c, t, success);
+			
+			delete[] callbacks;
+			t._t->_c = 0;
+		}
+		t = Task();
+	}
+	IOCore.deferredTaskIdx = 0;
+	if(IOCore.deferredTaskLen > 4)
+	{
+		delete[] IOCore.deferredTasks;
+		IOCore.deferredTasks = new Task[4];
+	}
+}
+
 void			System::sleep(void) const
 {
 	//@@deep-sleep and interrupt arming as appropriate
 	Sleep();
+	System::invokeDeferredCallbacks();
 	//@@deep-sleep and interrupt disarming
 }
 

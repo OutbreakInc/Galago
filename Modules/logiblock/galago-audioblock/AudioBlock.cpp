@@ -56,7 +56,7 @@ INTERRUPT void		IRQ_Timer1(void)
 		sample <<= 1;
 		LPC1300::GPIO0[1 << 2] = (1 << 2);
 	}
-	__asm__ volatile ("nop \n nop \n nop"::);
+	__asm__ volatile ("nop"::);
 	LPC1300::GPIO0[1 << 2] = 0;
 	
 	*LPC1300::Timer1Interrupts = LPC1300::TimerInterrupts_Match0Flag;
