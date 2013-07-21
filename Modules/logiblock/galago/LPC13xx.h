@@ -807,10 +807,10 @@
 			ClockControl_FlashStorage		= 0x000010,	//*
 			ClockControl_I2C				= 0x000020,
 			ClockControl_GPIO				= 0x000040,	//*
-			ClockControl_Timer16_0			= 0x000080,
-			ClockControl_Timer16_1			= 0x000100,
-			ClockControl_Timer32_0			= 0x000200,
-			ClockControl_Timer32_1			= 0x000400,
+			ClockControl_Timer0				= 0x000080,	//		Timer16B0 or Timer16_0 in the docs
+			ClockControl_Timer1				= 0x000100,	//		Timer16B1 or Timer16_1
+			ClockControl_Timer2				= 0x000200,	//		Timer32B0 or Timer32_0
+			ClockControl_Timer3				= 0x000400,	//		Timer32B1 or Timer32_1
 			ClockControl_SPI0				= 0x000800,	//*
 			ClockControl_UART				= 0x001000,
 			ClockControl_ADC				= 0x002000,
@@ -1199,7 +1199,7 @@
 	REGISTER	Timer0CaptureValue =		REGISTER_ADDRESS(0x4000C02C);
 	REGISTER	Timer0ExternalMatch =		REGISTER_ADDRESS(0x4000C03C);
 	REGISTER	Timer0CountControl =		REGISTER_ADDRESS(0x4000C070);
-	REGISTER	Timer0PWMControl =			REGISTER_ADDRESS(0x4000C03C);
+	REGISTER	Timer0PWMControl =			REGISTER_ADDRESS(0x4000C074);
 	
 	//Timer 1, 16-bit
 	REGISTER	Timer1Interrupts =			REGISTER_ADDRESS(0x40010000);
@@ -1216,7 +1216,7 @@
 	REGISTER	Timer1CaptureValue =		REGISTER_ADDRESS(0x4001002C);
 	REGISTER	Timer1ExternalMatch =		REGISTER_ADDRESS(0x4001003C);
 	REGISTER	Timer1CountControl =		REGISTER_ADDRESS(0x40010070);
-	REGISTER	Timer1PWMControl =			REGISTER_ADDRESS(0x4001003C);
+	REGISTER	Timer1PWMControl =			REGISTER_ADDRESS(0x40010074);
 	
 	//Timer 2, 32-bit
 	REGISTER	Timer2Interrupts =			REGISTER_ADDRESS(0x40014000);
@@ -1233,7 +1233,7 @@
 	REGISTER	Timer2CaptureValue =		REGISTER_ADDRESS(0x4001402C);
 	REGISTER	Timer2ExternalMatch =		REGISTER_ADDRESS(0x4001403C);
 	REGISTER	Timer2CountControl =		REGISTER_ADDRESS(0x40014070);
-	REGISTER	Timer2PWMControl =			REGISTER_ADDRESS(0x4001403C);
+	REGISTER	Timer2PWMControl =			REGISTER_ADDRESS(0x40014074);
 	
 	//Timer 3, 32-bit
 	REGISTER	Timer3Interrupts =			REGISTER_ADDRESS(0x40018000);
@@ -1250,7 +1250,7 @@
 	REGISTER	Timer3CaptureValue =		REGISTER_ADDRESS(0x4001802C);
 	REGISTER	Timer3ExternalMatch =		REGISTER_ADDRESS(0x4001803C);
 	REGISTER	Timer3CountControl =		REGISTER_ADDRESS(0x40018070);
-	REGISTER	Timer3PWMControl =			REGISTER_ADDRESS(0x4001803C);
+	REGISTER	Timer3PWMControl =			REGISTER_ADDRESS(0x40018074);
 	
 	
 	//Watchdog
@@ -1374,38 +1374,38 @@
 	REGISTER	InterruptEnableSet0 =		REGISTER_ADDRESS(0xE000E100);
 		enum Interrupt0
 		{
-			Interrupt1_PIO0_0 =		(1 << 0),
-			Interrupt1_PIO0_1 =		(1 << 0),
-			Interrupt1_PIO0_2 =		(1 << 0),
-			Interrupt1_PIO0_3 =		(1 << 0),
-			Interrupt1_PIO0_4 =		(1 << 0),
-			Interrupt1_PIO0_5 =		(1 << 0),
-			Interrupt1_PIO0_6 =		(1 << 0),
-			Interrupt1_PIO0_7 =		(1 << 0),
-			Interrupt1_PIO0_8 =		(1 << 0),
-			Interrupt1_PIO0_9 =		(1 << 0),
-			Interrupt1_PIO0_10 =	(1 << 0),
-			Interrupt1_PIO0_11 =	(1 << 11),
-			Interrupt1_PIO1_0 =		(1 << 12),
-			Interrupt1_PIO1_1 =		(1 << 13),
-			Interrupt1_PIO1_2 =		(1 << 14),
-			Interrupt1_PIO1_3 =		(1 << 15),
-			Interrupt1_PIO1_4 =		(1 << 16),
-			Interrupt1_PIO1_5 =		(1 << 17),
-			Interrupt1_PIO1_6 =		(1 << 18),
-			Interrupt1_PIO1_7 =		(1 << 19),
-			Interrupt1_PIO1_8 =		(1 << 20),
-			Interrupt1_PIO1_9 =		(1 << 21),
-			Interrupt1_PIO1_10 =	(1 << 22),
-			Interrupt1_PIO1_11 =	(1 << 23),
-			Interrupt1_PIO2_0 =		(1 << 24),
-			Interrupt1_PIO2_1 =		(1 << 25),
-			Interrupt1_PIO2_2 =		(1 << 26),
-			Interrupt1_PIO2_3 =		(1 << 27),
-			Interrupt1_PIO2_4 =		(1 << 28),
-			Interrupt1_PIO2_5 =		(1 << 29),
-			Interrupt1_PIO2_6 =		(1 << 30),
-			Interrupt1_PIO2_7 =		(1 << 31),
+			Interrupt0_PIO0_0 =		(1 << 0),
+			Interrupt0_PIO0_1 =		(1 << 1),
+			Interrupt0_PIO0_2 =		(1 << 2),
+			Interrupt0_PIO0_3 =		(1 << 3),
+			Interrupt0_PIO0_4 =		(1 << 4),
+			Interrupt0_PIO0_5 =		(1 << 5),
+			Interrupt0_PIO0_6 =		(1 << 6),
+			Interrupt0_PIO0_7 =		(1 << 7),
+			Interrupt0_PIO0_8 =		(1 << 8),
+			Interrupt0_PIO0_9 =		(1 << 9),
+			Interrupt0_PIO0_10 =	(1 << 10),
+			Interrupt0_PIO0_11 =	(1 << 11),
+			Interrupt0_PIO1_0 =		(1 << 12),
+			Interrupt0_PIO1_1 =		(1 << 13),
+			Interrupt0_PIO1_2 =		(1 << 14),
+			Interrupt0_PIO1_3 =		(1 << 15),
+			Interrupt0_PIO1_4 =		(1 << 16),
+			Interrupt0_PIO1_5 =		(1 << 17),
+			Interrupt0_PIO1_6 =		(1 << 18),
+			Interrupt0_PIO1_7 =		(1 << 19),
+			Interrupt0_PIO1_8 =		(1 << 20),
+			Interrupt0_PIO1_9 =		(1 << 21),
+			Interrupt0_PIO1_10 =	(1 << 22),
+			Interrupt0_PIO1_11 =	(1 << 23),
+			Interrupt0_PIO2_0 =		(1 << 24),
+			Interrupt0_PIO2_1 =		(1 << 25),
+			Interrupt0_PIO2_2 =		(1 << 26),
+			Interrupt0_PIO2_3 =		(1 << 27),
+			Interrupt0_PIO2_4 =		(1 << 28),
+			Interrupt0_PIO2_5 =		(1 << 29),
+			Interrupt0_PIO2_6 =		(1 << 30),
+			Interrupt0_PIO2_7 =		(1 << 31),
 		};
 	REGISTER	InterruptEnableSet1 =		REGISTER_ADDRESS(0xE000E104);
 		enum Interrupt1
@@ -1445,6 +1445,23 @@
 	REGISTER	InterruptClearPending1 =	REGISTER_ADDRESS(0xE000E284);
 	REGISTER	InterruptActive0 =			REGISTER_ADDRESS(0xE000E300);
 	REGISTER	InterruptActive1 =			REGISTER_ADDRESS(0xE000E304);
+	
+	REGISTER	InterruptPriority0 =		REGISTER_ADDRESS(0xE000E400);
+	REGISTER	InterruptPriority1 =		REGISTER_ADDRESS(0xE000E404);
+	REGISTER	InterruptPriority2 =		REGISTER_ADDRESS(0xE000E408);
+	REGISTER	InterruptPriority3 =		REGISTER_ADDRESS(0xE000E40C);
+	REGISTER	InterruptPriority4 =		REGISTER_ADDRESS(0xE000E410);
+	REGISTER	InterruptPriority5 =		REGISTER_ADDRESS(0xE000E414);
+	REGISTER	InterruptPriority6 =		REGISTER_ADDRESS(0xE000E418);
+	REGISTER	InterruptPriority7 =		REGISTER_ADDRESS(0xE000E41C);
+	REGISTER	InterruptPriority8 =		REGISTER_ADDRESS(0xE000E420);
+	REGISTER	InterruptPriority9 =		REGISTER_ADDRESS(0xE000E424);
+	REGISTER	InterruptPriority10 =		REGISTER_ADDRESS(0xE000E428);
+	REGISTER	InterruptPriority11 =		REGISTER_ADDRESS(0xE000E42C);
+	REGISTER	InterruptPriority12 =		REGISTER_ADDRESS(0xE000E420);
+	REGISTER	InterruptPriority13 =		REGISTER_ADDRESS(0xE000E434);
+	REGISTER	InterruptPriority14 =		REGISTER_ADDRESS(0xE000E438);
+	
 	REGISTER	InterruptTrigger =			REGISTER_ADDRESS(0xE000EF00);
 		enum InterruptTrigger
 		{
@@ -1564,10 +1581,10 @@
 	void		IRQ_WakeupPIO3_2(void);
 	void		IRQ_WakeupPIO3_3(void);
 	void		IRQ_I2C(void);
-	void		IRQ_Timer16_0(void);
-	void		IRQ_Timer16_1(void);
-	void		IRQ_Timer32_0(void);
-	void		IRQ_Timer32_1(void);
+	void		IRQ_Timer0(void);	//Timer16B0 or Timer16_0 in the docs
+	void		IRQ_Timer1(void);	//Timer16B1 or Timer16_1
+	void		IRQ_Timer2(void);	//Timer32B0 or Timer32_0
+	void		IRQ_Timer3(void);	//Timer32B1 or Timer32_1
 	void		IRQ_SPI0(void);
 	void		IRQ_UART(void);
 	void		IRQ_USB_IRQ(void);

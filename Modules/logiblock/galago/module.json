@@ -1,6 +1,6 @@
 {
 	"name":"galago",
-	"version":"0.9.20",
+	"version":"0.10.1",
 	"tags":["galago"],
 	"description":"Placeholder module for the GalagoAPI.",
 	"dependencies":

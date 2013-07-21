@@ -61,10 +61,10 @@ extern "C" void IRQ_WakeupPIO3_2(void) WEAK_IGNORE;
 extern "C" void IRQ_WakeupPIO3_3(void) WEAK_IGNORE;
 
 extern "C" void IRQ_I2C(void) WEAK_IGNORE;
-extern "C" void IRQ_Timer16_0(void) WEAK_IGNORE;
-extern "C" void IRQ_Timer16_1(void) WEAK_IGNORE;
-extern "C" void IRQ_Timer32_0(void) WEAK_IGNORE;
-extern "C" void IRQ_Timer32_1(void) WEAK_IGNORE;
+extern "C" void IRQ_Timer0(void) WEAK_IGNORE;
+extern "C" void IRQ_Timer1(void) WEAK_IGNORE;
+extern "C" void IRQ_Timer2(void) WEAK_IGNORE;
+extern "C" void IRQ_Timer3(void) WEAK_IGNORE;
 extern "C" void IRQ_SPI0(void) WEAK_IGNORE;
 extern "C" void IRQ_UART(void) WEAK_IGNORE;
 extern "C" void IRQ_USB_IRQ(void) WEAK_IGNORE;
@@ -150,10 +150,10 @@ IRQVector const null[] __attribute__ ((section(".isr_vector"), used)) =
 	&IRQ_WakeupPIO3_3,
 
 	&IRQ_I2C,
-	&IRQ_Timer16_0,
-	&IRQ_Timer16_1,
-	&IRQ_Timer32_0,
-	&IRQ_Timer32_1,
+	&IRQ_Timer0,
+	&IRQ_Timer1,
+	&IRQ_Timer2,
+	&IRQ_Timer3,
 	&IRQ_SPI0,
 	&IRQ_UART,
 	&IRQ_USB_IRQ,
