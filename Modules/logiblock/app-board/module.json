@@ -13,7 +13,7 @@
 	],
 	"files":
 	[
-		{"name":"AppBoards.cpp"},
-		{"name":"AppBoards.h", "build":false}
+		{"name":"AppBoard.cpp"},
+		{"name":"AppBoard.h", "build":false}
 	]
 }

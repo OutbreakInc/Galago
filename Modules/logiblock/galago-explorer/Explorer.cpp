@@ -1,10 +1,12 @@
 #include <GalagoAPI.h>
-#include "explorer.h"
+#include <AppBoard.h>
+#include "Explorer.h"
 
 using namespace Galago;
 using namespace Logiblock::AppBoards;
 
 				Explorer::Explorer(void):
+					_appBoardAddr(0),
 					_lat(0),
 					_long(0),
 					_altFromGeoid(0),
@@ -12,7 +14,7 @@ using namespace Logiblock::AppBoards;
 					_fix(0),
 					_sats(0),
 					_hdop(0),
-					_checksumCount(3)
+					_checksumCount(3),
 {
 	_buffer[0] = 0;
 }
@@ -25,6 +27,8 @@ void			Explorer::init(void)
 	accelInit.bytes()[0] = 7;
 	accelInit.bytes()[1] = 0x01;	//write 0x01 to register 7
 	io.i2c.write(0x98, accelInit);	//init the accelerometer
+	
+	//detect the board and come back with an address
 }
 	
 void			Explorer::processGPSData(char nextChar)

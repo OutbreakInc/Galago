@@ -8,7 +8,7 @@ namespace Logiblock {
 
 struct Endpoint;
 
-class AppBoards
+class AppBoard
 {
 public:
 	
@@ -19,7 +19,7 @@ public:
 		unsigned short version;
 	};
 	
-			AppBoards(void);
+			AppBoard(void);
 	
 	//Reset the bus. Doing this de-enumerates all connected devices.
 	void	reset(void);
@@ -55,7 +55,7 @@ private:
 	Endpoint*	endpoints;
 };
 
-extern AppBoards appBoards;	//static single instance
+extern AppBoard appBoard;	//static single instance
 
 } //ns
 

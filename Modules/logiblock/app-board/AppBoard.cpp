@@ -1,9 +1,8 @@
 #include <GalagoAPI.h>
 using namespace Galago;
 
-#include "AppBoards.h"
-
 #include <LPC13xx.h>
+#include <AppBoard.h>
 
 ////////////////////////////////////////////////////////////////
 // GXB - Galago expansion bus, a multiplexed SPI bus with autodiscovery and device addressing (experimental)
@@ -32,6 +31,12 @@ namespace Logiblock {
 							descriptorLength(descLen)
 		{
 		}
+		
+						~Endpoint(void)
+						{
+							if(descriptor != 0)
+								delete[] descriptor;
+						}
 	};
 
 }
@@ -39,11 +44,11 @@ namespace Logiblock {
 using namespace Logiblock;
 
 
-		AppBoards::AppBoards(void):
+		AppBoard::AppBoard(void):
 			endpoints(0)
 {
 }
-void	AppBoards::reset(void)
+void	AppBoard::reset(void)
 {
 	//empty endpoints list
 	Endpoint* e = endpoints;
@@ -52,7 +57,6 @@ void	AppBoards::reset(void)
 	{
 		Endpoint* d = e;
 		e = e->next;
-		delete d->descriptor;
 		delete d;
 	}
 	
@@ -60,7 +64,7 @@ void	AppBoards::reset(void)
 	
 	internalWrite(0xFE, (byte const*)&kResetKeyLE, 4);
 }
-bool	AppBoards::detect(void)
+bool	AppBoard::detect(void)
 {
 	int timeStep = setupGXB();
 	
@@ -109,7 +113,10 @@ bool	AppBoards::detect(void)
 					found = true;
 				}
 				else
+				{
+					delete[] descriptor;
 					empty = true;
+				}
 			}
 		}
 		//else empty is true and we exit
@@ -122,7 +129,7 @@ bool	AppBoards::detect(void)
 	return(found);
 }
 
-bool	AppBoards::details(byte address, DeviceDetails* detailsOut)
+bool	AppBoard::details(byte address, DeviceDetails* detailsOut)
 {
 	Endpoint* e = endpoints;
 	while((e != 0) && (e->address < address))
@@ -136,7 +143,7 @@ bool	AppBoards::details(byte address, DeviceDetails* detailsOut)
 	detailsOut->version = e->version();
 }
 
-byte	AppBoards::find(byte afterAddress, unsigned short vendorID, unsigned short productID)
+byte	AppBoard::find(byte afterAddress, unsigned short vendorID, unsigned short productID)
 {
 	Endpoint* e = endpoints;
 	while((e != 0) && (e->address < afterAddress))
@@ -149,14 +156,14 @@ byte	AppBoards::find(byte afterAddress, unsigned short vendorID, unsigned short 
 	return(e? (e->address) : 0);
 }
 
-bool	AppBoards::write(byte address, byte const* command, int length)
+bool	AppBoard::write(byte address, byte const* command, int length)
 {
 	if((address == 0) || (address >= 0xFE))
 		return(false);
 	return(internalWrite(address, command, length));
 }
 
-void	AppBoards::detach(byte address)
+void	AppBoard::detach(byte address)
 {
 	remove(address);
 	
@@ -164,7 +171,7 @@ void	AppBoards::detach(byte address)
 	internalWrite(0xFE, &disconnect, 1);
 }
 
-int			AppBoards::setupGXB(void)
+int			AppBoard::setupGXB(void)
 {
 	io.spi.stop();
 	io.sel = false;
@@ -172,12 +179,12 @@ int			AppBoards::setupGXB(void)
 	io.sck.setOutput();
 	io.sck = false;
 	
-	int timeStep = system.getCoreFrequency() / 12000000UL;	//empirically determined, yields about 100KHz. Max per the spec is 1MHz
+	int timeStep = system.getCoreFrequency() / 3000000UL;	//empirically determined, yields about 100KHz. Max per the spec is 1MHz
 	
 	return(timeStep);
 }
 
-byte		AppBoards::nextAddress(Endpoint**& predecessor)
+byte		AppBoard::nextAddress(Endpoint**& predecessor)
 {
 	byte address = 1;
 	
@@ -193,14 +200,14 @@ byte		AppBoards::nextAddress(Endpoint**& predecessor)
 	return(address);
 }
 
-void		AppBoards::insert(Endpoint** predecessor, Endpoint* e)
+void		AppBoard::insert(Endpoint** predecessor, Endpoint* e)
 {
 	//because we already have a predecessor pointer-to-Endpoint, insertion into the linked list is trivial
 	e->next = *predecessor;
 	*predecessor = e;
 }
 
-void		AppBoards::remove(byte address)
+void		AppBoard::remove(byte address)
 {
 	//find the endpoint with a matching address through a pointer-to-Endpoint
 	//  this lets us remove it from the linked list in one go
@@ -221,7 +228,7 @@ void		AppBoards::remove(byte address)
 	//else not found
 }
 
-bool		AppBoards::internalWrite(byte address, byte const* command, int length)
+bool		AppBoard::internalWrite(byte address, byte const* command, int length)
 {
 	int timeStep = setupGXB();
 	io.sel = true;
@@ -254,14 +261,14 @@ bool		AppBoards::internalWrite(byte address, byte const* command, int length)
 	return(true);
 }
 
-void	AppBoards::udelay(int timeStep, int i)
+void	AppBoard::udelay(int timeStep, int i)
 {
 	while(i--)
 		for(int j = 0; j < timeStep; j++)
 			__asm__ volatile ("nop" ::);
 }
 
-void	AppBoards::readBytes(int timeStep, byte* out, int length)
+void	AppBoard::readBytes(int timeStep, byte* out, int length)
 {
 	*LPC1300::GPIO0Dir &= ~(1 << 9);
 	*LPC1300::IOConfigPIO0_9 = (*LPC1300::IOConfigPIO0_9 & ~LPC1300::IOConfigPIO0_9_Repeat) | LPC1300::IOConfigPIO0_9_PullUp;
@@ -281,7 +288,7 @@ void	AppBoards::readBytes(int timeStep, byte* out, int length)
 		*out++ = cb;
 	}
 }
-bool	AppBoards::writeByte(unsigned int timeStep, byte b)
+bool	AppBoard::writeByte(unsigned int timeStep, byte b)
 {
 	*LPC1300::IOConfigPIO0_9 = (*LPC1300::IOConfigPIO0_9 & ~(LPC1300::IOConfigPIO0_9_Repeat | 3)) | LPC1300::IOConfigPIO0_9_Function_PIO;
 	*LPC1300::GPIO0Dir |= (1 << 9);
@@ -311,7 +318,7 @@ bool	AppBoards::writeByte(unsigned int timeStep, byte b)
 }
 
 
-AppBoards appBoards;
+namespace Logiblock { AppBoard appBoard; }
 
 
 
@@ -333,12 +340,12 @@ void	demo(void* v = 0, Task t = Task(), bool s = true)
 	
 	byte command = commands[++c->count & 7];
 	
-	if(!appBoards.write(c->address, &command, 1))
+	if(!appBoard.write(c->address, &command, 1))
 	{
-		appBoards.detect();
+		appBoard.detect();
 		c->count = 0;
 		
-		c->address = appBoards.find();
+		c->address = appBoard.find();
 	}
 	
 	system.when(system.delay(500), &demo, v);
@@ -346,11 +353,11 @@ void	demo(void* v = 0, Task t = Task(), bool s = true)
 
 int		main(void)
 {
-	appBoards.reset();
-	appBoards.detect();
+	appBoard.reset();
+	appBoard.detect();
 	
 	Context* c = new Context();
-	c->address = appBoards.find();
+	c->address = appBoard.find();
 	
 	demo(c);
 	
