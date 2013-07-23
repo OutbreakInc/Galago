@@ -1745,10 +1745,12 @@ void IO_UART_startTransmission(void)
 {
 	//do we have bytes to send?
 	IOCore::WriteTask* writeTask;
+	//the stupid lpc1xxx implementation of the '550 uart has no write FIFO
+	//  full/empty signal so we have to constrain it here
+	int count = 16;
 	while((writeTask = IOCore.uartCurrentWriteTask) != 0)
 	{
 		//push chars only while there's room.
-		int count = 16;	//stupid '550 uart
 		while(		(writeTask->idx < writeTask->len)	//while there are chars to send
 					&& count--	//and the FIFO isn't full
 				)
