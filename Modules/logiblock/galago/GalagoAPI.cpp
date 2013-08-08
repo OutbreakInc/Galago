@@ -51,6 +51,9 @@ void	memcpy(void* dest, void const* source, size_t length)
 	}
 }
 
+inline void	InterruptFreeEnter(void);
+inline void	InterruptFreeLeave(void);
+
 ////////////////////////////////////////////////////////////////
 // NumberFormatter formats numbers into text
 
@@ -491,7 +494,7 @@ void					Buffer::release(InternalBuffer* b) //static
 
 void	System_onSysTickInterruptStub(void);
 
-struct IOCore
+typedef struct IOCore
 {
 	struct TaskQueueItem
 	{
@@ -531,38 +534,53 @@ struct IOCore
 	
 	struct SPITask: public TaskQueueItem
 	{
+		Buffer			bytesReadBack;
+		
 		unsigned short	len;
 		unsigned short	writeIdx;
 		unsigned short	readIdx;
-		byte			is16Bit;
-		Buffer			bytesReadBack;
+		
+		enum
+		{
+			NoFlags = 0,
+			Is16Bit	= 1,
+			IsLockFence = 2
+		};
+		byte			flags;
+		
 		union
 		{
-			byte			data[1];
-			unsigned short	data16[1];
+			byte			data[0];
+			unsigned short	data16[0];
 		};
 		
-						SPITask(int l, Buffer readBack, bool is16 = false):
+						SPITask(bool):
+							flags(IsLockFence)
+		{}
+		
+						SPITask(int l, Buffer readBack, byte f = NoFlags):
 							len(l),
 							writeIdx(0),
 							readIdx(0),
-							is16Bit(is16),
+							flags(f),
 							bytesReadBack(readBack)
 		{}
+		
 						SPITask(byte const* bytes, int l, Buffer readBack):
 							len(l),
 							writeIdx(0),
 							readIdx(0),
-							is16Bit(false),
+							flags(NoFlags),
 							bytesReadBack(readBack)
 		{
 			memcpy(data, bytes, l);
 		}
+		
 						SPITask(unsigned short const* halves, int l, Buffer readBack):
 							len(l),
 							writeIdx(0),
 							readIdx(0),
-							is16Bit(true),
+							flags(Is16Bit),
 							bytesReadBack(readBack)
 		{
 			for(int i = 0; i < l; i++)
@@ -584,6 +602,8 @@ struct IOCore
 		}
 	};
 	
+	int volatile				interruptNest;
+	
 	void						(*irqSystick)(void);
 	void						(*irqUART)(void);
 	void						(*irqSPI)(void);
@@ -604,6 +624,7 @@ struct IOCore
 	int							deferredTaskLen;
 	
 								IOCore(void):
+									interruptNest(0),
 									irqSystick(System_onSysTickInterruptStub),
 									irqUART(0),
 									irqSPI(0),
@@ -638,9 +659,25 @@ struct IOCore
 			delete t;
 		}
 	}
-};
+} IOCore_t;
 
-static IOCore IOCore;
+static IOCore_t IOCore;
+
+////////////////////////////////////////////////////////////////
+// These are global but depend on IOCore
+
+inline void	InterruptFreeEnter(void)
+{
+	__asm__ volatile ("cpsid i" ::);
+	IOCore.interruptNest++;
+}
+
+inline void	InterruptFreeLeave(void)
+{
+	if(--IOCore.interruptNest == 0)
+		__asm__ volatile ("cpsie i" ::);
+}
+
 
 ////////////////////////////////////////////////////////////////
 // System
@@ -659,7 +696,7 @@ static IOCore IOCore;
 	//The tickrate is 400kHz
 	*SystickClockDivider = 30;	//because the chip starts at 12MHz initially. At 72MHz this would be 180.
 	
-	InterruptsEnable();	//enable global interrupts
+	InterruptFreeLeave();	//enable global interrupts
 }
 
 static unsigned int	System_getPLLInputFrequency(void)
@@ -903,6 +940,7 @@ void*			System::alloc(size_t size)
 	if(size == 0)
 		return(0);	//@@throw?
 	
+	InterruptFreeEnter();
 	unsigned int* m = (unsigned int*)__heapstart;
 	
 	//allocations are (4 + size) bytes, rounded up to the next 4-byte boundary
@@ -924,11 +962,16 @@ void*			System::alloc(size_t size)
 			for(int i = 1; i < s; i++)	//zero memory
 				m[i] = 0;
 			
+			InterruptFreeLeave();
 			return(m + 1);
 		}
 		m += bs;
 	}
 	__asm volatile("bkpt 7"::);	//@@ Out-of-memory exception
+	
+	//effectively unreachable code:
+	InterruptFreeLeave();
+	return(0);
 }
 
 //static
@@ -936,8 +979,12 @@ void			System::free(void* allocation)
 {
 	unsigned int* a = (unsigned int*)allocation;
 	
+	InterruptFreeEnter();
 	if((a < __heapstart) || (a >= __heapend) || !(a[-1] & kHeapAllocated))
+	{
+		InterruptFreeLeave();
 		return;	//@@throw?
+	}
 	
 	a--;	//unwrap
 	*a &= ~kHeapAllocated;	//free block
@@ -964,6 +1011,7 @@ void			System::free(void* allocation)
 	}
 	
 	*a = cbs;	//merge free blocks if contiguous
+	InterruptFreeLeave();
 }
 
 
@@ -999,24 +1047,35 @@ Task			System::createTask(void)
 
 bool			System::completeTask(Task t, bool success)
 {
+	IOCore_t volatile* ic = (IOCore_t volatile*)&IOCore;
 	if((t._t == 0) || (t._t->_flags > 0x3FFF))	//if invalid or already resolved, fail
 		return(false);
 	
 	t._t->_flags |= (success? (1 << 14) : (1 << 15));	//status
 	
-	if(IOCore.deferredTaskIdx == IOCore.deferredTaskLen)
+	//if the task has callback(s) when it's completed, defer them
+	if((t._t->_flags & 0x3FFF) > 0)
 	{
-		//expand
-		Task* a = new Task[IOCore.deferredTaskLen + 4];
-		if(IOCore.deferredTasks != 0)
-		{
-			memcpy(a, IOCore.deferredTasks, IOCore.deferredTaskLen);
-			delete[] IOCore.deferredTasks;
-		}
-		IOCore.deferredTasks = a;
-		IOCore.deferredTaskLen += 4;
+		InterruptFreeEnter();
+		
+			//do we need to expand the deferred list?
+			if(ic->deferredTaskIdx == ic->deferredTaskLen)
+			{
+				Task* a = new Task[ic->deferredTaskLen + 4];
+				if(ic->deferredTasks != 0)
+				{
+					memcpy(a, ic->deferredTasks, ic->deferredTaskLen);
+					delete[] ic->deferredTasks;
+				}
+				ic->deferredTasks = a;
+				ic->deferredTaskLen += 4;
+			}
+			
+			//defer it
+			ic->deferredTasks[ic->deferredTaskIdx++] = t;
+		
+		InterruptFreeLeave();
 	}
-	IOCore.deferredTasks[IOCore.deferredTaskIdx++] = t;
 	
 	return(true);
 }
@@ -1062,29 +1121,66 @@ bool			System::when(Task t, void (*completion)(void* context, Task, bool success
 
 void	System::invokeDeferredCallbacks(void)
 {
-	for(int i = 0; i < IOCore.deferredTaskIdx; i++)
-	{
-		Task& t = IOCore.deferredTasks[i];
-		InternalTaskCallback* callbacks = t._t->_c;
-		bool success = (t._t->_flags < (1 << 15));
-		if(callbacks != 0)
+	IOCore_t volatile* ic = (IOCore_t volatile*)&IOCore;
+	int count;
+	
+	InterruptFreeEnter();
+	
+		if((count = ic->deferredTaskIdx) > 0)
 		{
-			int numCallbacks = t._t->_flags & 0x3FFF;
-			t._t->_flags &= ~0x3FFF;
-			for(int i = 0; i < numCallbacks; i++)
-				callbacks[i].f(callbacks[i].c, t, success);
+		//while((count = ic->deferredTaskIdx) > 0)	//see note below about why this is disabled
+		//{
+			ic->deferredTaskIdx = 0;
+			Task* tasks = ic->deferredTasks;
+			ic->deferredTasks = 0;
+			int lastLen = ic->deferredTaskLen;
+			ic->deferredTaskLen = 0;
+		
+			InterruptFreeLeave();
 			
-			delete[] callbacks;
-			t._t->_c = 0;
+				for(int c = 0; c < count; c++)
+				{
+					Task& t = tasks[c];
+					InternalTaskCallback* callbacks = t._t->_c;
+					bool success = (t._t->_flags < (1 << 15));
+					if(callbacks != 0)
+					{
+						int numCallbacks = t._t->_flags & 0x3FFF;
+						t._t->_flags &= ~0x3FFF;
+						t._t->_c = 0;
+						
+						for(int i = 0; i < numCallbacks; i++)
+							callbacks[i].f(callbacks[i].c, t, success);
+						
+						delete[] callbacks;
+					}
+					t = Task();
+				}
+				delete[] tasks;
+			
+			//if possible, recycle the list. If it would have to be compacted anyway, trash it
+			// -> note: disabled because it's too risky and leads to needlessly complex flow.
+			//InterruptFreeEnter();
+			
+			/*if(ic->deferredTasks == 0)
+			{
+				if(lastLen <= 4)
+				{
+					ic->deferredTaskLen = lastLen;	//re-use
+					ic->deferredTasks = tasks;
+				}
+				else
+				{
+					ic->deferredTasks = new Task[4];	//compact
+					delete[] tasks;
+				}
+			}
+			else
+				delete[] tasks;	//will iterate, so throw the old list out
+		}*/
 		}
-		t = Task();
-	}
-	IOCore.deferredTaskIdx = 0;
-	if(IOCore.deferredTaskLen > 4)
-	{
-		delete[] IOCore.deferredTasks;
-		IOCore.deferredTasks = new Task[4];
-	}
+		else
+			InterruptFreeLeave();
 }
 
 void			System::sleep(void) const
@@ -1114,9 +1210,10 @@ static void		System_wakeFromSpan(unsigned int point)
 	//take the current systick down-counter value
 	//subtract that value from the span
 	//subtract the span from each queued task
+	IOCore_t volatile* ic = (IOCore_t volatile*)&IOCore;
 	
 	unsigned int span = *SystickReload - point, newSpan = 0;
-	for(IOCore::TimerTask* timer = IOCore.timerCurrentTask; timer != 0; timer = (IOCore::TimerTask*)timer->next)
+	for(IOCore::TimerTask* timer = ic->timerCurrentTask; timer != 0; timer = (IOCore::TimerTask*)timer->next)
 	{
 		timer->span = (timer->span > span)? (timer->span - span) : 0;
 		if((newSpan == 0) && (timer->span > 0))
@@ -1138,7 +1235,7 @@ Task			System_delayTicks(unsigned int ticks)
 	timer->task = task;
 	
 	//needs special deadline-order queueing
-	InterruptsDisable();
+	InterruptFreeEnter();
 		
 		System_wakeFromSpan(*SystickValue);
 		
@@ -1155,7 +1252,7 @@ Task			System_delayTicks(unsigned int ticks)
 		
 		System_wakeFromSpan(*SystickValue);
 		
-	InterruptsEnable();
+	InterruptFreeLeave();
 	
 	return(task);
 }
@@ -1547,21 +1644,23 @@ void			IO::SPI::start(int bitRate, Mode mode, Role role)
 		io.miso.setMode(IO::Pin::Default);
 		io.mosi.setMode(IO::Pin::Default);
 		
-		InterruptsDisable();
+		InterruptFreeEnter();
 			
 			IOCore.flushQueue((IOCore::TaskQueueItem**)&IOCore.spiCurrentTask);
 			
-		InterruptsEnable();
+		InterruptFreeLeave();
 	}
 }
 
 
 void			IO_SPI_queueTask(IOCore::SPITask* spiTask)
 {
-	InterruptsDisable();
+	InterruptFreeEnter();
+	
 		IOCore.queueItem((IOCore::TaskQueueItem**)&IOCore.spiCurrentTask, spiTask);
 		*SPI0InterruptEnable |= SPI0Interrupt_TransmitFIFOHalfEmpty;
-	InterruptsEnable();
+	
+	InterruptFreeLeave();
 }
 
 Task			IO::SPI::write(byte b, int length, Buffer bytesReadBack)
@@ -1580,7 +1679,7 @@ Task			IO::SPI::write(byte b, int length, Buffer bytesReadBack)
 Task			IO::SPI::write(unsigned short h, int length, Buffer bytesReadBack)
 {
 	Task task = system.createTask();
-	IOCore::SPITask* newTask = new(length * 2) IOCore::SPITask(length, bytesReadBack, true);
+	IOCore::SPITask* newTask = new(length * 2) IOCore::SPITask(length, bytesReadBack, IOCore::SPITask::Is16Bit);
 	newTask->task = task;
 	
 	for(int i = 0; i < length; i++)
@@ -1592,10 +1691,16 @@ Task			IO::SPI::write(unsigned short h, int length, Buffer bytesReadBack)
 
 Task			IO::SPI::write(byte const* s, int length, Buffer bytesReadBack)
 {
+	Task task = system.createTask();
+	if(s == 0)
+	{
+		system.completeTask(task, false);
+		return(task);
+	}
+	
 	if(length < 0)
 		length = stringZeroLength(s);
 	
-	Task task = system.createTask();
 	IOCore::SPITask* newTask = new(length) IOCore::SPITask(s, length, bytesReadBack);
 	newTask->task = task;
 	
@@ -1605,11 +1710,57 @@ Task			IO::SPI::write(byte const* s, int length, Buffer bytesReadBack)
 Task			IO::SPI::write(unsigned short const* s, int length, Buffer bytesReadBack)
 {
 	Task task = system.createTask();
+	if(s == 0)
+	{
+		system.completeTask(task, false);
+		return(task);
+	}
+	
 	IOCore::SPITask* newTask = new(length * 2) IOCore::SPITask(s, length, bytesReadBack);
 	newTask->task = task;
 	
 	IO_SPI_queueTask(newTask);
 	return(task);
+}
+
+//asynchronously lock the SPI interface. This prevents further async actions from occurring until the interface is
+//  unlocked with a call to unlock(). This is used to multiplex multiple devices using a !CS pin or a higher-level
+//  protocol, like GXB.
+Task			IO::SPI::lock(void)
+{
+	Task task = system.createTask();
+	
+	IOCore::SPITask* newTask = new IOCore::SPITask(true);
+	newTask->task = task;
+	
+	IO_SPI_queueTask(newTask);
+	
+	return(task);
+}
+
+bool			IO::SPI::unlock(void)
+{
+	bool unlocked = false;
+	
+	InterruptFreeEnter();
+	
+		IOCore::SPITask* currentTask = IOCore.spiCurrentTask;
+		
+		if(currentTask && (currentTask->flags & IOCore::SPITask::IsLockFence))
+		{
+			*ClockControl |= ClockControl_SPI0;		//enable SPI0 clock
+			*InterruptEnableSet1 = Interrupt1_SPI0;	//and SPIO0 interrupts
+			
+			//advance the queue
+			IOCore.spiCurrentTask = (IOCore::SPITask*)currentTask->next;
+			delete currentTask;
+			
+			unlocked = true;
+		}
+	
+	InterruptFreeLeave();
+	
+	return(unlocked);
 }
 
 void	IO_onSPIInterrupt(void)
@@ -1618,26 +1769,54 @@ void	IO_onSPIInterrupt(void)
 	
 	while((currentTask = IOCore.spiCurrentTask) != 0)
 	{
+		bool is16Bit = currentTask->flags & IOCore::SPITask::Is16Bit;
+		
+		if(currentTask->flags & IOCore::SPITask::IsLockFence)
+		{
+			//enter a locked state
+			*ClockControl &= ~ClockControl_SPI0;	//disable SPI0 clock
+			
+			*InterruptEnableClear1 = Interrupt1_SPI0;
+			
+			//complete the task but don't cycle the queue
+			system.completeTask(currentTask->task);
+			break;
+		}
+		
+		//if an overrun occurred, we could not ever get the bytes we missed. Abort the task.
+		if(*SPI0MaskedInterrupt & SPI0Interrupt_ReceiveOverrun)
+		{
+			*SPI0InterruptClear = SPI0InterruptClear_ReceiveOverrun;
+			
+			IOCore.spiCurrentTask = (IOCore::SPITask*)currentTask->next;
+			system.completeTask(currentTask->task, false);	//report async failure
+			delete currentTask;
+			continue;
+		}
+		
 		while((currentTask->readIdx < currentTask->writeIdx) && (*SPI0Status & SPI0Status_ReceiveFIFONotEmpty))
 		{
-			if(currentTask->is16Bit)
-				currentTask->data16[currentTask->readIdx++] = *SPI0Data;
-			else
-				currentTask->data[currentTask->readIdx++] = (byte)*SPI0Data;
+			if(is16Bit)	currentTask->data16[currentTask->readIdx++] = *SPI0Data;
+			else		currentTask->data[currentTask->readIdx++] = (byte)*SPI0Data;
 		}
 		
 		while((currentTask->writeIdx < currentTask->len) && (*SPI0Status & SPI0Status_TransmitFIFONotFull))
 		{
-			if(currentTask->is16Bit)
-				*SPI0Data = currentTask->data16[currentTask->writeIdx++];
-			else
-				*SPI0Data = currentTask->data[currentTask->writeIdx++];
+			if(is16Bit)	*SPI0Data = currentTask->data16[currentTask->writeIdx++];
+			else		*SPI0Data = currentTask->data[currentTask->writeIdx++];
+			
+			//consume synchronously available bytes
+			if(*SPI0Status & SPI0Status_ReceiveFIFONotEmpty)
+			{
+				if(is16Bit)	currentTask->data16[currentTask->readIdx++] = *SPI0Data;
+				else		currentTask->data[currentTask->readIdx++] = (byte)*SPI0Data;
+			}
 		}
 		
 		if(currentTask->readIdx == currentTask->len)
 		{
 			if(currentTask->bytesReadBack)
-				memcpy(currentTask->bytesReadBack.bytes(), currentTask->data, (currentTask->is16Bit)? (currentTask->len * 2) : currentTask->len);
+				memcpy(currentTask->bytesReadBack.bytes(), currentTask->data, (currentTask->flags)? (currentTask->len * 2) : currentTask->len);
 			
 			IOCore.spiCurrentTask = (IOCore::SPITask*)currentTask->next;
 			system.completeTask(currentTask->task);
@@ -1674,8 +1853,12 @@ void		IO::UART::start(int baudRate, Mode mode)
 		io.txd.setMode(IO::Pin::UART);
 		io.rxd.setMode(IO::Pin::UART);
 		
-		if(IOCore.uartReceiveBuffer == 0)
-			IOCore.uartReceiveBuffer = new(32) CircularBuffer(32);	//make parametric?
+		InterruptFreeEnter();
+		
+			if(IOCore.uartReceiveBuffer == 0)
+				IOCore.uartReceiveBuffer = new(32) CircularBuffer(32);	//make parametric?
+		
+		InterruptFreeLeave();
 		
 		IO::UART::startWithExplicitRatio(q, n, d, mode);
 	}
@@ -1692,7 +1875,7 @@ void		IO::UART::start(int baudRate, Mode mode)
 		io.txd.setMode(IO::Pin::Default);
 		io.rxd.setMode(IO::Pin::Default);
 		
-		InterruptsDisable();
+		InterruptFreeEnter();
 			
 			delete IOCore.uartReceiveBuffer;
 			IOCore.uartReceiveBuffer = 0;
@@ -1701,7 +1884,7 @@ void		IO::UART::start(int baudRate, Mode mode)
 			//empty the queue
 			IOCore.flushQueue((IOCore::TaskQueueItem**)&IOCore.uartCurrentWriteTask);
 			
-		InterruptsEnable();
+		InterruptFreeLeave();
 	}
 }
 void		IO::UART::startWithExplicitRatio(int divider, int fracN, int fracD, Mode mode)
@@ -1730,15 +1913,27 @@ void		IO::UART::startWithExplicitRatio(int divider, int fracN, int fracD, Mode m
 
 int			IO::UART::bytesAvailable(void) const
 {
-	return((IOCore.uartReceiveBuffer != 0)? IOCore.uartReceiveBuffer->bytesUsed() : 0);
+	InterruptFreeEnter();
+	
+		int available = (IOCore.uartReceiveBuffer != 0)? IOCore.uartReceiveBuffer->bytesUsed() : 0;
+	
+	InterruptFreeLeave();
+	
+	return(available);
 }
 
 //return the current UART receive task, creating one if none exists
 Task		IO::UART::bytesReceived(void)
 {
-	if(IOCore.uartRecvTask == Task())
-		IOCore.uartRecvTask = system.createTask();
-	return(IOCore.uartRecvTask);
+	InterruptFreeEnter();
+	
+		Task t = IOCore.uartRecvTask;
+		if(t == Task())
+			IOCore.uartRecvTask = t = system.createTask();
+	
+	InterruptFreeEnter();
+	
+	return(t);
 }
 
 void IO_UART_startTransmission(void)
@@ -1748,26 +1943,36 @@ void IO_UART_startTransmission(void)
 	//the stupid lpc1xxx implementation of the '550 uart has no write FIFO
 	//  full/empty signal so we have to constrain it here
 	int count = 16;
-	while((writeTask = IOCore.uartCurrentWriteTask) != 0)
-	{
-		//push chars only while there's room.
-		while(		(writeTask->idx < writeTask->len)	//while there are chars to send
-					&& count--	//and the FIFO isn't full
-				)
-			*UARTData = writeTask->data[writeTask->idx++];	//push chars into the FIFO
-		
-		if(writeTask->idx == writeTask->len)	//if finished
+	InterruptFreeEnter();
+	
+		while((writeTask = IOCore.uartCurrentWriteTask) != 0)
 		{
-			IOCore.uartCurrentWriteTask = (IOCore::WriteTask*)writeTask->next;
-			system.completeTask(writeTask->task);
-			delete writeTask;
+			//push chars only while there's room.
+			while(		(writeTask->idx < writeTask->len)	//while there are chars to send
+						&& count--	//and the FIFO isn't full
+					)
+				*UARTData = writeTask->data[writeTask->idx++];	//push chars into the FIFO
 			
-			if(IOCore.uartCurrentWriteTask == 0)
-				break;
+			if(writeTask->idx == writeTask->len)	//if finished
+			{
+				IOCore.uartCurrentWriteTask = (IOCore::WriteTask*)writeTask->next;
+				
+				InterruptFreeLeave();
+				
+					system.completeTask(writeTask->task);
+					delete writeTask;
+				
+				InterruptFreeEnter();
+				
+				if(IOCore.uartCurrentWriteTask == 0)
+					break;
+			}
+			else
+				break;		//come back around when there are FIFO bytes free
 		}
-		else
-			return;		//come back around when there are FIFO bytes free
-	}
+		
+	InterruptFreeLeave();
+	
 	*UARTInterrupts &= ~UARTInterrupts_TxBufferEmpty;	//stop being notified on TX ready
 }
 
@@ -1863,7 +2068,8 @@ Task		IO::UART::write(byte const* s, int length)
 	IOCore::WriteTask* writeTask = new(length) IOCore::WriteTask(s, length);
 	writeTask->task = task;
 	
-	InterruptsDisable();
+	InterruptFreeEnter();
+	
 		IOCore.queueItem((IOCore::TaskQueueItem**)&IOCore.uartCurrentWriteTask, writeTask);
 		*UARTInterrupts |= UARTInterrupts_TxBufferEmpty;	//notify when we can send bytes
 		
@@ -1871,7 +2077,7 @@ Task		IO::UART::write(byte const* s, int length)
 			== (UARTLineStatus_TxHoldingRegisterEmpty | UARTLineStatus_TransmitterEmpty))
 			IO_UART_startTransmission();
 		
-	InterruptsEnable();
+	InterruptFreeLeave();
 	
 	return(task);
 }
@@ -1978,47 +2184,48 @@ void	IO::I2C::start(int bitRate, IO::I2C::Role role)
 {
 	*PeripheralnReset &= ~PeripheralnReset_I2C;	//assert reset
 	
-	InterruptsDisable();
+	InterruptFreeEnter();
 
-	//empty the queue in any case
-	IOCore.flushQueue((IOCore::TaskQueueItem**)&IOCore.i2cCurrentTask);
+		//empty the queue in any case
+		IOCore.flushQueue((IOCore::TaskQueueItem**)&IOCore.i2cCurrentTask);
+		
+		if(bitRate > 0)
+		{
+			*ClockControl |= ClockControl_I2C;
+			*PeripheralnReset |= PeripheralnReset_I2C;	//deassert reset
+			
+			io.scl.setMode(IO::Pin::I2C);
+			io.sda.setMode(IO::Pin::I2C);
+			
+			*I2CControlClear = I2CControlSet_Ack | I2CControlSet_Interrupt
+								| I2CControlSet_StartCondition | I2CControlSet_EnableI2C;
+			
+			unsigned int bitHalfPeriod = (system.getCoreFrequency() / bitRate) >> 1;
+			//@@depending on the time-constant of the bus (1 / (pull-up resistance * capacitance)),
+			//  the low-time should be smaller and the high-time should be higher
+			*I2CClockHighTime = bitHalfPeriod;
+			*I2CClockLowTime = bitHalfPeriod;
+			
+			IOCore.irqI2C = IO_onI2CInterrupt;
+			
+			//enable interrupt before enabling I2C state machine:
+			*InterruptEnableSet1 = Interrupt1_I2C;
+			*I2CControlSet = I2CControlSet_EnableI2C;
+		}
+		else
+		{
+			io.scl.setMode(IO::Pin::Default);
+			io.sda.setMode(IO::Pin::Default);
+			
+			*I2CControlClear = I2CControlSet_Ack | I2CControlSet_Interrupt
+								| I2CControlSet_StartCondition | I2CControlSet_EnableI2C;
+			
+			//shut down I2C clock
+			*ClockControl &= ~ClockControl_I2C;
+			*InterruptEnableClear1 = Interrupt1_I2C;
+		}
 	
-	if(bitRate > 0)
-	{
-		*ClockControl |= ClockControl_I2C;
-		*PeripheralnReset |= PeripheralnReset_I2C;	//deassert reset
-		
-		io.scl.setMode(IO::Pin::I2C);
-		io.sda.setMode(IO::Pin::I2C);
-		
-		*I2CControlClear = I2CControlSet_Ack | I2CControlSet_Interrupt
-							| I2CControlSet_StartCondition | I2CControlSet_EnableI2C;
-		
-		unsigned int bitHalfPeriod = (system.getCoreFrequency() / bitRate) >> 1;
-		//@@depending on the time-constant of the bus (1 / (pull-up resistance * capacitance)),
-		//  the low-time should be smaller and the high-time should be higher
-		*I2CClockHighTime = bitHalfPeriod;
-		*I2CClockLowTime = bitHalfPeriod;
-		
-		IOCore.irqI2C = IO_onI2CInterrupt;
-		
-		//enable interrupt before enabling I2C state machine:
-		*InterruptEnableSet1 = Interrupt1_I2C;
-		*I2CControlSet = I2CControlSet_EnableI2C;
-	}
-	else
-	{
-		io.scl.setMode(IO::Pin::Default);
-		io.sda.setMode(IO::Pin::Default);
-		
-		*I2CControlClear = I2CControlSet_Ack | I2CControlSet_Interrupt
-							| I2CControlSet_StartCondition | I2CControlSet_EnableI2C;
-		
-		//shut down I2C clock
-		*ClockControl &= ~ClockControl_I2C;
-		*InterruptEnableClear1 = Interrupt1_I2C;
-	}
-	InterruptsEnable();
+	InterruptFreeLeave();
 }
 
 Task	IO::I2C::write(byte address, Buffer s, IO::I2C::RepeatedStartSetting repeatedStart)
@@ -2041,14 +2248,15 @@ Task	IO::I2C::write(byte address, Buffer s, IO::I2C::RepeatedStartSetting repeat
 	
 	i2cTask->task = task;
 	
-	InterruptsDisable();
+	InterruptFreeEnter();
+	
 		bool mustStart = (IOCore.i2cCurrentTask == 0);
 		IOCore.queueItem((IOCore::TaskQueueItem**)&IOCore.i2cCurrentTask, i2cTask);
 		
 		if(mustStart)
 			*I2CControlSet = I2CControlSet_StartCondition;
 		
-	InterruptsEnable();
+	InterruptFreeLeave();
 	
 	return(task);
 }

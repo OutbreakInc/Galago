@@ -19,6 +19,10 @@ public:
 		unsigned short version;
 	};
 	
+	//NOTE: reset(), detect(), write() and detach() are synchronous methods that may be called only
+	//  when the SPI port is idle.  Wait for an idle port using the GalagoAPI io.spi.lock() method,
+	//  use AppBoard methods, then call io.spi.unlock() to return to asynchonous operation.
+	
 			AppBoard(void);
 	
 	//Reset the bus. Doing this de-enumerates all connected devices.
@@ -50,7 +54,7 @@ private:
 	bool		internalWrite(byte address, byte const* command = 0, int length = 0);
 	void		udelay(int timeStep, int i);
 	void		readBytes(int timeStep, byte* out, int length);
-	bool		writeByte(unsigned int timeStep, byte b);
+	bool		writeBytes(unsigned int timeStep, byte const* b, int length);
 	
 	Endpoint*	endpoints;
 };

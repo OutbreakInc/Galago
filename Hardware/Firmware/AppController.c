@@ -28,6 +28,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+u8		gSPIPseudovalue;
+
 //Performs an SPI transaction (sends and receives a byte) in master mode
 u8		SPIExchangeMaster(u8 byte)
 {
@@ -46,7 +48,8 @@ u8		SPIExchangeMaster(u8 byte)
 //Setup or take down the SPI interface for a slave transfer
 void	SPISetupSlave(void)
 {
-	USIDR = (gIOState & (1 << 1))? 0xFF : 0x00;
+	gSPIPseudovalue = (gIOState & (1 << 1))? 0xFF : 0x00;
+	USIDR = gSPIPseudovalue;
 	USICR = 0x18;	//3-wire bus, external clock, shift on falling, read on rising edge, interrupt armed
 }
 void	SPIDisableSlave(void)
@@ -56,9 +59,8 @@ void	SPIDisableSlave(void)
 
 u8		SPIExchangeSlave(u8 byte, u8 output)
 {
-	//only if the pin is marked as output do we load the value, else the pseudovalue set in SPISetupSlave() is used
-	if(output)
-		USIDR = byte;
+	//only load the value if the pin is marked as output, else use the pseudovalue set in SPISetupSlave()
+	USIDR = output? byte : gSPIPseudovalue;
 	
 	u8 out;
 	

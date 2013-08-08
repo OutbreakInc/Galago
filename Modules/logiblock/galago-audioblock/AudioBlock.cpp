@@ -6,6 +6,11 @@
 using namespace Galago;
 using namespace Logiblock::AppBoards;
 
+
+//global singleton
+namespace Logiblock { namespace AppBoards { AudioBlock audioBlock; } }
+
+
 //The Audioblock (Audio App Board) has an NXP UDA1334ATS, which has accepts up to 24bits per sample per channel
 //  and feeds it to a '1-bit' delta-sigma DAC core, with internal processing (seemingly) similar to pulse-density
 //  modulation.  Sample clocking and analog generation is handled by a built-in PLL which is disciplined by the
@@ -24,26 +29,29 @@ using namespace Logiblock::AppBoards;
 //  sending audio data to the DAC is costly.  Please be aware of the timing and cycle demands if using high-bitrate
 //  streams.
 
-For many use cases, reading audio samples from (e.g.) an SD card while playing them
+//For many use cases, reading audio samples from (e.g.) an SD card while simultaneously playing them back is crucial,
+//  so the AudioBlock uses two distinct interface for loading (SPI) and playing (GPIO, soft-I2S) the samples.
+//  Attempting to do both tasks on the SPI interface would be impossible for any decent samplerate.
 
-unsigned int	System_divideClockFrequencyRounded(unsigned int n, unsigned int d)
-{
+//rely on a private function in GalagoAPI
+unsigned int	System_divideClockFrequencyRounded(unsigned int n, unsigned int d);
+/*{
+	//otherwise, use this implementation
 	unsigned int q = (((n << 1) / d) + 1) >> 1;
 	return(q? q : 1);
-}
+}*/
 
-extern "C"
-INTERRUPT void		IRQ_Timer1(void)
+void			AudioBlock::processAudioInterrupt(void)
 {
 	//hardware has already toggled the BCK signal, so output the next sample of left-justified audio data right away
 	
 	int sample = 0, bits;
-	audioBlock._buffer->read(((byte*)&sample) + 1);
-	if(audioBlock._bytesPerSample == 1)
+	_buffer->read(((byte*)&sample) + 1);
+	if(_bytesPerSample == 1)
 		bits = 8;
 	else
 	{
-		audioBlock._buffer->read((byte*)sample);
+		_buffer->read((byte*)sample);
 		bits = 16;
 	}
 	
@@ -60,22 +68,32 @@ INTERRUPT void		IRQ_Timer1(void)
 	LPC1300::GPIO0[1 << 2] = 0;
 	
 	*LPC1300::Timer1Interrupts = LPC1300::TimerInterrupts_Match0Flag;
+	
+	//_hungry is an optimization for timing-sensitive code
+	if(!_hungry && (_buffer->bytesUsed() < _buffer->bytesFree))	//if less than half the buffer remains,
+	{
+		requestSamples();
+		_hungry = true;
+	}
 }
 
 
 			AudioBlock::AudioBlock(void):
-				_buffer(0)
+				_buffer(0),
+				_audioAppBoard(0),
+				_hungry(false)
 {
 }
 
-			AudioBlock::init(void)
+bool		AudioBlock::init(void)
 {
+	return((_audioAppBoard = appBoard.find(0, 0x0b1, 0xac06)) != 0);
 }
-	
-bool		AudioBlock::begin(		int sampleRate = 48000,
-									int bitsPerSample = 16,
-									ChannelMode channelMode = Stereo,
-									bufferLength_ms = 10
+
+bool		AudioBlock::start(		int sampleRate,
+									int bitsPerSample,
+									ChannelMode channelMode,
+									int bufferLength_ms
 								)
 {
 	if(_buffer != 0)
@@ -83,6 +101,8 @@ bool		AudioBlock::begin(		int sampleRate = 48000,
 		delete _buffer;
 		_buffer = 0;
 	}
+	
+	_hungry = false;
 	
 	//shutdown
 	*LPC1300::Timer1Control = LPC1300::TimerControl_Reset;
@@ -115,15 +135,12 @@ bool		AudioBlock::begin(		int sampleRate = 48000,
 		_mode = channelMode;
 		_buffer = new CircularBuffer(sampleRate * _bytesPerSample * bufferLength_ms / 1000);
 		
-		_divisor = System_divideClockFrequencyRounded(system.getMainClockFrequency(), sampleRate * 4);
-		_sampleIndex = 0;
-		
 		//set up PWM on p5 (timer1 match0) and interrupt for audio samples
 		*LPC1300::ClockControl |= LPC1300::ClockControl_Timer1;
 		
 		*LPC1300::Timer1Control = (LPC1300::TimerControl_Enable | LPC1300::TimerControl_Reset);
 		
-		*LPC1300::Timer1Prescaler = _divisor;
+		*LPC1300::Timer1Prescaler = System_divideClockFrequencyRounded(system.getMainClockFrequency(), sampleRate * 4);
 		*LPC1300::Timer1MatchControl =	LPC1300::TimerMatchControl_Match0Interrupt
 										| LPC1300::TimerMatchControl_Match0Reset;
 		*LPC1300::Timer1ExternalMatch = LPC1300::TimerExternalMatch_Match0Toggle;
@@ -138,11 +155,13 @@ bool		AudioBlock::begin(		int sampleRate = 48000,
 
 int			AudioBlock::playSamples(Buffer b)
 {
+	_hungry = false;
 	return(_buffer->write(b.bytes(), b.length()));
 }
 
 int			AudioBlock::playSamples(void const* samples, int length)
 {
+	_hungry = false;
 	return(_buffer->write((byte const*)samples, length));
 }
 
@@ -155,10 +174,7 @@ Task		AudioBlock::needSamplesTask(void)
 
 void		AudioBlock::requestSamples(void)
 {
-	if(_needSamples != Task())
-	{
-		Task t = _needSamples;
-		_needSamples = Task();
-		system.completeTask(t);
-	}
+	if(_needSamples == Task())
+		_needSamples = system.createTask();
+	system.completeTask(t);
 }

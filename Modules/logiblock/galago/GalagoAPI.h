@@ -252,7 +252,8 @@ public:
 		Task			write(byte const* s, int length, Buffer bytesReadBack = Buffer());
 		Task			write(unsigned short const* s, int length, Buffer bytesReadBack = Buffer());
 		
-		Task			setSelect(bool select);
+		Task			lock(void);
+		bool			unlock(void);
 	};
 
 	class I2C

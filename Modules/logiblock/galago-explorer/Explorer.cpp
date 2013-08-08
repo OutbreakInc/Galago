@@ -6,7 +6,8 @@ using namespace Galago;
 using namespace Logiblock::AppBoards;
 
 				Explorer::Explorer(void):
-					_appBoardAddr(0),
+					_appBoardAddress(0),
+					_buffer(0),
 					_lat(0),
 					_long(0),
 					_altFromGeoid(0),
@@ -14,13 +15,23 @@ using namespace Logiblock::AppBoards;
 					_fix(0),
 					_sats(0),
 					_hdop(0),
-					_checksumCount(3),
+					_checksumCount(3)
 {
-	_buffer[0] = 0;
 }
 	
-void			Explorer::init(void)
+bool			Explorer::init(void)
 {
+	//detect the board and come back with an address
+	appBoards.detect();
+	_appBoardAddress = appBoards.find(0, 0x0b1, 0xac05);
+	
+	if(_appBoardAddress == 0)
+		return(false);
+	
+	if(_buffer == 0)
+		_buffer = new char[100];
+	_buffer[0] = 0;
+	
 	_accelData = Buffer::New(10);
 	
 	Buffer accelInit = Buffer::New(2);
@@ -28,11 +39,14 @@ void			Explorer::init(void)
 	accelInit.bytes()[1] = 0x01;	//write 0x01 to register 7
 	io.i2c.write(0x98, accelInit);	//init the accelerometer
 	
-	//detect the board and come back with an address
+	return(true);
 }
 	
 void			Explorer::processGPSData(char nextChar)
 {
+	if(_buffer == 0)
+		return(false);
+	
 	int offset = _buffer[0];
 	
 	if((nextChar == '$') || (offset >= sizeof(_buffer)))
@@ -93,6 +107,8 @@ void			Explorer::processGPSData(char nextChar)
 	}
 		
 	_buffer[0] = offset;
+	
+	return(true);
 }
 
 Task			Explorer::updateAccelerometer(void)

@@ -31,7 +31,7 @@ u8 const kUUIDAndDescriptor[] PROGMEM =
 	1,			//version
 	0xb1, 0x00,	//vendor ID (LSB first)
 	0x07, 0xac,	//product ID (LSB first)
-	0x01, 0x03,	//product version (LSB first)
+	0x02, 0x03,	//product version (LSB first)
 };
 
 //GPIO direction and state that should be latched when the device is not addressed
@@ -81,6 +81,7 @@ void	appCommand(u8 method)
 		
 	case 0x14:	//LED on
 		gIOState &= ~PINMASK_APP_nLED;
+		break;
 		
 	case 0x15:	//LED off
 		gIOState |= PINMASK_APP_nLED;

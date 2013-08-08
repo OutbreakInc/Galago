@@ -22,11 +22,32 @@ public:
 	inline int				altitudeFromEllipsoid() const	{return(_altFromEllipsoid);}
 	inline int				altitudeFromSeaLevel() const	{return(_altFromGeoid);}
 	
+	inline int				latitude() const				{return(_lat);}
+	inline int				longitude() const				{return(_long);}
+	inline int				altitudeFromEllipsoid() const	{return(_altFromEllipsoid);}
+	inline int				altitudeFromSeaLevel() const	{return(_altFromGeoid);}
+	
+	inline int				temperatureInCelsius() const	{return(_temperature);}
+
 							Explorer(void);
 	
-	void					init(void);
+	//initialize the app board.  Returns true if a board was found.
+	bool					init(void);
+	
+	//enable or disable the NMEA (GPS) data on the RXD/TXD pins.  This occupies the UART if enabled.
+	bool					enableNMEAData(bool enable = true);
+	inline bool				disableNMEAData(void)	{return(enableNMEAData(false));}
+	
+	bool					selectSDCard(void);
+	
+	//process the NMEA data one character at a time.  Typically you would feed received characters
+	//  (or batchs thereof) to this function as they arrive.
 	void					processGPSData(char nextChar);
+	
+	//poll the accelerometer for new data
 	Task					updateAccelerometer(void);
+	
+	Task					updateTemperature(void);
 	
 	Task					newGPSDataReady(void);
 	
@@ -46,6 +67,8 @@ private:
 	Task			_newGPSData;
 	Task			_accelRead;
 	Buffer			_accelData;
+	
+	char*			_buffer;
 	
 	struct
 	{
@@ -72,7 +95,7 @@ private:
 	signed char		_tiltX, _tiltY, _tiltZ;
 	
 	byte			_checksumCount;
-	char			_buffer[100];
+	byte			_appBoardAddress;
 };
 
 extern Explorer explorer;

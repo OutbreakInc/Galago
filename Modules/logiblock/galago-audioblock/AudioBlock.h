@@ -8,11 +8,20 @@ namespace Logiblock { namespace AppBoards {
 
 class AudioBlock
 {
-	friend void				IRQ_Timer16_0(void);
-	
 public:
 							AudioBlock(void);
-	void					init(void);
+	
+	//initialize the app board.  Returns true if a board was found.
+	bool					init(void);
+	
+	bool					setOutput(bool outputOn);
+	
+	inline bool				mute(void)		{return(setOutput(false));}
+	inline bool				unmute(void)	{return(setOutput(true));}
+	
+	bool					selectSDCard(void);
+	bool					enableDACPins(bool enable = true);
+	inline bool				disableDACPins(void)	{return(enableDACPins(false));}
 	
 	typedef enum
 	{
@@ -22,17 +31,28 @@ public:
 		RightOnly,
 	} ChannelMode;
 	
+	//this is the very timing-sensitive interrupt handler, and it must be called
+	//  (2 * the sample rate) times per second.  To use, declare a Timer1 interrupt
+	//  handler in your application and simply call this method from it (and nothing else.)
+	//
+	//  extern "C" INTERRUPT void		IRQ_Timer1(void)
+	//  {
+	//    audioBlock.processAudioInterrupt();
+	//  }
+	//
+	void					processAudioInterrupt(void);
+	
 	//at 48kHz 16-bit stereo, a 10ms buffer (default) is almost 2KB. Use sparingly!
-	void					begin(		int sampleRate = 48000,
+	bool					start(		int sampleRate = 48000,
 										int bitsPerSample = 16,
 										ChannelMode channelMode = Stereo,
-										bufferLength_ms = 10
+										int bufferLength_ms = 10
 									);
 	
-	inline void				end(void)	{begin(0);}
+	inline void				end(void)	{start(0);}
 	
 	int						playSamples(Buffer b);
-	int						playSamples(void const* samples);
+	int						playSamples(void const* samples, int length);
 	
 	//triggers when the sample buffer is half depleted
 	Task					needSamplesTask(void);
@@ -40,8 +60,11 @@ public:
 private:
 	void					requestSamples(void);
 	
-	ChannelMode				_mode;
+	Task					_needSamples;
 	CircularBuffer*			_buffer;
+	ChannelMode				_mode;
+	byte					_bytesPerSample;
+	byte					_audioAppBoard;
 };
 
 extern AudioBlock audioBlock;

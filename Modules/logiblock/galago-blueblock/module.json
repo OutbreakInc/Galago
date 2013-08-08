@@ -1,0 +1,19 @@
+{
+	"name":"galago-blueblock",
+	"version":"0.0.1",
+	"tags":["galago","blueblock","Bluetooth","app","board","wireless","serial"],
+	"description":"Application board library for the Galago Bluetooth App Board.",
+	"dependencies":
+	{
+		"logiblock/app-board": ">0"
+	},
+	"include":
+	[
+		{"base": "project", "dir": ".", "export":true}
+	],
+	"files":
+	[
+		{"name":"BlueBlock.cpp"},
+		{"name":"BlueBlock.h", "build":false, "export":true}
+	]
+}

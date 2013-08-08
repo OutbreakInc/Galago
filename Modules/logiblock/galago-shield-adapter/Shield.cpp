@@ -4,11 +4,6 @@
 using namespace Galago;
 using namespace Logiblock::AppBoards;
 
-namespace Logiblock { namespace AppBoards {
-
-Shield shield;
-
-
 		Shield::Shield(void)
 {
 	init();
@@ -42,4 +37,8 @@ void	Shield::init(void)
 	rst.setMode(IO::Pin::Reset);	//like the Arduino
 }
 
-}} //ns
+namespace Logiblock { namespace AppBoards {
+	
+	Shield shield;
+
+} } //ns

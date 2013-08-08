@@ -66,6 +66,7 @@ void	AppBoard::reset(void)
 }
 bool	AppBoard::detect(void)
 {
+	int oldSCKMode = *LPC1300::IOConfigPIO0_6;
 	int timeStep = setupGXB();
 	
 	bool empty, invalid, found = false;
@@ -76,7 +77,8 @@ bool	AppBoard::detect(void)
 		io.sel = true;
 		udelay(timeStep, 10);
 		
-		if(writeByte(timeStep, 0))	//address the autodetection pseudo-address
+		byte autoDetect = 0;
+		if(writeBytes(timeStep, &autoDetect, 1))	//address the autodetection pseudo-address
 		{
 			//wait
 			udelay(timeStep, 10);
@@ -105,7 +107,7 @@ bool	AppBoard::detect(void)
 				Endpoint** predecessor;
 				byte address = nextAddress(predecessor);
 				
-				if(writeByte(timeStep, address))	//assign an address
+				if(writeBytes(timeStep, &address, 1))	//assign an address
 				{
 					Endpoint* e = new Endpoint(uuidLengthAndVersion[17], address, descriptor, descriptorLength);
 					insert(predecessor, e);	//add to linked list of endpoints
@@ -126,6 +128,7 @@ bool	AppBoard::detect(void)
 	}
 	while(!empty);
 	
+	*LPC1300::IOConfigPIO0_6 = oldSCKMode;
 	return(found);
 }
 
@@ -147,8 +150,11 @@ byte	AppBoard::find(byte afterAddress, unsigned short vendorID, unsigned short p
 {
 	Endpoint* e = endpoints;
 	while((e != 0) && (e->address < afterAddress))
+		e = e->next;
+	
+	while(e != 0)
 	{
-		if(((vendorID == 0) || (e->vendorID() == vendorID)) || ((productID == 0) || (e->productID() == productID)))
+		if(((vendorID == 0) || (e->vendorID() == vendorID)) && ((productID == 0) || (e->productID() == productID)))
 			break;
 		e = e->next;
 	}
@@ -168,20 +174,17 @@ void	AppBoard::detach(byte address)
 	remove(address);
 	
 	byte disconnect = 0xFF;
-	internalWrite(0xFE, &disconnect, 1);
+	internalWrite(address, &disconnect, 1);	//de-enumerate only this device
 }
 
 int			AppBoard::setupGXB(void)
 {
-	io.spi.stop();
 	io.sel = false;
 	io.sel.setOutput();
-	io.sck.setOutput();
+	io.sck.setOutput();	//we command sck until API exit, at which point we revert it.
 	io.sck = false;
 	
-	int timeStep = system.getCoreFrequency() / 3000000UL;	//empirically determined, yields about 100KHz. Max per the spec is 1MHz
-	
-	return(timeStep);
+	return(system.getCoreFrequency() / 3000000UL);	//empirically determined, yields about 100KHz. Max per the spec is 1MHz
 }
 
 byte		AppBoard::nextAddress(Endpoint**& predecessor)
@@ -230,6 +233,7 @@ void		AppBoard::remove(byte address)
 
 bool		AppBoard::internalWrite(byte address, byte const* command, int length)
 {
+	int oldSCKMode = *LPC1300::IOConfigPIO0_6;
 	int timeStep = setupGXB();
 	io.sel = true;
 	udelay(timeStep, 10);
@@ -237,7 +241,7 @@ bool		AppBoard::internalWrite(byte address, byte const* command, int length)
 	bool special = (!address) || (address == 0xFE);
 	
 	//write a byte, paying attention to the acknowledgement unless this is a special command
-	if(!writeByte(timeStep, address) && !special)
+	if(!writeBytes(timeStep, &address, 1) && !special)
 	{
 		//no answer! forcibly de-enumerate the device, which is idempotent
 		//  because we will need to reenumerate it anyway.
@@ -245,19 +249,20 @@ bool		AppBoard::internalWrite(byte address, byte const* command, int length)
 		io.sel = false;
 		udelay(timeStep, 10);
 		
-		detach(address);
+		detach(address);	//implicit recursion
+		*LPC1300::IOConfigPIO0_6 = oldSCKMode;
 		return(false);
 	}
 	
 	udelay(timeStep, 10);
 	
-	while(length--)
-		writeByte(timeStep, *command++);
+	writeBytes(timeStep, command, length);
 	
 	udelay(timeStep, 10);
 	io.sel = false;
 	udelay(timeStep, 10);
 	
+	*LPC1300::IOConfigPIO0_6 = oldSCKMode;
 	return(true);
 }
 
@@ -270,7 +275,8 @@ void	AppBoard::udelay(int timeStep, int i)
 
 void	AppBoard::readBytes(int timeStep, byte* out, int length)
 {
-	*LPC1300::GPIO0Dir &= ~(1 << 9);
+	unsigned int oldMode = *LPC1300::IOConfigPIO0_9, oldDir = (*LPC1300::GPIO0Dir & (1 << 9));
+	*LPC1300::GPIO0Dir &= ~(1 << 9);	//mosi is an input
 	*LPC1300::IOConfigPIO0_9 = (*LPC1300::IOConfigPIO0_9 & ~LPC1300::IOConfigPIO0_9_Repeat) | LPC1300::IOConfigPIO0_9_PullUp;
 	while(length--)
 	{
@@ -287,33 +293,46 @@ void	AppBoard::readBytes(int timeStep, byte* out, int length)
 		}
 		*out++ = cb;
 	}
+	*LPC1300::IOConfigPIO0_9 = oldMode;
+	*LPC1300::GPIO0Dir = (*LPC1300::GPIO0Dir & ~(1 << 9)) | oldDir;
 }
-bool	AppBoard::writeByte(unsigned int timeStep, byte b)
+bool	AppBoard::writeBytes(unsigned int timeStep, byte const* bytes, int length)
 {
-	*LPC1300::IOConfigPIO0_9 = (*LPC1300::IOConfigPIO0_9 & ~(LPC1300::IOConfigPIO0_9_Repeat | 3)) | LPC1300::IOConfigPIO0_9_Function_PIO;
-	*LPC1300::GPIO0Dir |= (1 << 9);
-	int i = 8;
-	do
+	unsigned int oldMode = *LPC1300::IOConfigPIO0_9, oldDir = (*LPC1300::GPIO0Dir & (1 << 9));
+	
+	bool ack = true;
+	while(ack && (length--))
 	{
-		LPC1300::GPIO0[1 << 9] = (b & 0x80)? (1 << 9) : 0;
-		b <<= 1;
+		int i = 8;
+		byte b = *bytes++;
+		
+		*LPC1300::IOConfigPIO0_9 = (*LPC1300::IOConfigPIO0_9 & ~(LPC1300::IOConfigPIO0_9_Repeat | 3)) | LPC1300::IOConfigPIO0_9_Function_PIO;
+		*LPC1300::GPIO0Dir |= (1 << 9);
+		do
+		{
+			LPC1300::GPIO0[1 << 9] = (b & 0x80)? (1 << 9) : 0;
+			b <<= 1;
+			udelay(timeStep, 1);
+			LPC1300::GPIO0[1 << 6] = (1 << 6);
+			udelay(timeStep, 1);
+			if(i == 1)
+			{
+				*LPC1300::GPIO0Dir &= ~(1 << 9);
+				*LPC1300::IOConfigPIO0_9 = (*LPC1300::IOConfigPIO0_9 & ~LPC1300::IOConfigPIO0_9_Repeat) | LPC1300::IOConfigPIO0_9_PullUp;
+			}
+			LPC1300::GPIO0[1 << 6] = 0;
+		}
+		while(--i);
+		
 		udelay(timeStep, 1);
 		LPC1300::GPIO0[1 << 6] = (1 << 6);
 		udelay(timeStep, 1);
-		if(i == 1)
-		{
-			*LPC1300::GPIO0Dir &= ~(1 << 9);
-			*LPC1300::IOConfigPIO0_9 = (*LPC1300::IOConfigPIO0_9 & ~LPC1300::IOConfigPIO0_9_Repeat) | LPC1300::IOConfigPIO0_9_PullUp;
-		}
+		ack = ack && (LPC1300::GPIO0[1 << 9] == 0);
 		LPC1300::GPIO0[1 << 6] = 0;
 	}
-	while(--i);
 	
-	udelay(timeStep, 1);
-	LPC1300::GPIO0[1 << 6] = (1 << 6);
-	udelay(timeStep, 1);
-	bool ack = (LPC1300::GPIO0[1 << 9] == 0);
-	LPC1300::GPIO0[1 << 6] = 0;
+	*LPC1300::IOConfigPIO0_9 = oldMode;
+	*LPC1300::GPIO0Dir = (*LPC1300::GPIO0Dir & ~(1 << 9)) | oldDir;
 	return(ack);
 }
 

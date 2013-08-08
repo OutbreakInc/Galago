@@ -31,7 +31,7 @@ u8 const kUUIDAndDescriptor[] PROGMEM =
 	1,			//version
 	0xb1, 0x00,	//vendor ID (LSB first)
 	0x04, 0xac,	//product ID (LSB first)
-	0x01, 0x04,	//product version (LSB first)
+	0x02, 0x04,	//product version (LSB first)
 };
 
 //GPIO direction and state that should be latched when the device is not addressed
