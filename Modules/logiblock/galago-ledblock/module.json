@@ -1,0 +1,19 @@
+{
+	"name":"galago-ledblock",
+	"version":"0.0.1",
+	"tags":["galago","ledblock","led","pwm","servo","controller","board","current"],
+	"description":"Application board library for the Galago LED App Board.",
+	"dependencies":
+	{
+		"logiblock/app-board": ">0"
+	},
+	"include":
+	[
+		{"base": "project", "dir": ".", "export":true}
+	],
+	"files":
+	[
+		{"name":"LEDBlock.cpp"},
+		{"name":"LEDBlock.h", "build":false, "export":true}
+	]
+}
