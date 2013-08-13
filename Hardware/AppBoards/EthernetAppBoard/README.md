@@ -1,4 +1,4 @@
-## Etherblock (*Ethernet App Board*)
+## Etherblock - *Ethernet App Board*
 
 [ ![Etherblock assembly](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0404-small.jpg?raw=true) ](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0404.jpg?raw=true)
 
