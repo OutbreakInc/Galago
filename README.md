@@ -10,8 +10,8 @@ All hardware designs, unless otherwise specified, are released under the [Creati
 
 Hardware design files are in CadSoft EAGLE(tm) 5.10 binary format.  EAGLE is available from CadSoft [(US link)](http://cadsoftusa.com) [(DE link)](http://cadsoft.de)
 
-##### Audio App Board
-![Photo of Audio App Board prototype](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/AudioAppBoard/photos/AudioAppBoard-0BAC0602-2-small.jpg?raw=true)
+##### Audioblock (Audio App Board)
+[![Photo of Audioblock App Board](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/AudioAppBoard/photos/AudioAppBoard-0BAC0606-small.jpg?raw=true)](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/AudioAppBoard/photos/AudioAppBoard-0BAC0606.jpg?raw=true)
 
 The Audio App Board features a 16-bit, 48KHz stereo audio digital-to-analog converter driving two 1.5W class-D audio amplifiers and a low-noise switch-mode power supply with barrel jack.
 + [Audio App Board design files](https://github.com/OutbreakInc/Galago/tree/master/Hardware/AppBoards/AudioAppBoard/boards)
@@ -31,8 +31,8 @@ The Bluetooth(R) App Board hosts a Bluetooth module implementing the SPP (Serial
 + [Bluetooth App Board design files](https://github.com/OutbreakInc/Galago/tree/master/Hardware/AppBoards/BluetoothAppBoard/boards)
 + [Bluetooth App Board schematic](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/BluetoothAppBoard/boards/BluetoothBoard-0BAC0702-schematics.pdf?raw=true)
 
-##### Ethernet App Board
-[![Photo of Ethernet App Board prototype](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0404-small.jpg?raw=true)](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0404.jpg?raw=true)
+##### Etherblock (Ethernet App Board)
+[![Photo of Ethernet App Board](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0404-small.jpg?raw=true)](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0404.jpg?raw=true)
 
 The Ethernet App Board features the ENC28J60 Ethernet controller with integrated MAC and PHY, plus a switch-mode power supply with barrel jack input.
 + [Ethernet App Board design files](https://github.com/OutbreakInc/Galago/tree/master/Hardware/AppBoards/EthernetAppBoard/boards)
