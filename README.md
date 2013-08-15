@@ -32,7 +32,7 @@ The Bluetooth(R) App Board hosts a Bluetooth module implementing the SPP (Serial
 + [Bluetooth App Board schematic](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/BluetoothAppBoard/boards/BluetoothBoard-0BAC0702-schematics.pdf?raw=true)
 
 ##### Ethernet App Board
-![Photo of Ethernet App Board prototype](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0402-2-small.jpg?raw=true)
+[![Photo of Ethernet App Board prototype](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0404-small.jpg?raw=true)](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0404.jpg?raw=true)
 
 The Ethernet App Board features the ENC28J60 Ethernet controller with integrated MAC and PHY, plus a switch-mode power supply with barrel jack input.
 + [Ethernet App Board design files](https://github.com/OutbreakInc/Galago/tree/master/Hardware/AppBoards/EthernetAppBoard/boards)
