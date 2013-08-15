@@ -1,9 +1,9 @@
 # Galago by Outbreak, Inc.
 A revolutionary microcontroller platform featuring an ARM Cortex chip, clever features, great open source tools, a tiny footprint and built-in debugger.  Galago enables rapid hardware device prototype development that scales to volume production without the costs and complexity normally involved with hardware.
 
-[Learn more about Galago](http://outbreak.co/galago)
+[Learn more about Galago](http://outbreak.co/galago) | [See the Galago campaign on Kickstarter](http://www.kickstarter.com/projects/kuy/galago-make-things-better)
 
-[See the Galago campaign on Kickstarter](http://www.kickstarter.com/projects/kuy/galago-make-things-better)
+[![Photo of Galago](https://github.com/OutbreakInc/Galago/blob/master/Hardware/Galago/photos/Galago-0BAB0410-small.jpg?raw=true)](https://github.com/OutbreakInc/Galago/blob/master/Hardware/Galago/photos/Galago-0BAB0410.jpg?raw=true)
 
 ### Hardware designs
 All hardware designs, unless otherwise specified, are released under the [Creative Commons CC BY-SA-3.0 license](http://creativecommons.org/licenses/by-sa/3.0 "Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)").
