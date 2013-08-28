@@ -657,7 +657,7 @@ public:
                                                                            |
      struct Context                                                        |
      {                                                                     |
-	   Buffer i2cRead;                                                     |
+       Buffer i2cRead;                                                     |
      };                                                                    |
                                                                            |
      ...                                                                   |
@@ -899,9 +899,9 @@ private:
                                                                            |
      void aCompletionFunction(void* context, Task t, bool success)         |
      {                                                                     |
-	   // t is the Task we're responding to                                |
-	   // success is the reslution of the Task, true or false              |
-	   // context is the optionalContext from above (defaults to null)     |
+       // t is the Task we're responding to                                |
+       // success is the reslution of the Task, true or false              |
+       // context is the optionalContext from above (defaults to null)     |
      }                                                                     |
                                                                            |
    You may call `system.when()` multiple times to assign multiple          |
