@@ -1,3 +1,4 @@
+/* -*- tab-width: 4; column-number-mode: 1; fill-column: 80; -*- */
 /*                                                                         |
    Logiblock.com  Galago     (c) Outbreak, Inc. 2010-2013                  |
    Sources released under Creative Commons CC-BY-SA-3.0 unless noted       |
@@ -379,7 +380,7 @@ public:
                                                                            |
      if(io.p2)  // you can read pins and use them as bool expressions      |
      {                                                                     |
-	   ...                                                                 |
+       ...                                                                 |
      }                                                                     |
                                                                            |
    Like other microcontroller platforms, you may read a gpio value while   |
