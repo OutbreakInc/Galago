@@ -148,6 +148,53 @@ private:
 	InternalTask*			_t;
 };
 
+/*                                                                         |
+   Galago CircularBuffer object                                            |
+                                                                           |
+   CircularBuffer is a utility object that implements a simple circular    |
+   buffer - that is, a section of memory into which bytes can be written   |
+   and read in a first-in-first-out (FIFO) fashion.                        |
+                                                                           |
+   ---------------------------------------------------------------------   |
+                                                                           |
+   ## Creating and referencing CircularBuffers                             |
+                                                                           |
+   CircularBuffers are regular objects, so creation and ownershop follows  |
+   normal C++ rules:                                                       |
+                                                                           |
+     CircularBuffer* b = new CircularBuffer(24);                           |
+                                                                           |
+     CircularBuffer* b2 = b;                                               |
+                                                                           |
+     delete b2;  // caution, leaves b reference dangling                   |
+                                                                           |
+   ## Reading and writing bytes                                            |
+                                                                           |
+   To read and write bytes, use the `.read()` and `.write()` methods.  For |
+   example, with single bytes a bool is returned indicating success:       |
+                                                                           |
+     b.write(1);  // returns true if the CircularBuffer is not full        |
+     b.write(2);  //  "                                                    |
+     b.write(3);  //  "                                                    |
+                                                                           |
+     byte a;                                                               |
+     b.read(&a);  // reads 1 into a, returns true                          |
+     b.read(&a);  // reads 2 into a, returns true                          |
+     b.read(&a);  // reads 3 into a, returns true                          |
+     b.read(&a);  // b is empty, returns false.  'a' is unchanged          |
+                                                                           |
+   For multiple bytes, the number of bytes read or written is returned.    |
+   If the entire byte string cannot be written, as much of it as possible  |
+   is written and that length is returned.  By extension, if a             |
+   CircularBuffer is full, 0 is returned.  For reads, if the requested     |
+   read length isn't available, as much as possible is read and that       |
+   length is returned.  To determine how many bytes are available or       |
+   occupied, use the `.bytesFree()` and `.bytesUsed()` methods,            |
+   respectively.                                                           |
+                                                                           |
+                                                                           |
+==========================================================================*/
+
 class CircularBuffer
 {
 public:
@@ -257,32 +304,43 @@ public:
 	Buffer&					operator =(Buffer const& b);
 	inline 					~Buffer(void)				{release(_b); _b = 0;}
 	
+	//access the length and contents of a Buffer
 	inline size_t			length() const	{return(_b? _b->length : 0);}
 	inline byte*			bytes()			{return(_b? _b->data : 0);}
 	inline byte const*		bytes() const	{return(_b? _b->data : 0);}
 	
+	//create a Buffer from a C string, bytes or empty with a specified length
 	static Buffer			New(char const* cStr);
 	static Buffer			New(size_t length);
 	static Buffer			New(void const* b, size_t length);
 	
+	//concatenate Buffers
 	Buffer					operator +(Buffer const& b) const;
 	Buffer&					operator +=(Buffer const& b);
 	
+	//compare the contents of to Buffers.  Two references to the same memory are of course equal too
 	inline bool				operator ==(Buffer const& b) const		{return((b._b == _b) || (b._b && equals(b._b->data, b._b->length)));}
 	bool					operator ==(char const* cStr) const;
 	inline bool				operator !=(Buffer const& b) const		{return((b._b != _b) || (!b._b) || !equals(b._b->data, b._b->length));}
 	inline bool				operator !=(char const* cStr) const		{return(!operator == (cStr));}
 	inline					operator bool(void) const				{return(_b != 0);}
 	
+	//parse the Buffer as a unsigned integer. Failure to parse returns 0
 	unsigned int			parseUint(int base = 10);
 	signed int				parseInt(int base = 10);
 	
+	//determine if the Buffer begins with another Buffer, a C string or an array of bytes
+	inline bool				startsWith(Buffer const& b) const	{return((b._b != 0) && startsWith(b._b->data, b._b->length));}
 	bool					startsWith(byte const* str, size_t length) const;
 	bool					startsWith(char const* cStr) const;
+	
+	//compare the Buffer to an array of bytes
 	bool					equals(byte const* str, size_t length) const;
 	
+	//safely read bytes without risk of out-of-bounds access
 	inline byte				operator[](size_t offset) const		{return((_b && (offset < _b->length))? _b->data[offset] : 0);}
 	
+	//extract a section of the Buffer.  Uses start <= end notation rather than (start, length)
 	Buffer					slice(size_t start, size_t end);
 	ssize_t					indexOf(byte b, size_t offset = 0);
 	ssize_t					indexOf(Buffer b, size_t offset = 0);
@@ -406,19 +464,19 @@ public:
 	public:
 		typedef enum
 		{
-			DigitalInput,
-			DigitalOutput,
-			AnalogInput,
+			DigitalInput,		//a GPIO input
+			DigitalOutput,		//a GPIO output
+			AnalogInput,		//ADC feature
 			
-			Reset,
-			SPI,
-			I2C,
-			UART,
-			PWM,
-			USB,
+			Reset,				//!reset mode
+			SPI,				//Pin carries SPI signals
+			I2C,				//I2C mode, electrically open-drain
+			UART,				//UART peripheral on this pin
+			PWM,				//connected to the timer/PWM system
+			USB,				//the Pin is in USB interface mode
 			
-			ClockOutput,
-			Wakeup,
+			ClockOutput,		//clock output signal is driven on the pin
+			Wakeup,				//(not currently supported)
 			
 			Manual = 0xFE,
 			Default,
@@ -427,9 +485,9 @@ public:
 		//not all parts feature these pin modes
 		typedef enum
 		{
-			Normal		= 0,
-			PullDown	= 1,
-			PullUp		= 2,
+			Normal		= 0,	//the pin does not have internal pull-up or pull-down resistors
+			PullDown	= 1,	//an internal resistor pulls the value down when not driven
+			PullUp		= 2,	//like PullDown but the value is pulled up to Vdd when not driven
 			
 			Sensitive	= 4,	//Sensistive mode implies hysteresis/Schmitt-triggers are disabled for the pin
 
@@ -441,18 +499,24 @@ public:
 		
 		inline			Pin(void): v(~0)					{}
 		
+		//make a Pin refer to the same hardware as another Pin
 		inline	Pin&	bind(Pin const& p)		{v = p.v; return(*this);}
 		
+		//set the Pin's state (driving output if applicable)
 		inline	Pin&	operator =(bool value)	{write(value? 1 : 0); return(*this);}
 		inline	Pin&	operator =(int value)	{write(value); return(*this);}
 		inline	Pin&	operator =(Pin& p)		{write(p.read()); return(*this);}
-		inline			operator bool(void)		{return((bool)read());}
-		
-		int				read(void) const;
-		unsigned int	readAnalog(void) const;
-		unsigned int	analogValue(void) const;
 		void			write(int value);
 		
+		//read the Pin's digital state
+		inline			operator bool(void)		{return((bool)read());}
+		int				read(void) const;
+		
+		//read an analog value via the ADC for Pins that support it
+		unsigned int	readAnalog(void) const;
+		unsigned int	analogValue(void) const;
+		
+		//set the Pin's I/O mode and features, with shorthand methods for common modes
 		inline	void	setOutput(Feature feature = Normal)		{setMode(DigitalOutput, feature);}
 		inline	void	setInput(Feature feature = PullUp)		{setMode(DigitalInput, feature);}
 		inline	void	setAnalog(Feature feature = Sensitive)	{setMode(AnalogInput, feature);}
