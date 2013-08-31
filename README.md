@@ -1,9 +1,9 @@
 # Logiblock.com Galago
 A revolutionary microcontroller platform featuring an ARM Cortex chip, clever features, great open source tools, a tiny footprint and built-in debugger.  Galago enables rapid hardware device prototype development that scales to volume production without the costs and complexity normally involved with hardware.
 
-[Buy your Galago at Logiblock.com](http://Logiblock.com) | [**Get started with Galago**](https://github.com/OutbreakInc/Galago/wiki/Getting-started-guide)
+[Buy your Galago at Logiblock.com](http://Logiblock.com) | [**Get started with Galago**](https://github.com/OutbreakInc/Galago/wiki/Getting-started-guide) | [Galago API Reference](https://github.com/OutbreakInc/Galago/wiki/GalagoAPI-Reference)
 
-[Galago documentation](https://github.com/OutbreakInc/Galago/wiki/) | [Original Galago campaign on Kickstarter](http://www.kickstarter.com/projects/kuy/galago-make-things-better)
+[Galago documentation home](https://github.com/OutbreakInc/Galago/wiki/) | [Original Galago campaign on Kickstarter](http://www.kickstarter.com/projects/kuy/galago-make-things-better)
 
 [![Photo of Galago](https://github.com/OutbreakInc/Galago/blob/master/Hardware/Galago/photos/Galago-0BAB0410-small.jpg?raw=true)](https://github.com/OutbreakInc/Galago/blob/master/Hardware/Galago/photos/Galago-0BAB0410.jpg?raw=true)
 
