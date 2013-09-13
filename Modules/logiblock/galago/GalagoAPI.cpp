@@ -67,7 +67,7 @@ public:
 		DecimalSigned = 11
 	} Base;
 	
-	static int		format(char* output, unsigned int number, int fractionBits, Base base)
+	static int		format(byte* output, unsigned int number, int fractionBits, Base base)
 	{
 		static char const charTable[] = "0123456789ABCDEF";
 		char buf[11];
@@ -2051,7 +2051,7 @@ Task		IO::UART::write(unsigned int w, IO::UART::Format format)
 	}
 	else
 	{
-		length = NumberFormatter::format(	buffer, w,
+		length = NumberFormatter::format(	(byte*)buffer, w,
 											((int)format) & ~1,
 											(((int)format) & 1)? NumberFormatter::DecimalSigned : NumberFormatter::DecimalUnsigned
 										);

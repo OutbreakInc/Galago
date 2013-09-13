@@ -22,13 +22,10 @@ public:
 	inline int				altitudeFromEllipsoid() const	{return(_altFromEllipsoid);}
 	inline int				altitudeFromSeaLevel() const	{return(_altFromGeoid);}
 	
-	inline int				latitude() const				{return(_lat);}
-	inline int				longitude() const				{return(_long);}
-	inline int				altitudeFromEllipsoid() const	{return(_altFromEllipsoid);}
-	inline int				altitudeFromSeaLevel() const	{return(_altFromGeoid);}
+	inline int				accelX() const					{return((int)_accelData[0]);}
+	inline int				accelY() const					{return((int)_accelData[1]);}
+	inline int				accelZ() const					{return((int)_accelData[2]);}
 	
-	inline int				temperatureInCelsius() const	{return(_temperature);}
-
 							Explorer(void);
 	
 	//initialize the app board.  Returns true if a board was found.
@@ -46,8 +43,6 @@ public:
 	
 	//poll the accelerometer for new data
 	Task					updateAccelerometer(void);
-	
-	Task					updateTemperature(void);
 	
 	Task					newGPSDataReady(void);
 	

@@ -3,6 +3,7 @@
 #include "Explorer.h"
 
 using namespace Galago;
+using namespace Logiblock;
 using namespace Logiblock::AppBoards;
 
 				Explorer::Explorer(void):
@@ -22,8 +23,8 @@ using namespace Logiblock::AppBoards;
 bool			Explorer::init(void)
 {
 	//detect the board and come back with an address
-	appBoards.detect();
-	_appBoardAddress = appBoards.find(0, 0x0b1, 0xac05);
+	appBoard.detect();
+	_appBoardAddress = appBoard.find(0, 0x0b1, 0xac05);
 	
 	if(_appBoardAddress == 0)
 		return(false);
@@ -45,7 +46,7 @@ bool			Explorer::init(void)
 void			Explorer::processGPSData(char nextChar)
 {
 	if(_buffer == 0)
-		return(false);
+		return;
 	
 	int offset = _buffer[0];
 	
@@ -107,8 +108,6 @@ void			Explorer::processGPSData(char nextChar)
 	}
 		
 	_buffer[0] = offset;
-	
-	return(true);
 }
 
 Task			Explorer::updateAccelerometer(void)
