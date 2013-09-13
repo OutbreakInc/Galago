@@ -1,9 +1,9 @@
 # Logiblock.com Galago
 A revolutionary microcontroller platform featuring an ARM Cortex chip, clever features, great open source tools, a tiny footprint and built-in debugger.  Galago enables rapid hardware device prototype development that scales to volume production without the costs and complexity normally involved with hardware.
 
-[Buy your Galago at Logiblock.com](http://Logiblock.com) | [**Get started with Galago**](https://github.com/OutbreakInc/Galago/wiki/Getting-started-guide)
+[Buy your Galago at Logiblock.com](http://Logiblock.com) | [**Get started with Galago**](https://github.com/OutbreakInc/Galago/wiki/Getting-started-guide) | [Galago API Reference](https://github.com/OutbreakInc/Galago/wiki/GalagoAPI-Reference)
 
-[Galago documentation](https://github.com/OutbreakInc/Galago/wiki/) | [Original Galago campaign on Kickstarter](http://www.kickstarter.com/projects/kuy/galago-make-things-better)
+[Galago documentation home](https://github.com/OutbreakInc/Galago/wiki/) | [Original Galago campaign on Kickstarter](http://www.kickstarter.com/projects/kuy/galago-make-things-better)
 
 [![Photo of Galago](https://github.com/OutbreakInc/Galago/blob/master/Hardware/Galago/photos/Galago-0BAB0410-small.jpg?raw=true)](https://github.com/OutbreakInc/Galago/blob/master/Hardware/Galago/photos/Galago-0BAB0410.jpg?raw=true)
 
@@ -37,6 +37,7 @@ The Bluetooth(R) App Board hosts a Bluetooth module implementing the SPP (Serial
 [![Photo of Ethernet App Board](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0404-small.jpg?raw=true)](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0404.jpg?raw=true)
 
 The Ethernet App Board features the ENC28J60 Ethernet controller with integrated MAC and PHY, plus a switch-mode power supply with barrel jack input.
++ The Ethernet board requires some assembly: [Assembly instructions](https://github.com/OutbreakInc/Galago/tree/master/Hardware/AppBoards/EthernetAppBoard)
 + [Ethernet App Board design files](https://github.com/OutbreakInc/Galago/tree/master/Hardware/AppBoards/EthernetAppBoard/boards)
 + [Ethernet App Board schematic](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/boards/EthernetAppBoard-0BAC0403-schematics.pdf?raw=true)
 
