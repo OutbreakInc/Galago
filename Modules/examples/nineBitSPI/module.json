@@ -1,0 +1,1 @@
+{"name":"nineBitSPI","files":[{"name":"main.cpp"}],"description":"testing 9-bit SPI","version":"0.1","compatibleWith":["Galago4"],"dependencies":{"logiblock/galago":">0"}}
