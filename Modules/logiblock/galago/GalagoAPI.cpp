@@ -1931,7 +1931,7 @@ Task		IO::UART::bytesReceived(void)
 		if(t == Task())
 			IOCore.uartRecvTask = t = system.createTask();
 	
-	InterruptFreeEnter();
+	InterruptFreeLeave();
 	
 	return(t);
 }
