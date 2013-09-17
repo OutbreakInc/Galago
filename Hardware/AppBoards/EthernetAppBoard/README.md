@@ -8,6 +8,8 @@ The Logiblock **Etherblock** is an App Board featuring a 10baseT Ethernet interf
 
 [ ![Etherblock assembly](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0404-assembled-small.jpg?raw=true) ](https://github.com/OutbreakInc/Galago/blob/master/Hardware/AppBoards/EthernetAppBoard/photos/EthernetAppBoard-0BAC0404-assembled.jpg?raw=true)
 
+*(click for larger image)*
+
 Etherblock is easy to assemble.  Simply follow these steps:
 
 - **Insert the 14-pin female 0.1" headers into the board and flip the assembly over.**  The rows will not hold themselves in so you must keep it affixed by hand.
