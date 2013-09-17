@@ -1,0 +1,20 @@
+{
+	"name":"galago-explorer",
+	"version":"0.0.1",
+	"tags":["galago","explorer","gps","accelerometer","thermometer","location"],
+	"description":"Application board library for the Galago Explorer board.",
+	"dependencies":
+	{
+		"logiblock/app-board": ">0",
+		"logiblock/sd-card": ">0"
+	},
+	"include":
+	[
+		{"base": "project", "dir": ".", "export":true}
+	],
+	"files":
+	[
+		{"name":"Explorer.cpp"},
+		{"name":"Explorer.h", "build":false}
+	]
+}
