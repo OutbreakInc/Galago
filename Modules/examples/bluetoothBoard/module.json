@@ -1,1 +1,0 @@
-{"name":"bluetoothBoard","files":[{"name":"main.cpp"}],"description":"","version":"0.1","compatibleWith":["Galago4"],"dependencies":{"logiblock/galago":">0","logiblock/blueblock":">0"}}

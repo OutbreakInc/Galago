@@ -1,1 +1,0 @@
-{"name":"audioBoard","files":[{"name":"main.cpp"}],"description":"","version":"0.1","compatibleWith":["Galago4"],"dependencies":{"logiblock/galago-audioblock":">0"}}

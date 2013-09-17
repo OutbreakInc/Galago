@@ -1,1 +1,0 @@
-{"name":"ledBoard","files":[{"name":"main.cpp"}],"description":"","version":"0.1","compatibleWith":["Galago4"],"dependencies":{"logiblock/galago":">0","logiblock/galago-ledblock":">0"}}
