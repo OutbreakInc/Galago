@@ -1,0 +1,155 @@
+body
+{
+	margin: 50px 0 0 0;
+	padding: 0;
+}
+
+.moot
+{
+	font-family: "myriad pro", tahoma, verdana, arial, sans-serif;
+	font-size: 18px;
+}
+
+.jumbotron
+{
+	margin-bottom: 0;
+}
+
+.jumbotron.jumbo-white
+{
+	background-color: #FFF;
+}
+
+.jumbotron.jumbo-white a.thumbnail
+{
+	background-color: transparent;
+	border-color: #FFF;
+}
+
+.jumbotron.jumbo-white a.thumbnail:hover
+{
+	border-color: #999;
+}
+
+.jumbotron.jumbo-blue
+{
+	background-color: #D5E4FF;
+}
+
+.jumbotron.jumbo-blue p
+{
+	text-shadow: #FFF 0 1px 2px;
+}
+
+.jumbotron.jumbo-blue hr
+{
+	border-top: 1px solid #333;
+}
+
+.jumbotron.jumbo-blue h1
+{
+	text-shadow: #FFF 0 1px 2px;
+}
+
+.jumbotron.jumbo-blue h1 a
+{
+	color: inherit;
+}
+
+.jumbotron.jumbo-blue h1 small
+{
+	font-weight: lighter;
+	font-style: italic;
+	color: #555;
+}
+
+.jumbotron.jumbo-blue a.thumbnail
+{
+	background-color: transparent;
+	border-color: #D5E4FF;
+}
+
+.jumbotron.jumbo-blue a.thumbnail:hover
+{
+	border-color: #428BCA;
+}
+
+.jumbotron.jumbo-mid-blue
+{
+	background: #D5E4FF;
+}
+.jumbotron.jumbo-mid-blue .stripe
+{
+	background: url(stripe-12-D5E4FF.png) repeat #D5E4FF;
+}
+.jumbotron.jumbo-mid-blue p
+{
+	text-shadow: #FFF 0 1px 2px;
+}
+
+@media (min-width: 992px){
+	.jumbotron.jumbo-mid-blue
+	{
+		padding: 0 inherit 0 inherit;
+	}
+	.jumbotron.jumbo-mid-blue .stripe
+	{
+		margin-bottom: 0;
+	}
+	.jumbotron.jumbo-mid-blue p
+	{
+		margin: 30px;
+	}
+}
+.jumbotron ul.animated
+{
+	padding-left: 0;
+}
+.jumbotron ul.animated li
+{
+	list-style: disc inside;
+	padding-left: 0.2em;
+	-webkit-transition: background-color linear 0.3s;
+	-moz-transition: background-color linear 0.3s;
+	transition: background-color linear 0.3s;
+}
+.jumbotron ul.animated li.active
+{
+	background-color: #EEE;
+}
+
+/*bootstrap overrides*/
+
+.btn-orange
+{
+	color: #FFF;
+	background-color: #FF7518;
+	border-color: #E46915;
+}
+
+.btn-orange:hover
+{
+	color: #FFF;
+	background-color: #DE6615;
+	border-color: #CD5E13;
+}
+
+.navbar-inverse
+{
+	border: none;
+	background-color: #333;
+}
+.navbar-inverse .navbar-brand
+{
+	color: #FFF;
+	padding: 5px 10px 0 0;
+}
+.navbar-inverse .navbar-nav > li > a
+{
+	color: #DDD;
+}
+
+.breadcrumb > li + li:before
+{
+	content: ">\00a0";
+}
