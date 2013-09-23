@@ -4,8 +4,8 @@
 		<meta charset="utf-8">
 		<title>Logiblock</title>
 		
-		<meta name="description" content="The Logiblock Store, offering Galago, App Boards and accessories for intelligent embedded computing and rapid product development." />
-		<meta name="copyright" content="Logiblock Store"/>
+		<meta name="description" content="Logiblock makes Galago, App Boards and accessories for intelligent embedded computing and rapid product development."/>
+		<meta name="copyright" content="Logiblock"/>
 		<meta name="author" content="Outbreak, Inc."/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -22,9 +22,10 @@
 		<![endif]-->
 
 		<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>-->
-		<script data-rel="true" src="/static/jquery-1.10.2.min.js" type="application/javascript"></script>
+		<script src="/static/jquery-1.10.2.min.js" type="application/javascript"></script>
+		<script src="/static/bootstrap-3.0.0.min.js" type="application/javascript"></script>
 		<script src="https://cdn.moot.it/1/moot.min.js"></script>
-		<script data-rel="true" src="/static/logiblock.com.js" type="text/javascript"></script>
+		<script src="/static/logiblock.com.js" type="text/javascript"></script>
 	</head>
 	<body>
 
@@ -40,12 +41,12 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="/">Home</a></li>
-					<li><a href="/blogs/news">Blog</a></li>
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog">Blog</a></li>
 					<li><a href="/products">Products</a></li>
 					<li><a href="/store">Store</a></li>
 					<li><a href="/docs">Docs</a></li>
-					<li><a href="/qa">Discuss</a></li>
+					<li><a href="/discuss">Discuss</a></li>
 				</ul>
 			</div><!--/.navbar-collapse -->
 		</div>
@@ -54,18 +55,14 @@
 	<!--<a class="moot" href="https://moot.it/i/logiblock">Logiblock discussions</a>-->
 
 	<div class="container hide section-header">
-		<h1>Galago</h1>
-		<ol class="breadcrumb">
-			<li><a href="/">Home</a></li>
-			<li><a href="/products">Products</a></li>
-			<li class="active">Galago</li>
-		</ol>
+		<h1></h1>
+		<ol class="breadcrumb"></ol>
 	</div>
 
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-offset-3 col-md-6">
 					<p>
 						Logiblock makes tools that make electronics easier <br class="hidden-xs"/> for both hobbyists and professionals.
 					</p>
@@ -95,33 +92,29 @@
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-6">
+				<div class="col-md-offset-3 col-md-6">
 					<p>With <strong>Galago</strong>, your projects are</p>
-					<ul class="animated">
+					<ul class="animateActive">
 						<li><a href="/ide">Easier</a> and faster to write</li>
 						<li>More precise with <a href="/ide#debugger">less guesswork</a></li>
 						<li>Affordable - <a href="/store/0bab0410/galago">starts at $16</a></li>
 					</ul>
 					<a href="/products/galago" class="btn btn-orange btn-lg">Learn more &raquo;</a>
 				</div>
-				<!--<div class="col-md-6">
-					<a class="thumbnail" href="#">
-						<img src=""/>
-					</a>
-				</div>-->
 			</div>
 		</div>
 	</div>
 
-	<div class="jumbotron jumbo-mid-blue">
+	<div class="jumbotron jumbo-blue no-padding">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-6 stripe">
+				<div class="col-md-5 stripe">
 					<a href="http://www.youtube.com/watch?v=U9P2MuBE4iI"><img class="img-responsive" src="/static/ide-topright-corner-play.png" alt="Logiblock IDE"/></a>
 				</div>
-				<div class="col-md-6">
-					<p><a href="/ide"><strong>Logiblock IDE</strong></a> is an <a href="https://github.com/OutbreakInc/nitride">open-source</a>, cross-platform development tool for <a href="/products/galago">Galago</a> that supports source-level debugging.</p>
-					<p>You can pause, inspect and modify your firmware to <a href="/ide#debugger">debug</a> it.</p>
+				<div class="col-md-7 padding">
+					<h2><a href="/ide">Logiblock IDE</a></h2>
+					<p>An <a href="https://github.com/OutbreakInc/nitride">open-source</a>, cross-platform development tool for <a href="/products/galago">Galago</a> that supports source-level debugging.</p>
+					<p>You can pause, inspect and modify your projects running on Galago to <a href="/ide#debugger">debug</a> them.</p>
 					<p>It's also <a href="/learn">much easier to learn</a> and use than other debug-capable development tools.</p>
 				</div>
 			</div>
@@ -134,17 +127,21 @@
 				<div class="col-md-9">
 					<h3>Great for Professionals</h3>
 					<p>Galago helps you build and ship products faster too. Featuring an <a href="https://github.com/OutbreakInc/Galago">open and flexible design</a>,
-					low BOM cost and <a href="/products/galago#pro">surface-mount packaging</a>, Galago is designed to shorten time-to-market for small teams with big ideas.</p>
+					low BOM cost and <a href="/products/galago#pro">a surface-mount option</a>, Galago is designed to shorten time-to-market for small teams with big ideas.</p>
 					<a href="/products/galago#pro" class="btn btn-primary btn-lg">Learn more &raquo;</a>
 				</div>
 				<div class="col-md-3">
-					<a href="#" class="thumbnail pull-left">
+					<a href="/products/galago#pro" class="thumbnail pull-left">
 						<img src="/static/galago-pro-400.jpg" width="200" height="200" alt="Galago pro"/>
 					</a>
 				</div>
 			</div>
 		</div>
 	</div>
+
+
+
+	
 
 	<div class="container">
 		<hr/>
@@ -165,5 +162,5 @@
 	 </a>
 	-->
 
-   </body>
+	</body>
 </html>

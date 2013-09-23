@@ -20,6 +20,11 @@ body
 	background-color: #FFF;
 }
 
+.jumbotron.jumbo-white h1 a
+{
+	color: inherit;
+}
+
 .jumbotron.jumbo-white a.thumbnail
 {
 	background-color: transparent;
@@ -51,7 +56,7 @@ body
 	text-shadow: #FFF 0 1px 2px;
 }
 
-.jumbotron.jumbo-blue h1 a
+.jumbotron.jumbo-blue h1 a, .jumbotron.jumbo-blue h2 a
 {
 	color: inherit;
 }
@@ -74,38 +79,34 @@ body
 	border-color: #428BCA;
 }
 
-.jumbotron.jumbo-mid-blue
-{
-	background: #D5E4FF;
-}
-.jumbotron.jumbo-mid-blue .stripe
+.jumbotron.jumbo-blue .stripe
 {
 	background: url(stripe-12-D5E4FF.png) repeat #D5E4FF;
 }
-.jumbotron.jumbo-mid-blue p
-{
-	text-shadow: #FFF 0 1px 2px;
-}
 
 @media (min-width: 992px){
-	.jumbotron.jumbo-mid-blue
+	.jumbotron.no-padding
 	{
 		padding: 0 inherit 0 inherit;
 	}
-	.jumbotron.jumbo-mid-blue .stripe
+	.jumbotron .stripe
 	{
 		margin-bottom: 0;
 	}
-	.jumbotron.jumbo-mid-blue p
+	.jumbotron.no-padding p
 	{
-		margin: 30px;
+		margin: 30px inherit 30px inherit;
+	}
+	.jumbotron .padding
+	{
+		padding-left: 30px;
 	}
 }
-.jumbotron ul.animated
+.jumbotron ul.animateActive
 {
 	padding-left: 0;
 }
-.jumbotron ul.animated li
+.jumbotron ul.animateActive li
 {
 	list-style: disc inside;
 	padding-left: 0.2em;
@@ -113,7 +114,7 @@ body
 	-moz-transition: background-color linear 0.3s;
 	transition: background-color linear 0.3s;
 }
-.jumbotron ul.animated li.active
+.jumbotron ul.animateActive li.active
 {
 	background-color: #EEE;
 }
