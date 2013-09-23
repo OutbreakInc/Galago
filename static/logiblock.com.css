@@ -41,7 +41,7 @@ body
 	background-color: #D5E4FF;
 }
 
-.jumbotron.jumbo-blue p
+.jumbotron.jumbo-blue p, .jumbotron.jumbo-blue h1
 {
 	text-shadow: #FFF 0 1px 2px;
 }
@@ -49,11 +49,6 @@ body
 .jumbotron.jumbo-blue hr
 {
 	border-top: 1px solid #333;
-}
-
-.jumbotron.jumbo-blue h1
-{
-	text-shadow: #FFF 0 1px 2px;
 }
 
 .jumbotron.jumbo-blue h1 a, .jumbotron.jumbo-blue h2 a
@@ -83,6 +78,46 @@ body
 {
 	background: url(stripe-12-D5E4FF.png) repeat #D5E4FF;
 }
+
+
+.jumbotron.jumbo-gray
+{
+	background-color: #DDD;
+}
+
+.jumbotron.jumbo-gray p, .jumbotron.jumbo-gray h1
+{
+	text-shadow: #FFF 0 1px 2px;
+}
+
+.jumbotron.jumbo-gray hr
+{
+	border-top: 1px solid #333;
+}
+
+.jumbotron.jumbo-gray h1 a, .jumbotron.jumbo-gray h2 a
+{
+	color: inherit;
+}
+
+.jumbotron.jumbo-gray h1 small
+{
+	font-weight: lighter;
+	font-style: italic;
+	color: #555;
+}
+
+.jumbotron.jumbo-gray a.thumbnail
+{
+	background-color: transparent;
+	border-color: #DDD;
+}
+
+.jumbotron.jumbo-gray a.thumbnail:hover
+{
+	border-color: #999;
+}
+
 
 @media (min-width: 992px){
 	.jumbotron.no-padding
