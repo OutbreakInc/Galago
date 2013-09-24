@@ -1,8 +1,8 @@
 #!/bin/sh
 
+echo Building in `pwd`...
 markup=`find * | grep -e "\.hbs\.html$" | grep -ve "^template/|^node_modules/"`
 
-echo Building in `pwd`...
 for m in $markup
 do
 	out=`echo $m | sed 's/\.hbs//g'`
