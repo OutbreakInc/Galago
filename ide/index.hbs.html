@@ -1,3 +1,8 @@
+	<script type="application/javascript">
+		if(namingRules)
+			namingRules["ide"] = "IDE";
+	</script>
+
 	<div class="jumbotron jumbo-white" style="padding-top: 0">
 		<div class="container">
 			<div class="row">
@@ -34,10 +39,18 @@
 		</div>
 	</div>
 	
+	<a id="debugger"></a>
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-offset-3 col-md-6">
+				<div class="col-md-4">
+					<img class="img-responsive" src="/static/ide-callstack.jpg" alt="Logiblock IDE Callstack"/>
+				</div>
+				<div class="col-md-8">
+					<h2>Debugger</h2>
+					<p>Software usually doesn't work the first time, even for experienced engineers.</p>
+					<p><strong>A <em>debugger</em> is a tool that lets you stop a program as it's running</strong> so you can inspect the values of variables and memory. This lets you determine where and why it went wrong. You may also <em>step</em> through the program as Galago runs each line of your code so you can see how it flows. At your command, the program will continue running or start over.</p>
+					<p><strong>A debugger gives you the information you need to fix bugs in your code.</strong>  Galago's debugger, built into the development tool, makes it easy to fix your code and download the revised program with just another click.</p>
 				</div>
 			</div>
 		</div>

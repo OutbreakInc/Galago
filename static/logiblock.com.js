@@ -1,3 +1,5 @@
+var namingRules = {};
+
 $(function($)
 {
 	//	temp
@@ -34,6 +36,12 @@ $(function($)
 	$(".animateActive").children().animateActive(1500);
 
 
+	function toTitleCase(word)
+	{
+		if(namingRules[word])	return(namingRules[word]);
+		return(word.substr(0, 1).toUpperCase() + word.substr(1));
+	}
+
 	//auto-set the active navbar nav item, set the title and show breadcrumbs if necessary
 	!(function()
 	{
@@ -43,10 +51,14 @@ $(function($)
 
 		if(path.length > 0)
 		{
-			$title.html(path[path.length - 1].substr(0, 1).toUpperCase() + path[path.length - 1].substr(1));
+			$title.html(toTitleCase(path[path.length - 1]));
 			$crumbs.append($('<li><a href="/">Home</a></li>'));
 			for(var i = 0; i < path.length; i++)
-				$crumbs.append($('<li><a href="/' + path.slice(0, i + 1).join("/") + '">' + path[i].substr(0, 1).toUpperCase() + path[i].substr(1) + '</a></li>'));
+				$crumbs.append(		$((i == (path.length - 1))?
+										('<li>' + toTitleCase(path[i]) + '</li>')
+										: ('<li><a href="/' + path.slice(0, i + 1).join("/") + '">' + toTitleCase(path[i]) + '</a></li>')
+									)
+								);
 			$header.removeClass("hide");
 		}
 
