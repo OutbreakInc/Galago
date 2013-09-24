@@ -1,0 +1,241 @@
+body
+{
+	margin: 50px 0 0 0;
+	padding: 0;
+}
+
+.moot
+{
+	font-family: "myriad pro", tahoma, verdana, arial, sans-serif;
+	font-size: 18px;
+}
+
+.jumbotron
+{
+	margin-bottom: 0;
+
+	&.jumbo-white
+	{
+		background-color: #FFF;
+
+		h1 a
+		{
+			color: inherit;
+
+			&.thumbnail
+			{
+				background-color: transparent;
+				border-color: #FFF;
+
+				&:hover
+				{
+					border-color: #999;
+				}
+			}
+		}
+	}
+	
+	&.jumbo-blue
+	{
+		background-color: #D5E4FF;
+
+		p, h1, h2
+		{
+			text-shadow: #FFF 0 1px 2px;
+		}
+
+		hr
+		{
+			border-top: 1px solid #333;
+		}
+
+		h1 a, h2 a
+		{
+			color: inherit;
+		}
+
+		h1 small
+		{
+			font-weight: lighter;
+			font-style: italic;
+			color: #555;
+		}
+
+		a.thumbnail
+		{
+			background-color: transparent;
+			border-color: #D5E4FF;
+
+			&:hover
+			{
+				border-color: #428BCA;
+			}
+		}
+
+		.stripe
+		{
+			background: url(stripe-12-D5E4FF.png) repeat #D5E4FF;
+		}
+	}
+
+	&.jumbo-gray
+	{
+		background-color: #DDD;
+
+		p, h1, h2
+		{
+			text-shadow: #FFF 0 1px 2px;
+		}
+
+		hr
+		{
+			border-top: 1px solid #333;
+		}
+
+		h1 a, h2 a
+		{
+			color: inherit;
+		}
+
+		h1 small
+		{
+			font-weight: lighter;
+			font-style: italic;
+			color: #555;
+		}
+
+		a.thumbnail
+		{
+			background-color: transparent;
+			border-color: #DDD;
+
+			&:hover
+			{
+				border-color: #999;
+			}
+		}
+	}
+
+	&.jumbo-dark
+	{
+		background-color: #444;
+		color: #EEE;
+
+		p, h1, h2, ul
+		{
+			text-shadow: #000 0 1px 2px;
+		}
+
+		hr
+		{
+			border-top: 1px solid #333;
+		}
+
+		a
+		{
+			color: #B2CCFF;
+		}
+		h1 a, h2 a
+		{
+			color: inherit;
+		}
+
+		h1 small
+		{
+			font-weight: lighter;
+			font-style: italic;
+			color: #555;
+		}
+
+		a.thumbnail
+		{
+			background-color: transparent;
+			border-color: #333;
+
+			&:hover
+			{
+				border-color: #AAA;
+			}
+		}
+	}
+}
+
+
+@media (min-width: 992px){
+	.jumbotron
+	{
+		&.no-padding
+		{
+			padding: 0 inherit 0 inherit;
+			
+			p
+			{
+				margin: 30px inherit 30px inherit;
+			}
+		}
+		.padding
+		{
+			padding-left: 30px;
+		}
+		.stripe
+		{
+			margin-bottom: 0;
+		}
+	}
+}
+
+/*not used*/
+.jumbotron ul.animateActive
+{
+	padding-left: 0;
+}
+.jumbotron ul.animateActive li
+{
+	list-style: disc inside;
+	padding-left: 0.2em;
+	-webkit-transition: background-color linear 0.3s;
+	-moz-transition: background-color linear 0.3s;
+	transition: background-color linear 0.3s;
+}
+.jumbotron ul.animateActive li.active
+{
+	background-color: #EEE;
+}
+
+/*bootstrap overrides*/
+
+.btn-orange
+{
+	color: #FFF;
+	background-color: #FF7518;
+	border-color: #E46915;
+	
+	&:hover
+	{
+		color: #FFF;
+		background-color: #DE6615;
+		border-color: #CD5E13;
+	}
+}
+
+.navbar-inverse
+{
+	border: none;
+	background-color: #333;
+
+	.navbar-brand
+	{
+		color: #FFF;
+		padding: 5px 10px 0 0;
+	}
+	
+	.navbar-nav > li > a
+	{
+		color: #DDD;
+	}
+}
+
+.breadcrumb > li + li:before
+{
+	content: ">\00a0";
+}
