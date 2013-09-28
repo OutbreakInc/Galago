@@ -62,35 +62,26 @@
 			<p>While that's happening you may find empty pages and broken links. Please check back later!</p>
 		</div>
 	</div>
-	<div class="jumbotron jumbo-blue">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-3">
-					<a class="thumbnail pull-right" href="/products/galago">
-						<img src="/static/galago-hero-512-D5E4FF.jpg" width="256" height="256" alt="Photo of Galago board"/>
-					</a>
-				</div>
-				<div class="col-md-9">
-					<h1><a href="/products/galago">Galago</a> <small>Rapid-development system</small></h1>
-					<hr/>
-					<p style="font-size: 110%">Galago fits a <a href="/products/galago#debugger">debugger</a>, powerful <a href="/products/galago#features">features</a> and <a href="/products/galago#performance">performance</a> in a <span style="font-weight: 100">tiny</span> format to instantly improve your electronic projects.</p>
-					<a href="/products/galago" class="btn btn-primary btn-lg">Get introduced &raquo;</a>
-				</div>
-			</div>
-		</div>
-	</div>
+	<script type="application/javascript">
+		if(logiblockSettings)
+			logiblockSettings.namingRules["ledblock"] = "LEDBlock";
+	</script>
 
+	<a id="top"></a>
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-6">
-					<h2>Galago App Boards</h2>
-					<p>Logiblock App Boards for Galago are pre-built accessories to accelerate project development.</p>
-					<p>Plug Galago in and and focus on what makes your project unique and special.</p>
-					<a href="/boards" class="btn btn-primary btn-lg">Browse App Boards &raquo;</a>
+				<div class="col-md-9">
+					<h2>LEDBlock <small>(LED and PWM App Board)</small></h2>
 				</div>
-				<div class="col-md-6">
-					<img class="img-responsive" src="/static/app-board-sketch-DDD.png" alt="app board sketch"/>
+				<div class="col-md-9">
+					<p>Control up to 16 LED or servo channels with 12-bit (4096-level) resolution with the <strong>LEDBlock.</strong>  If used
+						for LEDs, constant-current-sunk chains up to 10 LEDs long - 17 Volts - are possible.</p>
+						<p>Based on the <a href="http://www.ti.com/product/tlc5940‎">TI TLC5940</a> chip, meaning multiple chips can be chained for an almost unlimited number
+						of channels.</p>
+				</div>
+				<div class="col-md-3">
+					<img class="pull-left img-responsive" src="/static/app-board-ledblock.jpg" alt="Galago LEDBlock App Board"/>
 				</div>
 			</div>
 		</div>

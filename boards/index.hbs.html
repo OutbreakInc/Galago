@@ -1,0 +1,195 @@
+	<style type="text/css">
+		.api
+		{
+			font-family: monospace,serif;
+			color: inherit;
+			text-decoration: underline;
+		}
+	</style>
+	
+	<script type="application/javascript">
+		if(logiblockSettings)
+		{
+			logiblockSettings.namingRules["boards"] = "App Boards";
+			logiblockSettings.locationOverride = "/products/boards";
+		}
+	</script>
+	
+	<a id="top"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3">
+					<img class="pull-right img-responsive" src="/static/galago-ethernet.jpg" alt="Galago App Board"/>
+				</div>
+				<div class="col-md-6">
+					<h1>App Boards</h1>
+					<small>Accelerate your projects</small>
+					<p>
+						App Boards for Galago get you to your goal faster by building popular feature packages into a single board.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<a id="products"></a>
+	<div class="jumbotron jumbo-blue">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h2>Current App Boards</h2>
+				</div>
+				<div class="col-md-6">
+					<ul>
+						<li><a href="/boards#blueblock">Blueblock: Bluetooth&reg;</a></li>
+						<li><a href="/boards#etherblock">Etherblock: Ethernet</a></li>
+						<li><a href="/boards#explorer">Explorer Board: GPS, Accelerometer</a></li>
+					</ul>
+				</div>
+				<div class="col-md-6">
+					<ul>
+						<li><a href="/boards#ledblock">LEDBlock: 16-channel PWM</a></li>
+						<li><a href="/boards#audioblock">Audioblock: Stereo DAC, Amplifier</a></li>
+						<li><a href="/boards#shield">Shield Adapter (for Arduino&reg; shields)</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<a id="blueblock"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-offset-3 col-md-9">
+					<h2>Blueblock <small>Bluetooth&reg; App Board</small></h2>
+				</div>
+				<div class="col-md-3">
+					<img class="pull-right img-responsive" src="/static/app-board-blueblock.jpg" alt="Galago Blueblock App Board"/>
+				</div>
+				<div class="col-md-9">
+					<p>Cut the cable with wireless serial port feature of <strong>Blueblock</strong>.
+						When enabled, Galago's <a class="api" href="/learn/api#galago.io.serial">io.serial</a> object is connected to the board's Bluetooth&reg; module.</p>
+					<p>Blueblock also features convenient breadboard-style prototyping holes on both sides of the board.</p>
+					<a href="/products/blueblock" class="btn btn-orange btn-lg">Learn more &raquo;</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<a id="etherblock"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9">
+					<h2>Etherblock <small>Ethernet App Board</small></h2>
+				</div>
+				<div class="col-md-9">
+					<p>Connect your Galago to a wired network with <strong>Etherblock</strong>.  Also features an on-board switch-mode power supply
+						and a microSD socket.</p>
+					<p>Etherblock implements the <a href="http://www.microchip.com/wwwproducts/Devices.aspx?dDocName=en022889">Microchip ENC28J60</a> Ethernet controller chip.</p>
+					<a href="/products/etherblock" class="btn btn-orange btn-lg">Learn more &raquo;</a>
+				</div>
+				<div class="col-md-3">
+					<img class="pull-left img-responsive" src="/static/app-board-etherblock.jpg" alt="Galago Etherblock App Board"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<a id="explorer"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-offset-3 col-md-9">
+					<h2>Explorer <small>GPS App Board</small></h2>
+				</div>
+				<div class="col-md-3">
+					<img class="pull-right img-responsive" src="/static/app-board-explorer.jpg" alt="Galago Explorer App Board"/>
+				</div>
+				<div class="col-md-9">
+					<p>Reach further, higher and faster with the <strong>Explorer</strong> board.  Featuring a miniature GPS module with a tiny, surface-mount antenna
+						and a three-axis accelerometer, the Explorer board is an ideal starting point for tracking, guidance and exploration projects.</p>
+					<p>It's also easy to store logs or load geographic data from the Explorer board's microSD slot.</p>
+					<a href="/products/explorer" class="btn btn-orange btn-lg">Learn more &raquo;</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="jumbotron jumbo-blue no-padding">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 padding">
+					<h2>Technology Accessory</h2>
+					<p>Logiblock App Boards for Galago have auto-detection and configuration features built in. Galago can detect which App Board(s)
+						it is connected to and load library features automatically.</p>
+					<p>Unlike Arduino&reg; shields, App Boards will not electrically conflict or short each other out if stacked.</p>
+				</div>
+				<div class="col-md-6 stripe">
+					<img class="img-responsive" src="/static/app-board-sketch.png" alt="app board sketch"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<a id="ledblock"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9">
+					<h2>LEDBlock <small>LED and PWM App Board</small></h2>
+				</div>
+				<div class="col-md-9">
+					<p>Control up to 16 LED or servo channels with 12-bit (4096-level) resolution with the <strong>LEDBlock.</strong>  If used
+						for LEDs, constant-current-sunk chains up to 10 LEDs long - 17 Volts - are possible.</p>
+						<p>Based on the <a href="http://www.ti.com/product/tlc5940‎">TI TLC5940</a> chip, meaning multiple chips can be chained for an almost unlimited number
+						of channels.</p>
+					<a href="/products/ledblock" class="btn btn-orange btn-lg">Learn more &raquo;</a>
+				</div>
+				<div class="col-md-3">
+					<img class="pull-left img-responsive" src="/static/app-board-ledblock.jpg" alt="Galago LEDBlock App Board"/>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<a id="audioblock"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-offset-3 col-md-9">
+					<h2>Audioblock <small>Stereo DAC App Board</small></h2>
+				</div>
+				<div class="col-md-3">
+					<img class="pull-right img-responsive" src="/static/app-board-audioblock.jpg" alt="Galago Audioblock App Board"/>
+				</div>
+				<div class="col-md-9">
+					<p>Synthesize or play back recorded audio with <strong>Audioblock</strong>.  Features two 1.5W class-D audio amplifiers, a
+						16-bit 48KHz stereo DAC and a microSD socket for storage.  Also sports a low-noise switch-mode power supply.</p>
+						<p>based on the <a href="http://www.nxp.com/products/data_converters/audio_converters/audio_dacs/UDA1334ATS.html#overview">NXP UDA1334ATS</a> digital-to-analog converter chip.</p>
+					<a href="/products/audioblock" class="btn btn-orange btn-lg">Learn more &raquo;</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<a id="shield"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9">
+					<h2>Shield Adapter <small>for Arduino&reg; shields</small></h2>
+				</div>
+				<div class="col-md-9">
+					<p>Adapts Galago to connect to Arduino&reg; shields.  SPI, I2C, UART and ADC pins maintain a logical mapping to their shield counterparts.</p>
+					<p>No specific software libraries are provided for Arduino&reg; shields, but Galago API makes interfacing with hardware accessories easy.</p>
+					<a href="/products/shieldadapter" class="btn btn-orange btn-lg">Learn more &raquo;</a>
+				</div>
+				<div class="col-md-3">
+					<img class="pull-left img-responsive" src="/static/app-board-shield.jpg" alt="Galago Shield Adapter"/>
+				</div>
+			</div>
+		</div>
+	</div>

@@ -1,4 +1,8 @@
-var namingRules = {};
+var logiblockSettings =
+{
+	namingRules: {},
+	locationOverride: undefined
+};
 
 $(function($)
 {
@@ -38,14 +42,15 @@ $(function($)
 
 	function toTitleCase(word)
 	{
-		if(namingRules[word])	return(namingRules[word]);
+		if(logiblockSettings && logiblockSettings.namingRules[word])	return(logiblockSettings.namingRules[word]);
 		return(word.substr(0, 1).toUpperCase() + word.substr(1));
 	}
 
 	//auto-set the active navbar nav item, set the title and show breadcrumbs if necessary
 	!(function()
 	{
-		var navs = [], path = window.location.pathname.split("/").filter(function(o){return(o != "")});
+		var path = logiblockSettings.locationOverride || (window && window.location && window.location.pathname) || "";
+		var navs = [], path = path.split("/").filter(function(o){return(o != "")});
 
 		var $header = $(".section-header"), $crumbs = $("ol.breadcrumb", $header), $title = $("h1", $header);
 

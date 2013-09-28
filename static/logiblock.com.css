@@ -21,6 +21,7 @@ body{margin:50px 0 0 0;padding:0}
 @media (min-width:992px){.jumbotron.no-padding{padding:0 inherit 0 inherit}.jumbotron.no-padding p{margin:30px inherit 30px inherit} .jumbotron .padding{padding-left:30px} .jumbotron .stripe{margin-bottom:0}}.jumbotron ul.animateActive{padding-left:0}
 .jumbotron ul.animateActive li{list-style:disc inside;padding-left:.2em;-webkit-transition:background-color linear .3s;-moz-transition:background-color linear .3s;transition:background-color linear .3s}
 .jumbotron ul.animateActive li.active{background-color:#eee}
+.blog{font-size:150%}
 .btn-orange{color:#fff;background-color:#ff7518;border-color:#e46915}.btn-orange:hover{color:#fff;background-color:#de6615;border-color:#cd5e13}
 .navbar-inverse{border:none;background-color:#333}.navbar-inverse .navbar-brand{color:#fff;padding:5px 10px 0 0}
 .navbar-inverse .navbar-nav>li>a{color:#ddd}
