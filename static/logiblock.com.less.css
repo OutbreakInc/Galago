@@ -114,8 +114,66 @@ body
 				border-color: #999;
 			}
 		}
+		
+		.stripe
+		{
+			background: url(stripe-12-DDD.png) repeat #D5E4FF;
+		}
 	}
 
+	&.jumbo-orange
+	{
+		background-color: #FFE4D5;
+
+		p, h1, h2
+		{
+			text-shadow: #FFF 0 1px 2px;
+		}
+
+		a
+		{
+			color: #FF7518;
+
+			&:hover
+			{
+				color: #E46915;
+			}
+		}
+
+		hr
+		{
+			border-top: 1px solid #333;
+		}
+
+		h1 a, h2 a
+		{
+			color: inherit;
+		}
+
+		h1 small
+		{
+			font-weight: lighter;
+			font-style: italic;
+			color: #555;
+		}
+
+		a.thumbnail
+		{
+			background-color: transparent;
+			border-color: #DDD;
+
+			&:hover
+			{
+				border-color: #999;
+			}
+		}
+		
+		.stripe
+		{
+			background: url(stripe-12-FFE4D5.png) repeat #FFE4D5;
+		}
+	}
+	
 	&.jumbo-dark
 	{
 		background-color: #444;

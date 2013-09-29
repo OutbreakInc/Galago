@@ -12,6 +12,14 @@ body{margin:50px 0 0 0;padding:0}
 .jumbotron.jumbo-gray h1 a,.jumbotron.jumbo-gray h2 a{color:inherit}
 .jumbotron.jumbo-gray h1 small{font-weight:lighter;font-style:italic;color:#555}
 .jumbotron.jumbo-gray a.thumbnail{background-color:transparent;border-color:#ddd}.jumbotron.jumbo-gray a.thumbnail:hover{border-color:#999}
+.jumbotron.jumbo-gray .stripe{background:url(stripe-12-DDD.png) repeat #d5e4ff}
+.jumbotron.jumbo-orange{background-color:#ffe4d5}.jumbotron.jumbo-orange p,.jumbotron.jumbo-orange h1,.jumbotron.jumbo-orange h2{text-shadow:#fff 0 1px 2px}
+.jumbotron.jumbo-orange a{color:#ff7518}.jumbotron.jumbo-orange a:hover{color:#e46915}
+.jumbotron.jumbo-orange hr{border-top:1px solid #333}
+.jumbotron.jumbo-orange h1 a,.jumbotron.jumbo-orange h2 a{color:inherit}
+.jumbotron.jumbo-orange h1 small{font-weight:lighter;font-style:italic;color:#555}
+.jumbotron.jumbo-orange a.thumbnail{background-color:transparent;border-color:#ddd}.jumbotron.jumbo-orange a.thumbnail:hover{border-color:#999}
+.jumbotron.jumbo-orange .stripe{background:url(stripe-12-FFE4D5.png) repeat #ffe4d5}
 .jumbotron.jumbo-dark{background-color:#444;color:#eee}.jumbotron.jumbo-dark p,.jumbotron.jumbo-dark h1,.jumbotron.jumbo-dark h2,.jumbotron.jumbo-dark ul{text-shadow:#000 0 1px 2px}
 .jumbotron.jumbo-dark hr{border-top:1px solid #333}
 .jumbotron.jumbo-dark a{color:#b2ccff}
