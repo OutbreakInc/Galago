@@ -25,24 +25,27 @@ public:
 	
 			AppBoard(void);
 	
-	//Reset the bus. Doing this de-enumerates all connected devices.
+	//Resets the bus. Doing this de-enumerates all connected devices.
 	void	reset(void);
 	
-	//Detect devices that haven't been enumerated yet.  Returns true if one or more devices were found.
+	//Detects devices that haven't been enumerated yet.  Returns true if one or more devices were found.
 	bool	detect(void);
 	
-	//Return (in 'detailsOut', provided by the caller) details of the specified device
+	//Returns (in 'detailsOut', provided by the caller) details of the specified device
 	bool	details(byte address, DeviceDetails* detailsOut);
+
+	//Returns the UUID of a device, if it exists and has been detected, specified by its address.
+	bool	getUUID(byte address, byte* uuidOut, int length);
 	
-	//Return the address of the next highest device after the one specified, filtered by
+	//Returns the address of the next highest device after the one specified, filtered by
 	//  vendorID (if provided) and productID (if provided)
 	byte	find(byte afterAddress = 0, unsigned short vendorID = 0, unsigned short productID = 0);
 	
-	//send a message to a device. This can be used to select a slave SPI device, activate board features
+	//Sends a message to a device. This can be used to select a slave SPI device, activate board features
 	//  and a number of other functions. See the protocol reference for a board to learn what to send it.
 	bool	write(byte address, byte const* command = 0, int length = 0);
 	
-	//de-enumerate one device by address.  No effect if the device is not present
+	//De-enumerates one device by address.  No effect if the device is not present
 	void	detach(byte address);
 	
 private:

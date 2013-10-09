@@ -15,13 +15,14 @@ namespace Logiblock {
 		
 		byte const*		descriptor;
 		
-		byte			descriptorLength;
+		byte			descriptorLength;	//does not count 16-byte UUID, 1-byte length and 1-byte version
 		byte			address;
 		byte			protocolVersion;
 		
-		unsigned short	vendorID() const	{return(((unsigned short*)descriptor)[0]);}
-		unsigned short	productID() const	{return(((unsigned short*)descriptor)[1]);}
-		unsigned short	version() const		{return(((unsigned short*)descriptor)[2]);}
+		byte const*		uuid() const		{return(descriptor);}
+		unsigned short	vendorID() const	{return(((unsigned short*)(descriptor + 18))[0]);}
+		unsigned short	productID() const	{return(((unsigned short*)(descriptor + 18))[1]);}
+		unsigned short	version() const		{return(((unsigned short*)(descriptor + 18))[2]);}
 		
 						Endpoint(byte protoVersion, byte addr, byte const* desc, byte descLen):
 							next(0),
@@ -50,6 +51,9 @@ using namespace Logiblock;
 }
 void	AppBoard::reset(void)
 {
+	int timeStep = setupGXB();
+	udelay(timeStep, 30);
+
 	//empty endpoints list
 	Endpoint* e = endpoints;
 	endpoints = 0;
@@ -100,9 +104,11 @@ bool	AppBoard::detect(void)
 			if(!empty)
 			{
 				byte descriptorLength = uuidLengthAndVersion[16] - 1;	//account for the fact that we already read the version byte
-				byte* descriptor = new byte[descriptorLength];
+				byte* descriptor = new byte[descriptorLength + 18];	//include the 18 bytes we already read
+
+				memcpy(descriptor, uuidLengthAndVersion, 18);
 				
-				readBytes(timeStep, descriptor, descriptorLength);
+				readBytes(timeStep, descriptor + 18, descriptorLength);
 				
 				Endpoint** predecessor;
 				byte address = nextAddress(predecessor);
@@ -144,6 +150,25 @@ bool	AppBoard::details(byte address, DeviceDetails* detailsOut)
 	detailsOut->vendorID = e->vendorID();
 	detailsOut->productID = e->productID();
 	detailsOut->version = e->version();
+	
+	return(true);
+}
+
+bool	AppBoard::getUUID(byte address, byte* uuidOut, int length)
+{
+	Endpoint* e = endpoints;
+	while((e != 0) && (e->address < address))
+		e = e->next;
+	
+	if((e == 0) || (e->address != address))
+		return(false);
+
+	if(length > 16)
+		length = 16;
+
+	memcpy(uuidOut, e->uuid(), length);
+
+	return(true);
 }
 
 byte	AppBoard::find(byte afterAddress, unsigned short vendorID, unsigned short productID)

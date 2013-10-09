@@ -9,6 +9,9 @@ namespace Logiblock { namespace AppBoards {
 class Explorer
 {
 public:
+	IO::Pin					activeLED;
+	IO::Pin					lockLED;
+
 	inline unsigned int		yearUTC() const					{return(_date.year);}
 	inline unsigned int		monthUTC() const				{return(_date.month);}
 	inline unsigned int		dayUTC() const					{return(_date.day);}
@@ -17,14 +20,15 @@ public:
 	inline unsigned int		minutesUTC() const				{return(_time.minutes);}
 	inline unsigned int		secondsUTC() const				{return(_time.seconds);}
 	
-	inline int				latitude() const				{return(_lat);}
-	inline int				longitude() const				{return(_long);}
-	inline int				altitudeFromEllipsoid() const	{return(_altFromEllipsoid);}
-	inline int				altitudeFromSeaLevel() const	{return(_altFromGeoid);}
+	inline signed int		fix() const						{return(_fix);}
+	inline signed int		latitude() const				{return(_lat);}
+	inline signed int		longitude() const				{return(_long);}
+	inline signed int		altitudeFromEllipsoid() const	{return(_altFromEllipsoid);}
+	inline signed int		altitudeFromSeaLevel() const	{return(_altFromGeoid);}
 	
-	inline int				accelX() const					{return((int)_accelData[0]);}
-	inline int				accelY() const					{return((int)_accelData[1]);}
-	inline int				accelZ() const					{return((int)_accelData[2]);}
+	inline signed int		accelX() const					{return((int)_accelData[0]);}
+	inline signed int		accelY() const					{return((int)_accelData[1]);}
+	inline signed int		accelZ() const					{return((int)_accelData[2]);}
 	
 							Explorer(void);
 	
@@ -32,7 +36,7 @@ public:
 	bool					init(void);
 	
 	//enable or disable the NMEA (GPS) data on the RXD/TXD pins.  This occupies the UART if enabled.
-	bool					enableNMEAData(bool enable = true);
+	bool					enableNMEAData(bool enabled = true);
 	inline bool				disableNMEAData(void)	{return(enableNMEAData(false));}
 	
 	bool					selectSDCard(void);

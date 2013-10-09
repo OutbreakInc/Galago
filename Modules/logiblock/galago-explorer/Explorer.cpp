@@ -6,6 +6,8 @@ using namespace Galago;
 using namespace Logiblock;
 using namespace Logiblock::AppBoards;
 
+static int const BUFFER_SIZE = 100;
+
 				Explorer::Explorer(void):
 					_appBoardAddress(0),
 					_buffer(0),
@@ -19,9 +21,12 @@ using namespace Logiblock::AppBoards;
 					_checksumCount(3)
 {
 }
-	
+
 bool			Explorer::init(void)
 {
+	activeLED.bind(io.p2);
+	lockLED.bind(io.p6);
+
 	//detect the board and come back with an address
 	appBoard.detect();
 	_appBoardAddress = appBoard.find(0, 0x0b1, 0xac05);
@@ -30,7 +35,7 @@ bool			Explorer::init(void)
 		return(false);
 	
 	if(_buffer == 0)
-		_buffer = new char[100];
+		_buffer = new char[BUFFER_SIZE];
 	_buffer[0] = 0;
 	
 	_accelData = Buffer::New(10);
@@ -42,7 +47,16 @@ bool			Explorer::init(void)
 	
 	return(true);
 }
-	
+
+bool			Explorer::enableNMEAData(bool enabled)
+{
+	if(_appBoardAddress == 0)
+		return(false);
+		
+	byte txrxEnabled = enabled? 0x10 : 0x11;
+	return(appBoard.write(_appBoardAddress, &txrxEnabled, 1));
+}
+
 void			Explorer::processGPSData(char nextChar)
 {
 	if(_buffer == 0)
@@ -50,7 +64,7 @@ void			Explorer::processGPSData(char nextChar)
 	
 	int offset = _buffer[0];
 	
-	if((nextChar == '$') || (offset >= sizeof(_buffer)))
+	if((nextChar == '$') || (offset >= BUFFER_SIZE))
 		offset = 0;
 	
 	_buffer[++offset] = nextChar;

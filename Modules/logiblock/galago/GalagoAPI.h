@@ -806,11 +806,11 @@ public:
 		} Format;
 		
 		Task			write(unsigned int w, Format format = UnsignedInteger32);
-		inline Task		write(byte b, Format format = UnsignedByte)					{return(write((unsigned int)b, format));}
-		inline Task		write(char c, Format format = Character)					{return(write((unsigned int)c, format));}
-		inline Task		write(unsigned short h, Format format = UnsignedInteger16)	{return(write((unsigned int)h, format));}
-		inline Task		write(short h, Format format = SignedInteger16)				{return(write((unsigned int)h, format));}
-		inline Task		write(int w, Format format = SignedInteger32)				{return(write((unsigned int)w, format));}
+		inline Task		write(byte b, Format format = UnsignedByte)					       {return(write((unsigned int)b, format));}
+		inline Task		write(signed char c, Format format = Character)					   {return(write((unsigned int)c, format));}
+		inline Task		write(unsigned short h, Format format = UnsignedInteger16) {return(write((unsigned int)h, format));}
+		inline Task		write(signed short h, Format format = SignedInteger16)		 {return(write((unsigned int)h, format));}
+		inline Task		write(signed int w, Format format = SignedInteger32)       {return(write((unsigned int)w, format));}
 
 		inline Task		write(char const* s, int length = -1)	{return(write((byte const*)s, length));}
 		Task			write(byte const* s, int length = -1);
@@ -1086,5 +1086,9 @@ inline void			operator delete[](void* p)
 	if(((unsigned int)(size_t)p) & 0x3)	return;	//@@throw
 	Galago::System::free((unsigned int*)p);
 }
+
+//libc compatibility
+extern "C"
+void	memcpy(void* dest, void const* source, size_t length);
 
 #endif //defined __GALAGO_H__
