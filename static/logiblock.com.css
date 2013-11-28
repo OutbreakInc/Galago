@@ -1,4 +1,5 @@
 body{margin:50px 0 0 0;padding:0}
+sup{font-size:.6em}
 .moot{font-family:"myriad pro",tahoma,verdana,arial,sans-serif;font-size:18px}
 .jumbotron{margin-bottom:0}.jumbotron.jumbo-white{background-color:#fff}.jumbotron.jumbo-white h1 a{color:inherit}.jumbotron.jumbo-white h1 a.thumbnail{background-color:transparent;border-color:#fff}.jumbotron.jumbo-white h1 a.thumbnail:hover{border-color:#999}
 .jumbotron.jumbo-blue{background-color:#d5e4ff}.jumbotron.jumbo-blue p,.jumbotron.jumbo-blue h1,.jumbotron.jumbo-blue h2{text-shadow:#fff 0 1px 2px}
@@ -26,11 +27,17 @@ body{margin:50px 0 0 0;padding:0}
 .jumbotron.jumbo-dark h1 a,.jumbotron.jumbo-dark h2 a{color:inherit}
 .jumbotron.jumbo-dark h1 small{font-weight:lighter;font-style:italic;color:#555}
 .jumbotron.jumbo-dark a.thumbnail{background-color:transparent;border-color:#333}.jumbotron.jumbo-dark a.thumbnail:hover{border-color:#aaa}
-@media (min-width:992px){.jumbotron.no-padding{padding:0 inherit 0 inherit}.jumbotron.no-padding p{margin:30px inherit 30px inherit} .jumbotron .padding{padding-left:30px} .jumbotron .stripe{margin-bottom:0}}.jumbotron ul.animateActive{padding-left:0}
+.jumbotron.no-padding{padding:0 inherit 0 inherit}.jumbotron.no-padding p{margin:30px inherit 30px inherit}
+@media (min-width:992px){.jumbotron .padding{padding-left:30px} .jumbotron .stripe{margin-bottom:0}}@media (min-width:768px){.jumbotron{}}.jumbotron ul.animateActive{padding-left:0}
 .jumbotron ul.animateActive li{list-style:disc inside;padding-left:.2em;-webkit-transition:background-color linear .3s;-moz-transition:background-color linear .3s;transition:background-color linear .3s}
 .jumbotron ul.animateActive li.active{background-color:#eee}
-.blog{font-size:150%}
+.blog{font-size:150%;font-family:"ff-tisa-web-pro",Georgia,Cambria,"Times New Roman",Times,serif}
+.blog .date{color:#999;float:right}
+.blog p{color:#333;text-indent:1em;line-height:1.45;word-wrap:break-word;text-align:justify}
+.blog .article img{width:100%;margin:20px 0 20px 0;border-radius:15px}
+a.social-hn img{width:30px;height:30px;border-radius:3px;margin:0 10px 0 10px}
 .btn-orange{color:#fff;background-color:#ff7518;border-color:#e46915}.btn-orange:hover{color:#fff;background-color:#de6615;border-color:#cd5e13}
 .navbar-inverse{border:none;background-color:#333}.navbar-inverse .navbar-brand{color:#fff;padding:5px 10px 0 0}
-.navbar-inverse .navbar-nav>li>a{color:#ddd}
+.navbar-inverse .navbar-nav>li>a{color:#ddd}.navbar-inverse .navbar-nav>li>a sup.badge{background-color:#ff7518;margin-left:3px;padding:2px 5px;border-radius:20px;color:#000}
 .breadcrumb>li+li:before{content:">\00a0"}
+code{color:#333;background-color:#f5f5f5;border:1px solid #ccc;border-radius:4px}

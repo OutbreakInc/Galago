@@ -4,6 +4,11 @@ body
 	padding: 0;
 }
 
+sup
+{
+	font-size: 0.6em;
+}
+
 .moot
 {
 	font-family: "myriad pro", tahoma, verdana, arial, sans-serif;
@@ -216,21 +221,21 @@ body
 			}
 		}
 	}
+	&.no-padding
+	{
+		padding: 0 inherit 0 inherit;
+		
+		p
+		{
+			margin: 30px inherit 30px inherit;
+		}
+	}
 }
 
 
 @media (min-width: 992px){
 	.jumbotron
 	{
-		&.no-padding
-		{
-			padding: 0 inherit 0 inherit;
-			
-			p
-			{
-				margin: 30px inherit 30px inherit;
-			}
-		}
 		.padding
 		{
 			padding-left: 30px;
@@ -241,6 +246,21 @@ body
 		}
 	}
 }
+
+@media (min-width: 768px){
+	.jumbotron
+	{
+		/*.padding
+		{
+			padding-left: 30px;
+		}
+		.stripe
+		{
+			margin-bottom: 0;
+		}*/
+	}
+}
+
 
 /*not used*/
 .jumbotron ul.animateActive
@@ -264,8 +284,49 @@ body
 .blog
 {
 	font-size: 150%;
+	font-family: "ff-tisa-web-pro",Georgia,Cambria,"Times New Roman",Times,serif;
+
+	.by
+	{
+
+	}
+
+	.date
+	{
+		color: #999;
+		float: right;
+	}
+
+	p
+	{
+		color: #333;
+		text-indent: 1em;
+		line-height: 1.45;
+		word-wrap: break-word;
+		text-align: justify;
+	}
+
+	.article
+	{
+		img
+		{
+			width: 100%;
+			margin: 20px 0 20px 0;
+			border-radius: 15px;
+		}
+	}
 }
 
+a.social-hn
+{
+	img
+	{
+		width: 30px;
+		height: 30px;
+		border-radius: 3px;
+		margin: 0 10px 0 10px;
+	}
+}
 
 /*bootstrap overrides*/
 
@@ -297,10 +358,27 @@ body
 	.navbar-nav > li > a
 	{
 		color: #DDD;
+
+		sup.badge
+		{
+			background-color: #FF7518;
+			margin-left: 3px;
+			padding: 2px 5px;
+			border-radius: 20px;
+			color: #000;
+		}
 	}
 }
 
 .breadcrumb > li + li:before
 {
 	content: ">\00a0";
+}
+
+code
+{
+	color: #333;
+	background-color: #f5f5f5;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
