@@ -53,5 +53,4 @@ exit
 
 
 	# markdownify
-	grep -E "\|$" /Users/kuy/Projects/Galago/github/Modules/logiblock/galago/GalagoAPI.h | sed -E 's/^   (.*)\|$/\1/g' | sed -E 's/[ ]*$//g' | node_modules/.bin/md2html > learn/api/raw.html
-	
+	grep -E "\|$" GalagoAPI.h | sed -E 's/^   (.*)\|$/\1/g' | sed -E 's/[ ]*$//g' | node_modules/.bin/md2html > learn/api/raw.html
