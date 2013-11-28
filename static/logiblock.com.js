@@ -130,15 +130,15 @@ $(function($)
 	{
 	}
 
-	var cookies = new Cookies();
+	window.cookies = new Cookies();
 
 	
 	!(function()
 	{
-		var lastRead = (cookies.get("logiblog_last") || 0);
+		var lastRead = (window.cookies.get("logiblog_last") || 0);
 
 		//compare lastRead against blog entry publish times
-		var unread = 1;	//fake
+		var unread = ((parseInt(lastRead) || 0) <= 1385637000)? 1 : 0;	//fake
 
 		if(unread > 0)
 		{

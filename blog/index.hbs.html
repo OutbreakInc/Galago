@@ -2,6 +2,11 @@
 
 	<script type="application/javascript">
 		$(document.head).append($('<link rel="stylesheet" href="https://cdn.moot.it/1/moot.css">'));
+
+		$(function()
+		{
+			window.cookies.set("logiblog_last", parseInt(Date.now() / 1000));
+		});
 	</script>
 	<script src="https://cdn.moot.it/1/moot.min.js"></script>
 	
