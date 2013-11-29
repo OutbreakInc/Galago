@@ -100,3 +100,18 @@ function checkLinks()
 		});
 	});
 }
+
+
+
+
+//payment related
+function luhn(s)
+{
+	var t = 0;
+	for(var i = 0; i < 16; i++)
+	{
+		var d = parseInt(s[i]) * (i & 1)? 1 : 2;
+		t += (d > 9)? (parseInt(d / 10) + (d % 10)) : d;
+	}
+	return((t % 10) == 0);
+}
