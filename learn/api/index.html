@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Logiblock</title>
+		<title>Logiblock Galago API Documentation</title>
 		
 		<meta name="description" content="Logiblock makes Galago, App Boards and accessories for intelligent embedded computing and rapid product development."/>
 		<meta name="copyright" content="Logiblock"/>
@@ -56,22 +56,544 @@
 		<ol class="breadcrumb"></ol>
 	</div>
 	
-	<div class="container">
+	<!--<div class="container">
 		<div class="alert alert-danger">
 			<p>Hi! This site is undergoing a quick redesign and will be ready soon.</p>
 			<p>While that's happening you may find empty pages and broken links. Please check back later!</p>
 		</div>
-	</div>
+	</div>-->
+<!-- @meta {title="Galago API Documentation"} -->
+
+	<script type="application/javascript">
+		if(logiblockSettings)
+			logiblockSettings.namingRules["api"] = "API";
+	</script>
+	
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-offset-3 col-md-6">
-					<p>For now, please see the <a href="https://github.com/OutbreakInc/Galago/wiki/GalagoAPI-Reference">GalagoAPI reference</a> on GitHub.</p>
+					<div class="alert alert-warning">
+						<p>This documentation is incomplete; for now, please see the <a href="https://github.com/OutbreakInc/Galago/wiki/GalagoAPI-Reference">GalagoAPI reference</a> on GitHub.</p>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-		<div class="container">
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Galago Task object</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<pre>
+class Task
+{
+public:
+    friend class System;
+    
+    inline                  Task(void);
+    inline                  Task(Task const&amp; t);
+    inline                  ~Task(void);
+    
+    Task&amp;                   operator =(Task const&amp; t);
+    
+    inline bool operator    ==(Task const&amp; t) const;
+    inline bool operator    !=(Task const&amp; t) const;
+    
+    Task operator           +(Task const&amp; r) const;
+    
+private:
+    inline                  Task(InternalTask* t);
+    inline static void      refer(InternalTask* t);
+    static void             release(InternalTask* t);
+    InternalTask*           _t;
+};
+				</pre>
+			</div>
+			<div class="col-md-6">
+				
+					<p><strong>Tasks represent asynchronous work that has either not yet completed, 
+					has succeeded or has failed.</strong> Tasks are a type of promise that make
+					writing asynchronous code simple while being immune to race conditions,
+					deadlocks and other nuisances when used correctly.</p>
+
+					<hr/>
+
+					<h3>Creating and passing Tasks</h3>
+
+					<p>Tasks are reference objects so you don't need to worry about how they
+					refer to state. To create tasks, use the <code>System::createTask()</code>
+					method (see System API documentation) and pass and assign them as
+					normal value objects:</p>
+
+<pre>
+Task t;	// null reference 
+
+t = system.createTask(); 
+
+Task t2 = t; 
+
+someMethod(t2);
+
+t = doAsyncAction(500);
+</pre>
+
+				<p>Tasks may be compared with the == and != operators.This compares 
+				references and, by extension, value:</p>
+
+<pre>
+if(t == Task())	// is t a null Task reference?
+</pre>
+
+				<p>You may combine Tasks to create a new Task that's only complete when 
+				all its constituent Tasks are complete, or is considered failed when 
+				the first of its constituent Tasks fails:</p>
+<pre>
+Task t3 = t + t2;
+
+system.when(t3, &amp;someAction);
+</pre>
+				<p>Please find the main Task interface and documentation in the System API.</p>
+
+			</div>
+		</div>
+	</div>
+
+
+	<hr/>
+
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Galago CircularBuffer object</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<pre>
+class CircularBuffer
+{
+public:
+            CircularBuffer(int size);
+            ~CircularBuffer(void);
+
+    bool    write(byte b);
+    int     write(byte const* b, int length);
+    bool    read(byte* b);
+    int     read(byte* b, int length);
+    
+    int     bytesUsed(void) const;
+    int     bytesFree(void) const;
+    
+private:
+    byte*   _start;
+    byte*   _end;
+    byte*   _head;
+    byte*   _tail;
+};
+				</pre>
+			</div>
+			<div class="col-md-6">
+				<p><strong>CircularBuffer is a utility object that implements a simple circular 
+				buffer</strong> - that is, a section of memory into which bytes can be written
+				and read in a first-in-first-out (FIFO) fashion.</p>
+
+				<hr/>
+
+				<h3>Creating and referencing CircularBuffers</h3>
+
+				<p>CircularBuffers are regular objects, so creation and ownershop follows 
+				normal C++ rules:</p>
+
+<pre>
+CircularBuffer* b = new CircularBuffer(24);
+
+CircularBuffer* b2 = b;
+
+delete b2;  // caution, leaves b reference dangling
+</pre>
+				<h3>Reading and writing bytes</h3>
+
+				<p>To read and write bytes, use the <code>.read()</code> and <code>.write()</code> methods.  For
+				example, with single bytes a bool is returned indicating success:</p>
+
+<pre>
+b.write(1);  // returns true if the CircularBuffer is not full 
+b.write(2);  //  "
+b.write(3);  //  "
+
+byte a;
+b.read(&amp;a);  // reads 1 into a, returns true 
+b.read(&amp;a);  // reads 2 into a, returns true 
+b.read(&amp;a);  // reads 3 into a, returns true 
+b.read(&amp;a);  // b is empty, returns false.'a' is unchanged 
+</pre>
+
+				<p>For multiple bytes, the number of bytes read or written is returned. 
+				If the entire byte string cannot be written, as much of it as possible 
+				is written and that length is returned.  By extension, if a
+				CircularBuffer is full, 0 is returned.  For reads, if the requested
+				read length isn't available, as much as possible is read and that
+				length is returned.To determine how many bytes are available or
+				occupied, use the <code>.bytesFree()</code> and <code>.bytesUsed()</code> methods, 
+				respectively.</p>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+	<hr/>
+
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Galago Buffer object</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<pre>
+class Buffer
+{
+public:
+    inline                  Buffer(void): _b(0) {}
+    inline                  Buffer(Buffer const&amp; b): _b(b._b)   {refer(_b);}
+    Buffer&amp;                 operator =(Buffer const&amp; b);
+    inline                  ~Buffer(void)               {release(_b); _b = 0;}
+
+    //access the length and contents of a Buffer
+    inline size_t           length() const  {return(_b? _b-&gt;length : 0);}
+    inline byte*            bytes()         {return(_b? _b-&gt;data : 0);}
+    inline byte const*      bytes() const   {return(_b? _b-&gt;data : 0);}
+
+    //create a Buffer from a C string, bytes or empty with a specified length
+    static Buffer           New(char const* cStr);
+    static Buffer           New(size_t length);
+    static Buffer           New(void const* b, size_t length);
+
+    //concatenate Buffers
+    Buffer                  operator +(Buffer const&amp; b) const;
+    Buffer&amp;                 operator +=(Buffer const&amp; b);
+
+    //compare the contents of to Buffers.  Two references to the same memory are of course equal too
+    inline bool             operator ==(Buffer const&amp; b) const      {return((b._b == _b) || (b._b &amp;&amp; equals(b._b-&gt;data, b._b-&gt;length)));}
+    bool                    operator ==(char const* cStr) const;
+    inline bool             operator !=(Buffer const&amp; b) const      {return((b._b != _b) || (!b._b) || !equals(b._b-&gt;data, b._b-&gt;length));}
+    inline bool             operator !=(char const* cStr) const     {return(!operator == (cStr));}
+    inline                  operator bool(void) const               {return(_b != 0);}
+
+    //parse the Buffer as a unsigned integer. Failure to parse returns 0
+    unsigned int            parseUint(int base = 10);
+    signed int              parseInt(int base = 10);
+
+    //determine if the Buffer begins with another Buffer, a C string or an array of bytes
+    inline bool             startsWith(Buffer const&amp; b) const   {return((b._b != 0) &amp;&amp; startsWith(b._b-&gt;data, b._b-&gt;length));}
+    bool                    startsWith(byte const* str, size_t length) const;
+    bool                    startsWith(char const* cStr) const;
+
+    //compare the Buffer to an array of bytes
+    bool                    equals(byte const* str, size_t length) const;
+
+    //safely read bytes without risk of out-of-bounds access
+    inline byte             operator[](size_t offset) const     {return((_b &amp;&amp; (offset &lt; _b-&gt;length))? _b-&gt;data[offset] : 0);}
+
+    //extract a section of the Buffer.  Uses start &lt;= end notation rather than (start, length)
+    Buffer                  slice(size_t start, size_t end);
+    ssize_t                 indexOf(byte b, size_t offset = 0);
+    ssize_t                 indexOf(Buffer b, size_t offset = 0);
+
+private:
+    inline                  Buffer(InternalBuffer* b): _b(b) {refer(b);}
+    inline static void      refer(InternalBuffer* b)    {if(b)  b-&gt;_rc++;}
+    static void             release(InternalBuffer* b);
+    InternalBuffer*         _b;
+};
+
+				</pre>
+			</div>
+			<div class="col-md-6">
+<p><strong>Buffers are reference-counted blocks of memory that support many high-
+level operations common on String objects in other languages.</strong></p>
+
+<hr/>
+
+<h2>Creating and passing Buffers</h2>
+
+<p>To create a buffer, call the static method <code>Buffer::New()</code>:</p>
+
+<pre><code>Buffer b;  // a null reference
+
+Buffer b = Buffer::New(&quot;a string&quot;);  // null-terminated char string
+Buffer b = Buffer::New(24);  // a size
+Buffer b = Buffer::New(data, length);  // arbitrary bytes</code></pre>
+
+<p>References can be copied - both <code>b</code> and <code>b2</code> point at the same buffer:</p>
+
+<pre><code>Buffer b = Buffer::New(&quot;example&quot;);
+Buffer b2 = b;</code></pre>
+
+<p>A Buffer&#39;s memory is freed when no references point at it anymore:</p>
+
+<pre><code>b2 = b = Buffer();  // set b and b2 to null references</code></pre>
+
+<p>You may treat a Buffer as a bool to see if it has a non-null reference:</p>
+
+<pre><code>if(b)  doSomethingWith(b);</code></pre>
+
+<h2>Buffer contents</h2>
+
+<p>Buffers can be compared with == and != operators.  Equivalent
+references and equal contents are both considered equal.</p>
+
+<pre><code>if(b == b2) theyAreEqual();</code></pre>
+
+<p>Contents can be further compared with <code>.equals()</code> and <code>.startsWith()</code>
+methods:</p>
+
+<pre><code>if(b.equals(&quot;hello&quot;, 5)) wasHello();
+
+if(b.startsWith(&quot;../&quot;, 3)) handleThisCase();</code></pre>
+
+<p>The contents and length are accessible with the <code>.bytes()</code> and the
+<code>.length()</code> methods respectively:</p>
+
+<pre><code>io.serial.write(b.bytes(), b.length());
+
+b.bytes()[4] = &#39;a&#39;;</code></pre>
+
+<p>Concatentation is possible with + and += operators:</p>
+
+<pre><code>b += Buffer::New(&quot; more string&quot;);
+
+Buffer b3 = b2 + b;</code></pre>
+
+<p>A substring can be extracted with <code>.slice()</code>:</p>
+
+<pre><code>Buffer b4 = b.slice(0, 7);</code></pre>
+
+<p>A single character or a substring can be found in a Buffer with the
+<code>.indexOf()</code> method:</p>
+
+<pre><code>ssize_t position = b.indexOf(&#39;a&#39;);
+
+position = b.indexOf(b3, 6);  // optional start offset passed</code></pre>
+
+<p>The <code>.parseInt()</code> and <code>.parseUint()</code> methods attempt to interpret the
+Buffer&#39;s contents as an integer or unsigned integer, respectively:</p>
+
+<pre><code>int value = Buffer::New(&quot;50&quot;).parseInt();  // value would be 50
+
+value = Buffer::New(&quot;a&quot;).parseInt();  // value would be 0</code></pre>
+			</div>
+		</div>
+	</div>
+
+
+	<hr/>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1>Galago IO API: <code>Galago::io</code></p></h1>
+
+				<p>IO is responsible for all IO peripherals, like the UART, I2C, SPI, ADC
+				and GPIO.</p>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6">
+
+				<h2>Pin</h2>
+
+				<p>Central to the concepts in the IO class is the Pin object.  A Pin
+				represents a single i/o pin and reflects its capabilities.  Pins can be
+				used directly for general purpose IO and the ADC, but also control
+				which other features, such as I2C, UART and SPI, are mapped to the pin.</p>
+
+				<h2>SPI (3-wire/4-wire synchronous serial interface)</h2>
+
+				<p>SPI is a three-wire bus with duplex serial lanes and out-of-band device
+				selection.  Unlike I2C, it has no standard data size, clock polarity,
+				arbitration, acknowledgement or other high-level features.  What it
+				lacks in features it makes up for in speed, simplicity and flexibility.</p>
+
+			</div>
+			<div class="col-md-6">
+
+				<h2>I2C bus (Inter-IC bus)</h2>
+
+				<p>I2C is a two-wire bus that supports multiple masters and slaves with
+				addressing, collision avoidance, acknowledgement and slave bit delays.
+				It&#39;s widely used for a large range of peripherals including sensors,
+				memory devices, human interfaces and displays.</p>
+
+				<h2>UART (Asynchronous serial port)</h2>
+
+				<p>The UART is a very common serial interface traditionally used to
+				connect computers, modems, dissimilar microcontrollers and industrial
+				equipment, communications devices and countless other applications.
+				Unlike SPI and I2C it&#39;s asynchronous and therefore relies on accurate
+				absolute time references on both the sending and receiving ends.</p>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Galago Pin object</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<pre>
+class Pin
+{
+  friend class IO;
+
+public:
+  typedef enum
+  {
+    DigitalInput,  //a GPIO input
+    DigitalOutput, //a GPIO output
+    AnalogInput,   //ADC feature
+
+    Reset,         //!reset mode
+    SPI,           //Pin carries SPI signals
+    I2C,           //I2C mode, open-drain
+    UART,          //UART peripheral on this pin
+    PWM,           //connected to the timer/PWM
+    USB,           //the Pin is in USB mode
+
+    ClockOutput,   //clock output signal
+    Wakeup,        //(not currently supported)
+
+    Manual = 0xFE,
+    Default,
+  } Mode;
+
+  //not all parts feature these pin modes
+  typedef enum
+  {
+    Normal      = 0,
+    PullDown    = 1,
+    PullUp      = 2,
+
+    Sensitive   = 4,
+
+    OpenDrain   = 8,
+  } FeatureSetting;
+  typedef int Feature;
+
+  inline          Pin(void): v(~0);
+
+  //make a Pin refer to the same h/w as another Pin
+  inline  Pin&amp;    bind(Pin const&amp; p);
+
+  //set the Pin&#39;s state (possibly driving output)
+  inline  Pin&amp;    operator =(bool value);
+  inline  Pin&amp;    operator =(int value);
+  inline  Pin&amp;    operator =(Pin&amp; p);
+  void            write(int value);
+
+  //read the Pin&#39;s digital state
+  inline          operator bool(void);
+  int             read(void) const;
+
+  //read an analog value with ADC where supported
+  unsigned int    readAnalog(void) const;
+  unsigned int    analogValue(void) const;
+
+  //set the Pin&#39;s I/O mode and features,
+  //  with shorthand methods for common modes
+  inline  void    setOutput(Feature feature = Normal);
+  inline  void    setInput(Feature feature = PullUp);
+  inline  void    setAnalog(Feature feature = Sensitive);
+  inline  void    setPWM(Feature feature = Normal);
+
+  void            setMode(Mode mode, Feature feature = Normal);
+
+private:
+  inline          Pin(Pin const&amp; p);
+  explicit inline Pin(bool);
+
+  unsigned int    v;
+};
+				</pre>
+			</div>
+			<div class="col-md-6">
+<p><strong>Central to the concepts in the IO class is the Pin object.</strong>  A Pin
+represents a single i/o pin and reflects its capabilities.  Logically,
+Pins behave like constant references to real pins, so you can use <code>=</code>
+to set the state of a Pin rather than change its reference.  To set
+the reference, use <code>Pin.bind()</code>:</p>
+
+<pre><code>Pin doorSolenoid;
+doorSolenoid.bind(io.p5);  // bind to io.p5</code></pre>
+
+<h3>Pin modes</h3>
+
+<p>Pins have a <code>setMode()</code> method, which allows configuration of the mode
+and features of the pin, plus shorthand methods <code>setOutput()</code>,
+<code>setInput()</code>, <code>setAnalog()</code> and <code>setPWM()</code>.  The supported modes vary
+per pin, so check the hardware documentation for what each pin can do.
+For the full list of supported modes, see the inline documentation for
+the <code>IO::Pin::Mode</code> enum below.</p>
+
+<h3>Pins as GPIO</h3>
+
+<p>To use Pins as general-purpose i/o (GPIO), call <code>.setOutput()</code>,
+<code>.setInput()</code> or <code>.setMode()</code> with the appropriate options and
+<code>.read()</code>, <code>.write()</code> to read or write a digital value (respectively.)
+For example:</p>
+
+<pre><code>io.p2.write(1);  // set pin p2 to digital high
+io.p2 = 1;       // equivalent
+io.p2 = true;    // equivalent
+io.p2 = io.p4;   // set pin p2 to the value read from p4
+
+int value = io.p2.read();  // read the digital value from pin p2
+
+bool buttonPressed = io.p2;  // digital values are bools too
+
+if(io.p2)  // you can read pins and use them as bool expressions
+{
+  ...
+}</code></pre>
+
+<p>Like other microcontroller platforms, you may read a gpio value while
+the Pin is set for output mode, and if you write a value while it&#39;s an
+input, no level will be driven on the pin.</p>
+
+<p>For analog values, ensure the Pin is in analog mode and then read it:</p>
+
+<pre><code>io.a3.setAnalog();
+
+unsigned int value = io.readAnalog();</code></pre>
+
+<p>As a convenience, you may access the last analog value with the
+<code>.analogValue()</code> method.</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="alert alert-warning">
+			<p>This documentation is unfinished!</p>
+		</div>
+	</div>	<div class="container">
 		<hr/>
 		<p>Copyright &copy; 2013 Outbreak, Inc.</p>
 	</div>

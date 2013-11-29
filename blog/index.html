@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Logiblock</title>
+		<title>Logiblock Blog</title>
 		
 		<meta name="description" content="Logiblock makes Galago, App Boards and accessories for intelligent embedded computing and rapid product development."/>
 		<meta name="copyright" content="Logiblock"/>
@@ -56,33 +56,116 @@
 		<ol class="breadcrumb"></ol>
 	</div>
 	
-	<div class="container">
+	<!--<div class="container">
 		<div class="alert alert-danger">
 			<p>Hi! This site is undergoing a quick redesign and will be ready soon.</p>
 			<p>While that's happening you may find empty pages and broken links. Please check back later!</p>
 		</div>
-	</div>
+	</div>-->
+<!-- @meta {title="Blog"} -->
+
+	<script type="application/javascript">
+		$(document.head).append($('<link rel="stylesheet" href="https://cdn.moot.it/1/moot.css">'));
+
+		$(function()
+		{
+			window.cookies.set("logiblog_last", parseInt(Date.now() / 1000));
+		});
+	</script>
+	<script src="https://cdn.moot.it/1/moot.min.js"></script>
+	
 	<div class="container">
 		<div class="row">
-			<div class="blog col-md-offset-3 col-md-6">
-				<div>
-					<h2>The idea</h2>
-					<img class="pull-left img-circle" style="margin-right:20px" width="64" height="64" src="http://www.gravatar.com/avatar/7065c94f9bf4fc222d774708966d394c.jpg?s=128"/>
-					<small><a href="http://twitter.com/KuyMainwaring">@KuyMainwaring</a>, 2013 Sept 23rd</small>
+			<div class="col-md-offset-3 col-md-6">
+				<div class="blog">
+					<div>
+						<h2>IoT from the inside</h2>
+						<img class="pull-left img-circle" style="margin-right:20px" width="64" height="64" src="http://www.gravatar.com/avatar/7065c94f9bf4fc222d774708966d394c.jpg?s=128"/>
+						<small class="by"><a href="http://twitter.com/KuyMainwaring">@KuyMainwaring</a></small><small class="date">2013 Nov 27th</small>
+					</div>
+					<hr class="clearfix"/>
+					<div class="article">
+						<p>
+							Hardware startups and the <a class="wiki" href="https://en.wikipedia.org/wiki/Internet_of_Things">Internet of Things</a> are a funny business.
+							My experience started in earnest after <a href="/products/galago">Galago</a>, when I began to get involved actively in the hardware startup scene in the San Francisco Bay Area.
+							My initial objective was to understand how these startups could use an integrated module such as Galago to establish a large portion
+							of their product's functionality very quickly, then focus on developing the aspects that make their offering different from others.
+							This was, after all, my original objective with Galago - to introduce the software framework mentality developers use
+							to build a website or an iOS app to hardware products.  Unfortunately this objective was based on what turned out to be a very naïve assumption.
+						</p>
+						<img src="/static/blog/modules.jpg"/>
+						<p>
+							The idea of modules in electronics design certainly isn't new.  You could think of Arduino-class boards as modules offering general I/O
+							functionality and friendly development tools.  There are several that offer WiFi, Bluetooth Low Energy and other valuable features on top
+							of the aforementioned simplicity.  There are also a wide variety of surface-count wireless modules that carry regulatory approval to speed
+							up hardware design.	 And yet when one opens a commerical electronics product one doesn't usually see an interconnected set of
+							highly-available, interchangeable, off-the-shelf, well-documented and/or open-source functional modules inside.  If standing on the shoulders
+							of giants is how virtually all software is successfully made, why do we often not even see one such module inside (except those of the surface-mount
+							wireless variety, which are common for another reason)?  I believe the answer is rooted in an old notion of how things should be built and
+							in the unyielding - and irrational - drive to cut BOM cost.
+						</p>
+						<img src="/static/blog/carambola.jpg"/>
+						<h3>Set us up the BOM.</h3>
+						<p>
+							The BOM, or <em>bill of materials</em> of a product is the cost of chips, circuit boards, plastics, batteries and other components
+							that go into it.  It does not include the assembly and other labor costs of building the product, nor the costs of shipping, warehousing
+							or otherwise getting the product to the consumer.  And crucially it does not include engineering costs
+							(termed <a class="wiki" href="https://en.wikipedia.org/wiki/Non-recurring_engineering">NRE</a> expenses) sunk into developing the product.
+							Rarely does a company accurately weigh development costs against per-unit costs, and to look at them side-by-side is an enlightening
+							experience.
+						</p>
+						<p>
+							It's quite clear that investing a little extra engineering time to save BOM cost is sensible if one expects to sell thousands of units.
+							For example, suppose an engineer is tasked with switching from one sensor solution to another to save $1 on the BOM.  If she accomplishes
+							this in one week, and at least 2500 units are sold, then it's a win, right?  No, unless she's badly underpaid then it is at best a break-even
+							proposition.  Moreover there is risk associated with the switch and, worst of all, it doesn't necessarily improve customer experience when it's
+							done.  What if she runs into compatibility problems and takes more than a week to do it?  What if it turns out to be impossible (or
+							impractical)?  When this happens a hardware team loses precious time, can sacrifice market timing advantage and obviously wastes money.
+						</p>
+						<img src="/static/blog/chip-tray.jpg"/>
+						<p>
+							How a hardware startup designs its product can have effects far beyond good component choices.  Most products today include a programmable
+							processor or microcontroller, and many include connectivity components such as USB, WiFi and Bluetooth (particularly its Low-Energy variant.)
+							Suppose a team picks a CPU that costs $5 less than another.  $5 is a lot to save on a BOM for many consumer products and it looks very
+							appealing to management and team leads.  Unfortunately, the harsh economic reality is that the new CPU cannot require more than two extra weeks
+							of work per engineer (using the same salary as our earlier example) per thousand units sold.  Porting code to a new CPU is usually expensive,
+							and if a component is $5 less costly then it's likely from a different product family from a different chipmaker.  And that's where it gets
+							really expensive.
+						</p>
+						<p>
+							There are well-known (if not widely-practised) principles in product development to avoid wasting time optimizing or making things nobody wants.
+							Don't optimize prematurely.  Don't build something without validation and customer commitment.  Et cetera.  And yet premature design optimization
+							and utter disregard for the time-cost and risk of engineering decisions remains rampant in both hardware and software startups.  While I believe
+							small software teams have no reservations using a framework like Express, Django or Rails to build on the web, the notion of starting an electronic
+							product on module(s) is appoached with caution by hardware teams.  Why is this?  Simply put, concepts like supply-chain risk, dimensional constraints
+							and, yes, BOM cost do not factor into software platform judgements.  That said, if one adheres firmly to the NRE vs. BOM economics described above,
+							starting with integrated modular components ought to be a sound choice.  Or is it?
+						</p>
+						<h3>Next time...</h3>
+						<p>
+							<em>In the next installment, I'll cover:</em>
+							<ul>
+								<li>The best modules currently available</li>
+								<li>What hardware startups really want, and</li>
+								<li>Why building modules is a tough business.</li>
+							</ul>
+						</p>
+						<p>
+							Thanks for reading,
+						</p>
+						<p>
+							<span class="sig">&mdash;Kuy</span>
+						</p>
+					</div>
 				</div>
-				<hr class="clearfix"/>
+				<hr/>
 				<p>
-					I have a passion for electronics, and like so much passion, it's irrational.  I can't explain precisely why I enjoy building electronic gadgets,
-					tools or products and I have an even harder time justifying the time I spend on it, especially because it remains so difficult to
-					build a business in this space.
+					<a href="https://twitter.com/share" class="twitter-share-button" data-size="large" data-via="KuyMainwaring" data-lang="en">Tweet</a>
+					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+					<a class="pull-right social-hn" href="https://news.ycombinator.com/submit"><img src="/static/hn.png"/>Submit or discuss on HN</a>
 				</p>
-				<p>
-					It is clear, however, that the electronics product industry has some pretty major problems.  The
-					biggest and most obvious is that it remains an old-fashioned and exclusive industry in many ways, an industry that's hostile to
-					the adventurous, underfunded and "startup-minded" explorer and the small team. Why is it so hard to get a datasheet for this?  Why
-					are these development tools so awful?  Why is it so expensive to get things made?  These are real problems - many of which I've faced
-					building Galago - and I refuse to accept that they cannot be solved.
-				</p>
+				<h3>Comments</h3>
+				<a class="moot" href="https://moot.it/i/logiblock/blog/20131127-IoT-from-the-inside">Comments</a>
 			</div>
 		</div>
 	</div>	<div class="container">

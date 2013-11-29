@@ -87,6 +87,70 @@ $(function($)
 		}
 	})();
 
+
+	!(function()
+	{
+		$("a.social-hn").each(function(i, a)
+		{
+			var $a = $(a), $p = $a.parent(), t;
+
+			while(!t && !$p.is("body"))
+			{
+				t = $("h1", $p).html() || $("h2", $p).html() || $("h3", $p).html();
+				$p = $p.parent();
+			}
+
+			t = t || document.title;
+			$(a).attr("href", "https://news.ycombinator.com/submitlink?u=" + escape(window.location) + "&t=" + escape(t));
+		});
+
+	})();
+
+	Cookies.prototype =
+	{
+		set: function Cookie_set(name, value, expiration)
+		{
+			var ex = new Date();
+			ex.setDate(ex.getDate() + expiration);
+			document.cookie = name + "=" + escape(value) + ((expiration == null) ? "" : "; expires=" + ex.toUTCString());
+		},
+
+		get: function Cookie_get(name)
+		{
+			var s, e, c = document.cookie;
+			if((s = c.indexOf(name + "=")) != -1)
+			{
+				e = c.indexOf(";", s);
+				return(c.substring(s + name.length + 1, (e > 0)? e : undefined));
+			}
+			return(undefined);
+		}
+	}
+	function Cookies()
+	{
+	}
+
+	window.cookies = new Cookies();
+
+	
+	!(function()
+	{
+		var lastRead = (window.cookies.get("logiblog_last") || 0);
+
+		//compare lastRead against blog entry publish times
+		var unread = ((parseInt(lastRead) || 0) <= 1385637000)? 1 : 0;	//fake
+
+		if(unread > 0)
+		{
+			var $sup = $('<sup class="badge"/>');
+
+			var $blogNav = $('ul.navbar-nav a[href="/blog"]');
+
+			$blogNav.append($sup.html(unread));
+		}
+
+	})();
+
 });
 
 function checkLinks()
