@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Logiblock Galago Explorer GPS Board</title>
+		<title>Logiblock Store</title>
 		
 		<meta name="description" content="Logiblock makes Galago, App Boards and accessories for intelligent embedded computing and rapid product development."/>
 		<meta name="copyright" content="Logiblock"/>
@@ -65,27 +65,38 @@
 			<p>While that's happening you may find empty pages and broken links. Please check back later!</p>
 		</div>
 	</div>-->
-<!-- @meta {title="Galago Explorer GPS Board"} -->
+<!-- @meta {title="Store"} -->
 
 	<script type="application/javascript">
 		if(logiblockSettings)
-			logiblockSettings.namingRules["explorer"] = "Explorer Board";
+			logiblockSettings.namingRules["order"] = "Current Order";
 	</script>
-
-	<a id="top"></a>
+	
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-offset-3 col-md-9">
-					<h2>Explorer <small>(GPS App Board)</small></h2>
-				</div>
-				<div class="col-md-3">
-					<img class="pull-right img-responsive" src="/static/app-board-explorer.jpg" alt="Galago Explorer App Board"/>
-				</div>
-				<div class="col-md-9">
-					<p>Reach further, higher and faster with the <strong>Explorer</strong> board.  Featuring a miniature GPS module with a tiny, surface-mount antenna
-						and a three-axis accelerometer, the Explorer board is an ideal starting point for tracking, guidance and exploration projects.</p>
-					<p>It's also easy to store logs or load geographic data from the Explorer board's microSD slot.</p>
+				<div class="col-md-12">
+					<table class="table">
+						<tr><th>Qty.</th><th>Description</th><th>Subtotal</th></tr>
+						<tr><td>1</td><td><a href="/products/galago">Galago Starter Kit</a></td><td>$69</td></tr>
+						<tr><td>1</td><td><a href="/products/accessories/usbcable">USB Cable</a></td><td>$3</td></tr>
+						<tr><td></td><td>Shipping and Tax</td><td>$7</td></tr>
+						<tr><td></td><td>Total</td><td>
+							<form action="/charge" method="POST">
+								<script
+									src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+									data-key="pk_test_czwzkTp2tactuLOEOqbMTRzG"
+									data-image="/static/logiblock-checkout.png"
+									data-name="Logiblock Store"
+									data-description="Cart contents ($79.00)"
+									data-shipping-address="true"
+									data-panel-label="Place Order"
+									data-label="Buy ($79.00)"
+									data-amount="7900">
+								</script>
+							</form>
+						</td></tr>
+					</table>
 				</div>
 			</div>
 		</div>

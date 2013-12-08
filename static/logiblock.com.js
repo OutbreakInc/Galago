@@ -1,51 +1,34 @@
+jQuery.then = function(fn, ctx)
+{
+	(jQuery.__pr || (jQuery.__pr = [])).push({f: fn, c: ctx});
+	return(jQuery);
+};
+jQuery.resolve = function()
+{
+	var r = (jQuery.__pr || []);
+	jQuery.__pr = [];
+	for(var i = 0; i < r.length; i++)
+		try			{ r[i].f.apply(r[i].ctx, [jQuery].concat(Array.prototype.slice.call(arguments))); }
+		catch(e)	{ setTimeout(function(){throw e;}, 0); }
+};
+
+
+
 var logiblockSettings =
 {
 	namingRules: {},
 	locationOverride: undefined
 };
 
-$(function($)
+function toTitleCase(word)
 {
-	//	temp
-	/*var $topNav = $("ul.navbar-nav li");
-
-	$topNav.click(function(e)
-	{
-		var $e = $(e.currentTarget), href = $(e.target).attr("href");
-		
-		$topNav.removeClass("active");
-		$e.addClass("active");
-		
-		console.log("nav to: " + href);
-
-		e.preventDefault();
-		return(false);
-	});
-	*///	/temp
-
-	//animation routine
-	$.fn.animateActive = function animateActive(period)
-	{
-		var $t = this, i = 0, interval = setInterval(function animateActive_onTimer()
-		{
-			$t;
-			$t.removeClass("active");
-			$($t[i]).addClass("active");
-			if(++i >= $t.length)	i = 0;
-		}, period || 1000);
-
-		return({$ths: $t, stop: function(){clearInterval(interval);}});
-	}
-
-	$(".animateActive").children().animateActive(1500);
+	if(logiblockSettings && logiblockSettings.namingRules[word])	return(logiblockSettings.namingRules[word]);
+	return(word.substr(0, 1).toUpperCase() + word.substr(1));
+}
 
 
-	function toTitleCase(word)
-	{
-		if(logiblockSettings && logiblockSettings.namingRules[word])	return(logiblockSettings.namingRules[word]);
-		return(word.substr(0, 1).toUpperCase() + word.substr(1));
-	}
-
+jQuery(function($)
+{
 	//auto-set the active navbar nav item, set the title and show breadcrumbs if necessary
 	!(function()
 	{
@@ -86,6 +69,53 @@ $(function($)
 					return(navs[n].$el.addClass("active"));
 		}
 	})();
+	
+
+	var storeFrame = $('<iframe class="state" src="/state.html"></iframe>');
+	storeFrame.load(function storeFrameLoaded(e)
+	{
+		window.cookies = e.target.contentWindow.cookies;
+
+		$.resolve();
+	});
+	$("body").append(storeFrame);
+});
+
+
+jQuery.then(function($)
+{
+	//	temp
+	/*var $topNav = $("ul.navbar-nav li");
+
+	$topNav.click(function(e)
+	{
+		var $e = $(e.currentTarget), href = $(e.target).attr("href");
+		
+		$topNav.removeClass("active");
+		$e.addClass("active");
+		
+		console.log("nav to: " + href);
+
+		e.preventDefault();
+		return(false);
+	});
+	*///	/temp
+
+	//animation routine
+	$.fn.animateActive = function animateActive(period)
+	{
+		var $t = this, i = 0, interval = setInterval(function animateActive_onTimer()
+		{
+			$t;
+			$t.removeClass("active");
+			$($t[i]).addClass("active");
+			if(++i >= $t.length)	i = 0;
+		}, period || 1000);
+
+		return({$ths: $t, stop: function(){clearInterval(interval);}});
+	}
+
+	$(".animateActive").children().animateActive(1500);
 
 
 	!(function()
@@ -106,31 +136,6 @@ $(function($)
 
 	})();
 
-	Cookies.prototype =
-	{
-		set: function Cookie_set(name, value, expiration)
-		{
-			var ex = new Date();
-			ex.setDate(ex.getDate() + expiration);
-			document.cookie = name + "=" + escape(value) + ((expiration == null) ? "" : "; expires=" + ex.toUTCString());
-		},
-
-		get: function Cookie_get(name)
-		{
-			var s, e, c = document.cookie;
-			if((s = c.indexOf(name + "=")) != -1)
-			{
-				e = c.indexOf(";", s);
-				return(c.substring(s + name.length + 1, (e > 0)? e : undefined));
-			}
-			return(undefined);
-		}
-	}
-	function Cookies()
-	{
-	}
-
-	window.cookies = new Cookies();
 
 	
 	!(function()
@@ -152,6 +157,10 @@ $(function($)
 	})();
 
 });
+
+
+
+
 
 function checkLinks()
 {

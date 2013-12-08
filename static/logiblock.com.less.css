@@ -328,6 +328,13 @@ a.social-hn
 	}
 }
 
+iframe.state
+{
+	border: none;
+	width: 1px;
+	height: 1px
+}
+
 /*bootstrap overrides*/
 
 .btn-orange

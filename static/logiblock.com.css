@@ -36,6 +36,7 @@ sup{font-size:.6em}
 .blog p{color:#333;text-indent:1em;line-height:1.45;word-wrap:break-word;text-align:justify}
 .blog .article img{width:100%;margin:20px 0 20px 0;border-radius:15px}
 a.social-hn img{width:30px;height:30px;border-radius:3px;margin:0 10px 0 10px}
+iframe.state{border:none;width:1px;height:1px}
 .btn-orange{color:#fff;background-color:#ff7518;border-color:#e46915}.btn-orange:hover{color:#fff;background-color:#de6615;border-color:#cd5e13}
 .navbar-inverse{border:none;background-color:#333}.navbar-inverse .navbar-brand{color:#fff;padding:5px 10px 0 0}
 .navbar-inverse .navbar-nav>li>a{color:#ddd}.navbar-inverse .navbar-nav>li>a sup.badge{background-color:#ff7518;margin-left:3px;padding:2px 5px;border-radius:20px;color:#000}
