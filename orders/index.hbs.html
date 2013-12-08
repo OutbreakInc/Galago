@@ -1,0 +1,36 @@
+<!-- @meta {title="Store"} -->
+
+	<script type="application/javascript">
+		if(logiblockSettings)
+			logiblockSettings.namingRules["order"] = "Current Order";
+	</script>
+	
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<table class="table">
+						<tr><th>Qty.</th><th>Description</th><th>Subtotal</th></tr>
+						<tr><td>1</td><td><a href="/products/galago">Galago Starter Kit</a></td><td>$69</td></tr>
+						<tr><td>1</td><td><a href="/products/accessories/usbcable">USB Cable</a></td><td>$3</td></tr>
+						<tr><td></td><td>Shipping and Tax</td><td>$7</td></tr>
+						<tr><td></td><td>Total</td><td>
+							<form action="/charge" method="POST">
+								<script
+									src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+									data-key="pk_test_czwzkTp2tactuLOEOqbMTRzG"
+									data-image="/static/logiblock-checkout.png"
+									data-name="Logiblock Store"
+									data-description="Cart contents ($79.00)"
+									data-shipping-address="true"
+									data-panel-label="Place Order"
+									data-label="Buy ($79.00)"
+									data-amount="7900">
+								</script>
+							</form>
+						</td></tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
