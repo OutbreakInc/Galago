@@ -84,6 +84,37 @@ DaggerAPIMethod.post = function(host, urlScheme){return(DaggerAPIMethod("POST", 
 
 ////////////////////////////////////////////////////////////////
 
+Cookies.prototype =
+{
+	set: function Cookie_set(name, value, expiration)
+	{
+		var ex = new Date();
+		ex.setDate(ex.getDate() + expiration);
+		if(value !== undefined)
+			document.cookie = name + "=" + escape(value) + ((expiration == null) ? "" : "; expires=" + ex.toUTCString()) + "; path=/";
+		else
+			document.cookie = name + "=; expires=" + (new Date(0)).toUTCString();
+	},
+
+	get: function Cookie_get(name)
+	{
+		var s, e, c = document.cookie;
+		if((s = c.indexOf(name + "=")) != -1)
+		{
+			e = c.indexOf(";", s);
+			return(c.substring(s + name.length + 1, (e > 0)? e : undefined));
+		}
+		return(undefined);
+	}
+}
+function Cookies()
+{
+}
+
+window.cookies = new Cookies();
+
+////////////////////////////////////////////////////////////////
+
 /*
 var apiBase = "http://localhost:8000/v1";
 
@@ -160,7 +191,7 @@ jQuery(function($)
 	})();
 	
 
-	var storeFrame = $('<iframe class="state" src="/state.html"></iframe>');
+	/*var storeFrame = $('<iframe class="state" src="/state.html"></iframe>');
 	storeFrame.load(function storeFrameLoaded(e)
 	{
 		window.cookies = e.target.contentWindow.cookies;
@@ -168,6 +199,7 @@ jQuery(function($)
 		$.resolve();
 	});
 	$("body").append(storeFrame);
+	*/
 });
 
 
