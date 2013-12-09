@@ -14,6 +14,95 @@ jQuery.resolve = function()
 
 
 
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
+
+//creates an API method that has the effective signature:
+//create("POST", "//api.whatever.com/v1", "foo/:barID/baz")
+//	-> method(barID, [postJSON], callback, [context]);
+//create("GET", "/user/:userID/faves/:faveID")
+//	-> method(userID, faveID, [queryParams], callback, [context]);
+//callbacks are function(err, data) with this = context
+function DaggerAPIMethod(method, urlBase, urlScheme)
+{
+	var urlParts = urlScheme
+					.split("/").filter(function(p){
+							return(p !== "");
+						})
+					.map(function(p){
+							return((p.substr(0, 1) === ":")? null : p);
+						});
+	
+	if(urlScheme === undefined)
+	{
+		urlScheme = urlBase;
+		urlBase = "";
+	}
+
+	return(function()
+	{
+		var argIdx = 0, url = urlBase.substr(0);
+		for(var i = 0; i < urlParts.length; i++)
+			url += "/" + (urlParts[i]? urlParts[i] : arguments[argIdx++]);
+		
+		var data = (typeof(arguments[argIdx]) === "function")? undefined : arguments[argIdx++];
+		var callback = arguments[argIdx++];
+		var context = arguments[argIdx];
+		
+		if(typeof(callback) !== "function")
+		{
+			var e = new Error("No callback function specified when requesting API \"" + url + "\"!");
+			e.url = url;
+			throw e;
+		}
+		
+		$.ajax(
+		{
+			url: url,
+			type: method,
+			dataType: "json",
+			data:
+			{
+				data: JSON.stringify(data)
+			}
+
+		}).done(function(data)
+		{
+			callback.call(context, undefined, data);
+
+		}).fail(function()
+		{
+			callback.call(context, new Error("HTTP Error"), undefined);
+		})
+	});
+}
+//curry functions
+DaggerAPIMethod.get = function(host, urlScheme){return(DaggerAPIMethod("GET", host, urlScheme));};
+DaggerAPIMethod.post = function(host, urlScheme){return(DaggerAPIMethod("POST", host, urlScheme));};
+
+
+////////////////////////////////////////////////////////////////
+
+/*
+var apiBase = "http://localhost:8000/v1";
+
+var storeAPI =
+{
+	createOrder: DaggerAPIMethod.post(apiBase, "/orders"),
+	getOrder: DaggerAPIMethod.get(apiBase, "/orders/:orderID"),
+	modifyOrder: DaggerAPIMethod.post(apiBase, "/orders/:orderID"),
+	checkoutOrder: DaggerAPIMethod.post(apiBase, "/orders/:orderid/checkout"),
+};
+
+function genericCompletion()
+{
+	console.log("done", this, arguments);
+}
+*/
+
+
+
 var logiblockSettings =
 {
 	namingRules: {},
@@ -157,6 +246,82 @@ jQuery.then(function($)
 	})();
 
 });
+
+
+
+
+
+/*
+Store.prototype =
+{
+	getOrderID: function store_getOrderID()
+	{
+		return(window.cookies.get("currentOrder"));
+	},
+
+	setOrderID: function store_setOrderID(id)
+	{
+		window.cookies.set("currentOrder", id);
+	},
+	
+	getTotal: function store_getTotal()
+	{
+		return(this.__total);
+	},
+	
+	updateCart: function store_updateCart(order)
+	{
+		//update total
+		var items = Object.keys(order.items), total = 0;
+		for(var i = 0; i < items.length; i++)
+		{
+			var o = order.items[items[i]];
+			total += o.qty * o.price;
+		}
+		this.__total = total;
+
+		//update DOM
+		$orderLink = $("a.order");
+		$orderLink.attr("href", "/orders#" + order.id);
+		var $qtyBadge = $(".cartQty", $orderLink);
+		$qtyBadge.html(order.qty);
+		if(order.qty > 0)	$qtyBadge.removeClass("hide");
+		else				$qtyBadge.addClass("hide");
+	}
+};
+function Store()
+{
+	this.__total = 0;
+}
+
+var store = new Store();
+
+
+$.then(function()
+{
+	var orderID = window.cookies.get("currentOrder");
+	if(orderID)
+	{
+		storeAPI.getOrder(orderID, function(err, order)
+		{
+			if(err)
+				storeAPI.createOrder(function(err, order)
+				{
+					window.cookies.set("currentOrder", order.id);
+					store.updateCart(order);
+				});
+			else
+				store.updateCart(order);
+		});
+	}
+	else
+		storeAPI.createOrder(function(err, order)
+		{
+			window.cookies.set("currentOrder", order.id);
+			store.updateCart(order);
+		});
+});
+*/
 
 
 

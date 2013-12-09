@@ -1,4 +1,45 @@
 <!-- @meta {title="Galago: Make Things Better"} -->
+	
+	<script type="application/javascript">
+		$.then(function()
+		{
+			$("a").each(function(i, e)
+			{
+				var $e = $(e), href = $e.attr("href") || "";
+				if(href.substr(0, 2) == "#+")
+				{
+					var d = href.substr(2).split(",");
+
+					$e.click(function(a)
+					{
+						var diff = {items: [{id: d[0], qty: d[1]}]}, currentOrder = store.getOrderID();
+
+						function onOrderCreated(err, order)
+						{
+							store.setOrderID(order.id);
+							store.updateCart(order);
+						};
+						
+						if(currentOrder == undefined)
+							storeAPI.createOrder(diff, fn);
+						else
+						{
+							storeAPI.modifyOrder(currentOrder, diff, function(err, order)
+							{
+								if(err)
+									storeAPI.createOrder(diff, fn);
+								else
+									store.updateCart(order);
+							});
+						}
+
+						a.preventDefault();
+						return(false);
+					});
+				}
+			});
+		});
+	</script>
 
 	<div class="jumbotron jumbo-blue">
 		<div class="container">
@@ -156,6 +197,7 @@
 				</div>
 				<div class="col-md-6">
 					<div class="alert alert-danger"><p><em>Availability will resume in December with a new order and fulfillment system.</em>  Thanks for your patience!</p></div>
+					<!--<p><a href="#+galago,1" class="btn btn-orange btn-lg">Add to cart &raquo;</a></p>-->
 				</div>
 			</div>
 		</div>

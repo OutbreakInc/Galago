@@ -48,7 +48,7 @@
 					<li><a href="/discuss">Discuss</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right hide">
-					<li><a href="/order">Cart<sup class="badge">3</sup></a></li>
+					<li><a class="order" href="/orders">Cart<sup class="badge cartQty hide">0</sup></a></li>
 				</ul>
 			</div><!--/.navbar-collapse -->
 		</div>
@@ -70,31 +70,98 @@
 	<script type="application/javascript">
 		if(logiblockSettings)
 			logiblockSettings.namingRules["order"] = "Current Order";
+		
+		function populateOrder(order)
+		{
+			location.hash = "#" + order.id;
+			store.updateCart(order);
+
+			var $table = $("table.order"), $summary = $("tr.summary", $table), $checkoutButton = $("button.checkoutButton"), subtotal = 0;
+
+			$("tr.orderRow", $table).remove();
+
+			var items = Object.keys(order.items);
+			for(var i = 0; i < items.length; i++)
+			{
+				var o = order.items[items[i]];
+				subtotal = o.qty * o.price;
+				$summary.before($('<tr class="orderRow"><td>' + (i + 1) + '.</td><td><a href="' + o.url + '">' + o.desc + '</a></td><td>' + o.qty + '</td><td>$' + (subtotal / 100) + '</td></tr>'));
+			}
+
+			$checkoutButton.html("Buy ($" + (store.getTotal() / 100) + ")");
+			if(store.getTotal() <= 0)	$checkoutButton.addClass("disabled");
+			else						$checkoutButton.removeClass("disabled");
+		}
+		
+		$.then(function()
+		{
+			var stripeCheckoutHandler = StripeCheckout.configure(
+			{
+				key: "pk_test_6pRNASCoBOKtIshFeQd4XMUh",
+				image: "/static/logiblock-checkout.png",
+				shippingAddress: true,
+				token: function(token, args)
+				{
+					console.log("token()", arguments);
+
+					window.stripeKey = {token: token, address: args};
+
+					storeAPI.checkoutOrder(store.getOrderID(), {token: token, address: args}, function(err, response)
+					{
+						console.log(err, response);
+
+						//navigate
+					});
+				}
+			});
+			
+			$("button.checkoutButton").click(function(e)
+			{
+				if(store.getTotal() > 0)
+				{
+					stripeCheckoutHandler.open(
+					{
+						name: "Logiblock Store",
+						description: "Cart contents ($" + (store.getTotal() / 100) + ")",
+						amount: store.getTotal()
+					});
+				}
+				e.preventDefault();
+			});
+			
+
+
+			if(location.hash)
+			{
+				storeAPI.getOrder(location.hash.substr(1), function(err, order)
+				{
+					if(err)
+						storeAPI.createOrder(function(err, order)
+						{
+							populateOrder(order);
+						});
+					else
+						populateOrder(order);
+				});
+			}
+			else
+				storeAPI.createOrder(function(err, order)
+				{
+					populateOrder(order);
+				});
+		});
 	</script>
+	<script src="https://checkout.stripe.com/checkout.js"></script>
 	
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
-					<table class="table">
-						<tr><th>Qty.</th><th>Description</th><th>Subtotal</th></tr>
-						<tr><td>1</td><td><a href="/products/galago">Galago Starter Kit</a></td><td>$69</td></tr>
-						<tr><td>1</td><td><a href="/products/accessories/usbcable">USB Cable</a></td><td>$3</td></tr>
-						<tr><td></td><td>Shipping and Tax</td><td>$7</td></tr>
-						<tr><td></td><td>Total</td><td>
-							<form action="/charge" method="POST">
-								<script
-									src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-									data-key="pk_test_czwzkTp2tactuLOEOqbMTRzG"
-									data-image="/static/logiblock-checkout.png"
-									data-name="Logiblock Store"
-									data-description="Cart contents ($79.00)"
-									data-shipping-address="true"
-									data-panel-label="Place Order"
-									data-label="Buy ($79.00)"
-									data-amount="7900">
-								</script>
-							</form>
+					<table class="table order">
+						<tr><th> </th><th>Description</th><th>Qty.</th><th>Subtotal</th></tr>
+
+						<tr class="summary"><td></td><td>Total</td><td></td><td>
+							<button class="btn btn-primary btn-lg checkoutButton disabled">Buy</button>
 						</td></tr>
 					</table>
 				</div>

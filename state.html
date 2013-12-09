@@ -10,7 +10,7 @@
 			{
 				var ex = new Date();
 				ex.setDate(ex.getDate() + expiration);
-				document.cookie = name + "=" + escape(value) + ((expiration == null) ? "" : "; expires=" + ex.toUTCString());
+				document.cookie = name + "=" + ((value !== undefined)? (escape(value) + ((expiration == null) ? "" : "; expires=" + ex.toUTCString())) : "");
 			},
 
 			get: function Cookie_get(name)
