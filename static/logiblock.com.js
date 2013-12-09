@@ -10,6 +10,7 @@ jQuery.resolve = function()
 	for(var i = 0; i < r.length; i++)
 		try			{ r[i].f.apply(r[i].ctx, [jQuery].concat(Array.prototype.slice.call(arguments))); }
 		catch(e)	{ setTimeout(function(){throw e;}, 0); }
+	return(jQuery);
 };
 
 
@@ -88,12 +89,10 @@ Cookies.prototype =
 {
 	set: function Cookie_set(name, value, expiration)
 	{
-		var ex = new Date();
-		ex.setDate(ex.getDate() + expiration);
 		if(value !== undefined)
-			document.cookie = name + "=" + escape(value) + ((expiration == null) ? "" : "; expires=" + ex.toUTCString()) + "; path=/";
+			document.cookie = name + "=" + escape(value) + ((expiration !== undefined) ? "" : "; expires=" + new Date(Date.now() + (expiration * 1000)).toUTCString()) + "; path=/";
 		else
-			document.cookie = name + "=; expires=" + (new Date(0)).toUTCString();
+			document.cookie = name + "=; expires=" + (new Date(0)).toUTCString() + "; path=/";;
 	},
 
 	get: function Cookie_get(name)
@@ -200,6 +199,8 @@ jQuery(function($)
 	});
 	$("body").append(storeFrame);
 	*/
+
+	$.resolve();
 });
 
 
@@ -257,23 +258,15 @@ jQuery.then(function($)
 
 	})();
 
-
-	
 	!(function()
 	{
 		var lastRead = (window.cookies.get("logiblog_last") || 0);
 
 		//compare lastRead against blog entry publish times
-		var unread = ((parseInt(lastRead) || 0) <= 1385637000)? 1 : 0;	//fake
+		var unread = ((parseInt(lastRead) || 0) <= 1385637000)? 1 : 0;	//@@fake
 
 		if(unread > 0)
-		{
-			var $sup = $('<sup class="badge"/>');
-
-			var $blogNav = $('ul.navbar-nav a[href="/blog"]');
-
-			$blogNav.append($sup.html(unread));
-		}
+			$('ul.navbar-nav a[href="/blog"]').append($('<sup class="badge"/>').html(unread));
 
 	})();
 
