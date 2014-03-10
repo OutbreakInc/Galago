@@ -38,6 +38,8 @@ int		main(void)
 {
 	io.serial.start(9600);
 	io.i2c.start();
+	
+	system.wait(system.delay(80));
 
 	appBoard.reset();
 	appBoard.detect();
