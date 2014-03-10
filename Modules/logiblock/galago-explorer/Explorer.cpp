@@ -28,7 +28,6 @@ bool			Explorer::init(void)
 	lockLED.bind(io.p6);
 
 	//detect the board and come back with an address
-	appBoard.detect();
 	_appBoardAddress = appBoard.find(0, 0x0b1, 0xac05);
 	
 	if(_appBoardAddress == 0)
