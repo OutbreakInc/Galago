@@ -1374,31 +1374,31 @@
 	REGISTER	InterruptEnableSet0 =		REGISTER_ADDRESS(0xE000E100);
 		enum Interrupt0
 		{
-			Interrupt0_PIO0_0 =		(1 << 0),
-			Interrupt0_PIO0_1 =		(1 << 1),
-			Interrupt0_PIO0_2 =		(1 << 2),
-			Interrupt0_PIO0_3 =		(1 << 3),
-			Interrupt0_PIO0_4 =		(1 << 4),
-			Interrupt0_PIO0_5 =		(1 << 5),
-			Interrupt0_PIO0_6 =		(1 << 6),
-			Interrupt0_PIO0_7 =		(1 << 7),
-			Interrupt0_PIO0_8 =		(1 << 8),
-			Interrupt0_PIO0_9 =		(1 << 9),
+			Interrupt0_PIO0_0 =		(1 << 0),	// Galago P0
+			Interrupt0_PIO0_1 =		(1 << 1),	// Galago P1
+			Interrupt0_PIO0_2 =		(1 << 2),	// Galago P3
+			Interrupt0_PIO0_3 =		(1 << 3),	// Galago P4
+			Interrupt0_PIO0_4 =		(1 << 4),	// Galago SCL
+			Interrupt0_PIO0_5 =		(1 << 5),	// Galago SDA
+			Interrupt0_PIO0_6 =		(1 << 6),	// Galago SCK
+			Interrupt0_PIO0_7 =		(1 << 7),	// Galago CTS
+			Interrupt0_PIO0_8 =		(1 << 8),	// Galago MISO
+			Interrupt0_PIO0_9 =		(1 << 9),	// Galago MOSI
 			Interrupt0_PIO0_10 =	(1 << 10),
-			Interrupt0_PIO0_11 =	(1 << 11),
-			Interrupt0_PIO1_0 =		(1 << 12),
-			Interrupt0_PIO1_1 =		(1 << 13),
-			Interrupt0_PIO1_2 =		(1 << 14),
+			Interrupt0_PIO0_11 =	(1 << 11),	// Galago A0
+			Interrupt0_PIO1_0 =		(1 << 12),	// Galago A1
+			Interrupt0_PIO1_1 =		(1 << 13),	// Galago A2
+			Interrupt0_PIO1_2 =		(1 << 14),	// Galago A3
 			Interrupt0_PIO1_3 =		(1 << 15),
-			Interrupt0_PIO1_4 =		(1 << 16),
-			Interrupt0_PIO1_5 =		(1 << 17),
-			Interrupt0_PIO1_6 =		(1 << 18),
-			Interrupt0_PIO1_7 =		(1 << 19),
-			Interrupt0_PIO1_8 =		(1 << 20),
-			Interrupt0_PIO1_9 =		(1 << 21),
-			Interrupt0_PIO1_10 =	(1 << 22),
-			Interrupt0_PIO1_11 =	(1 << 23),
-			Interrupt0_PIO2_0 =		(1 << 24),
+			Interrupt0_PIO1_4 =		(1 << 16),	// Galago A5
+			Interrupt0_PIO1_5 =		(1 << 17),	// Galago RTS
+			Interrupt0_PIO1_6 =		(1 << 18),	// Galago RXD
+			Interrupt0_PIO1_7 =		(1 << 19),	// Galago TXD
+			Interrupt0_PIO1_8 =		(1 << 20),	// Galago P2
+			Interrupt0_PIO1_9 =		(1 << 21),	// Galago P5
+			Interrupt0_PIO1_10 =	(1 << 22),	// Galago on-board LED (A6)
+			Interrupt0_PIO1_11 =	(1 << 23),	// Galago A7
+			Interrupt0_PIO2_0 =		(1 << 24),	// Galago SEL
 			Interrupt0_PIO2_1 =		(1 << 25),
 			Interrupt0_PIO2_2 =		(1 << 26),
 			Interrupt0_PIO2_3 =		(1 << 27),
@@ -1416,7 +1416,7 @@
 			Interrupt1_PIO2_11 =	(1 << 3),
 			Interrupt1_PIO3_0 =		(1 << 4),
 			Interrupt1_PIO3_1 =		(1 << 5),
-			Interrupt1_PIO3_2 =		(1 << 6),
+			Interrupt1_PIO3_2 =		(1 << 6),		// Galago P6
 			Interrupt1_PIO3_3 =		(1 << 7),
 			Interrupt1_I2C =		(1 << 8),
 			Interrupt1_Timer0 =		(1 << 9),
@@ -1540,31 +1540,31 @@
 	void		Sleep(void);
 	void		Reset(void);
 	
-	void		IRQ_WakeupPIO0_0(void);
-	void		IRQ_WakeupPIO0_1(void);
-	void		IRQ_WakeupPIO0_2(void);
-	void		IRQ_WakeupPIO0_3(void);
-	void		IRQ_WakeupPIO0_4(void);
-	void		IRQ_WakeupPIO0_5(void);
-	void		IRQ_WakeupPIO0_6(void);
-	void		IRQ_WakeupPIO0_7(void);
-	void		IRQ_WakeupPIO0_8(void);
-	void		IRQ_WakeupPIO0_9(void);
+	void		IRQ_WakeupPIO0_0(void);		// Galago P0
+	void		IRQ_WakeupPIO0_1(void);		// Galago P1
+	void		IRQ_WakeupPIO0_2(void);		// Galago P3
+	void		IRQ_WakeupPIO0_3(void);		// Galago P4
+	void		IRQ_WakeupPIO0_4(void);		// Galago SCL
+	void		IRQ_WakeupPIO0_5(void);		// Galago SDA
+	void		IRQ_WakeupPIO0_6(void);		// Galago SCK
+	void		IRQ_WakeupPIO0_7(void);		// Galago CTS
+	void		IRQ_WakeupPIO0_8(void);		// Galago MISO
+	void		IRQ_WakeupPIO0_9(void);		// Galago MOSI
 	void		IRQ_WakeupPIO0_10(void);
-	void		IRQ_WakeupPIO0_11(void);
-	void		IRQ_WakeupPIO1_0(void);
-	void		IRQ_WakeupPIO1_1(void);
-	void		IRQ_WakeupPIO1_2(void);
+	void		IRQ_WakeupPIO0_11(void);	// Galago A0
+	void		IRQ_WakeupPIO1_0(void);		// Galago A1
+	void		IRQ_WakeupPIO1_1(void);		// Galago A2
+	void		IRQ_WakeupPIO1_2(void);		// Galago A3
 	void		IRQ_WakeupPIO1_3(void);
-	void		IRQ_WakeupPIO1_4(void);
-	void		IRQ_WakeupPIO1_5(void);
-	void		IRQ_WakeupPIO1_6(void);
-	void		IRQ_WakeupPIO1_7(void);
-	void		IRQ_WakeupPIO1_8(void);
-	void		IRQ_WakeupPIO1_9(void);
-	void		IRQ_WakeupPIO1_10(void);
-	void		IRQ_WakeupPIO1_11(void);
-	void		IRQ_WakeupPIO2_0(void);
+	void		IRQ_WakeupPIO1_4(void);		// Galago A5
+	void		IRQ_WakeupPIO1_5(void);		// Galago RTS
+	void		IRQ_WakeupPIO1_6(void);		// Galago RXD
+	void		IRQ_WakeupPIO1_7(void);		// Galago TXD
+	void		IRQ_WakeupPIO1_8(void);		// Galago P2
+	void		IRQ_WakeupPIO1_9(void);		// Galago P5
+	void		IRQ_WakeupPIO1_10(void);	// Galago on-board LED (A6)
+	void		IRQ_WakeupPIO1_11(void);	// Galago A7
+	void		IRQ_WakeupPIO2_0(void);		// Galago SEL
 	void		IRQ_WakeupPIO2_1(void);
 	void		IRQ_WakeupPIO2_2(void);
 	void		IRQ_WakeupPIO2_3(void);
@@ -1578,7 +1578,7 @@
 	void		IRQ_WakeupPIO2_11(void);
 	void		IRQ_WakeupPIO3_0(void);
 	void		IRQ_WakeupPIO3_1(void);
-	void		IRQ_WakeupPIO3_2(void);
+	void		IRQ_WakeupPIO3_2(void);		// Galago P6
 	void		IRQ_WakeupPIO3_3(void);
 	void		IRQ_I2C(void);
 	void		IRQ_Timer0(void);	//Timer16B0 or Timer16_0 in the docs
@@ -1592,10 +1592,10 @@
 	void		IRQ_ADC(void);
 	void		IRQ_Watchdog(void);
 	void		IRQ_Brownout(void);
-	void		IRQ_GPIO_3(void);
-	void		IRQ_GPIO_2(void);
-	void		IRQ_GPIO_1(void);
-	void		IRQ_GPIO_0(void);
+	void		IRQ_GPIO_3(void);	// Galago P6
+	void		IRQ_GPIO_2(void);	// Galago SEL
+	void		IRQ_GPIO_1(void);	// Galago A1 A2 A3 A5 RTS RXD TXD P2 P5 LED(/A6) A7
+	void		IRQ_GPIO_0(void);	// Galago P0 P1 P3 P4 SCL SDA SCK CTS MISO MOSI A0
 	
 	#ifdef __cplusplus
 	}	//extern "C"
