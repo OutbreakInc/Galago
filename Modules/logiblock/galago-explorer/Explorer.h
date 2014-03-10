@@ -21,6 +21,9 @@ public:
 	inline unsigned int		secondsUTC() const				{return(_time.seconds);}
 	
 	inline signed int		fix() const						{return(_fix);}
+
+	//latitude and longitude are returned in a -9.22 format: a signed int with 22 bits of fractional precision.
+	//  to get a whole number, shift (signed) by 22 bits to the right.
 	inline signed int		latitude() const				{return(_lat);}
 	inline signed int		longitude() const				{return(_long);}
 	inline signed int		altitudeFromEllipsoid() const	{return(_altFromEllipsoid);}
