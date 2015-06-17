@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Logiblock Galago Ethernet Board</title>
+		<title>Logiblock Other</title>
 		
 		<meta name="description" content="Logiblock accelerates electronic product development."/>
 		<meta name="copyright" content="Logiblock"/>
@@ -61,25 +61,31 @@
 			<p>While that's happening you may find empty pages and broken links. Please check back later!</p>
 		</div>
 	</div>-->
-<!-- @meta {title="Galago Ethernet Board"} -->
+<!-- @meta {title="Other"} -->
 
-	<a id="top"></a>
+	<script type="application/javascript">
+		if(logiblockSettings)
+			logiblockSettings.namingRules["ip-portfolio"] = "IP Portfolio";
+	</script>
+	
+	<a id="gzip"/>
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-9">
-					<h2>Etherblock <small>(Ethernet App Board)</small></h2>
-				</div>
-				<div class="col-md-9">
-					<p>Connect your Galago to a wired network with <strong>Etherblock</strong>.  Also features an on-board switch-mode power supply
-						and a microSD socket.</p>
-				</div>
 				<div class="col-md-3">
-					<img class="pull-left img-responsive" src="/static/app-board-etherblock.jpg" alt="Galago Etherblock App Board"/>
+					<a class="thumbnail pull-right" href="/products/galago">
+						<img src="/static/galago-hero-512-D5E4FF.jpg" width="256" height="256" alt="Photo of Galago board"/>
+					</a>
+				</div>
+				<div class="col-md-9">
+					<h2>GZIP on-chip</h2>
+					<p>Compression technology is the underlying magic upon which virtually every rich digital experience we have is based. Without it, we would not have the proliferation of digital video, audio, apps and web content, much of which is compressed with gzip or its underlying algorithm, DEFLATE.</p>
+					<p>Logiblock designed <strong>a gzip/DEFLATE decoder which requires only 750 bytes of RAM and about 1.5KB of code</strong>, a miniscule footprint compared to the reference zlib library.  This advancement makes possible practical compressed firmware updates, large geo datasets, animations, on-board documentation and other exciting applications. Additionally, the decoder can be used to implement <strong>extremely efficient <a href="/ip-portfolio/ota#delta">firmware delta-updates</a></strong> - which store only the changes from one version to another - with no additional software complexity by exploiting tricks in the decompressor state.</p>
 				</div>
 			</div>
 		</div>
 	</div>
+
 	<div class="container">
 		<hr/>
 		<p>Copyright &copy; 2015 Logiblock / Outbreak, Inc.</p>

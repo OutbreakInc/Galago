@@ -1,0 +1,66 @@
+<!-- @meta {title="High Reliability"} -->
+
+	<script type="application/javascript">
+
+		if(logiblockSettings)
+		{
+			logiblockSettings.namingRules["ip-portfolio"] = "IP Portfolio";
+			logiblockSettings.namingRules["high-reliability"] = "High Reliability";
+		}
+	</script>
+
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3">
+					<a class="thumbnail pull-right" href="/products/galago">
+						<img src="/static/galago-hero-512-D5E4FF.jpg" width="256" height="256" alt="Photo of Galago board"/>
+					</a>
+				</div>
+				<div class="col-md-9">
+					<h2>Design for High Reliabiity</h2>
+					<p>Logiblock has experience engineering both physical security and safety-of-life applications, where product failure or malfunction could result in theft, property damage, injury or even loss of life.  We apply rigorous static-analysis, fuzzing and simulation techniques to our firmware to discover weaknesses and fix them before they can cause unexpected failure or be exploited by attackers.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<a id="design-for-safety"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9">
+					<h2>Concept: <em>Reliability by design</em></h2>
+					<p>To be fully reliable, software must be designed for predictability at both the operational and source-code levels.  The biggest risk to the quality of high-reliability systems is often the people who work on them, particularly those who maintain after the original authors have moved on.  Logiblock employs rigorous discipline in source code architecture to design for maximum predictability, readability and confidence, developing embedded firmware to dual-build for both the target device as well as PC simulators, stress- and fuzz-test fixtures and static analysis rigs.  A wide array of run-time techniques are also employed, such as:
+					<ul>
+					<li>heap and stack canaries</li>
+					<li>trap pages/regions</li>
+					<li>multiple independent watchdogs</li>
+					<li>internal memory validation checksums</li>
+					<li>execution chokepoints</li>
+					<li>product-specific self-checking constraints</li>
+					</p>
+				</div>
+				<div class="col-md-3">
+				</div>
+			</div>
+		</div>
+		<hr/>
+	</div>
+
+	<a id="oat"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3">
+				</div>
+				<div class="col-md-9">
+					<h2>Case study: <em>Maximum achievable safety</em></h2>
+					<small>Designed by Logiblock for <em>[undisclosed client]</em>, 2014-2015</small>
+					<hr/>
+					<p>Part of the requirements for <em>[a smart-home product]</em> included developing firmware for one on-board microcontroller to run all safety-critical systems where the life or death of the user was quite literally at stake.  Moreover, the firmware had to operate continuously for ten years with no provision for <a href="/ip-portfolio/ota">software update</a>.  Finally, the chip had to use the absolute minimum of energy to achieve this, and was responsible for switching on and off all other power domains of the product.  Logiblock designed firmware for this application that met all the stability, reliability, performance and maintainability goals (and them some.)</p>
+				</div>
+			</div>
+		</div>
+		<hr/>
+	</div>

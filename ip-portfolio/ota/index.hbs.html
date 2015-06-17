@@ -1,0 +1,90 @@
+<!-- @meta {title="OTA"} -->
+
+	<script type="application/javascript">
+		if(logiblockSettings)
+		{
+			logiblockSettings.namingRules["ip-portfolio"] = "IP Portfolio";
+			logiblockSettings.namingRules["ota"] = "OTA";
+		}
+	</script>
+
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3">
+					<a class="thumbnail pull-right" href="/products/galago">
+						<img src="/static/galago-hero-512-D5E4FF.jpg" width="256" height="256" alt="Photo of Galago board"/>
+					</a>
+				</div>
+				<div class="col-md-9">
+					<h2>Over the Air Updates (OTA)</h2>
+					<p>Software updates are crucial on every platform to keep products competitive, secure and performing optimally.</p>
+					<p>Logiblock draws on experience developing <a href="#oat">cutting-edge passive OTA</a> updates over Bluetooth and Wifi to develop exceptional <a href="#cryptopload">software updates schemes</a> tailored to your specific product requirements.</p>
+				</div>
+			</div>
+		</div>
+		<hr/>
+	</div>
+
+	<a id="delta"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9">
+					<h3>Concept: Deeply-embedded firmware delta-updates</h3>
+					<p>By applying Logiblock's <a href="/ip-portfolio/etc#gzip">embedded gzip decompressor</a>, firmware updates can be sent using the minimum of space, time and bandwidth. Moreover, our gzip decoder can also be used to expand <strong>delta-updates</strong> that contain <strong>only the changes between one version and another</strong> without any dedicated differential-patching decoder.  This yields the highest compression-ratio-per-decoder-size ratio, which is a crucial factor for deeply-embedded systems, where codec size is a significant aspect of codec efficiency.</p>
+				</div>
+				<div class="col-md-3">
+				</div>
+			</div>
+		</div>
+		<hr/>
+	</div>
+
+	<!--
+	<a id="morphology">
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9">
+					<h3>Case study: Flash Player update system for Adobe Systems, Inc., 2009-2011</h3>
+					<p>Adobe desperately needed a new update and installer system for its extremely widely-deployed Flash Player plugin.  As the (at the time) most popular commercial software product in the world with over 1.6 billion installations, updating Flash Player worldwide was no small feat.  We designed a scriptable application stub within the tight size and demanding functionality requirements to act as a swiss-army-knife for installation, system repair, upgrade and removal of Adobe payloads (Flash Player and its DRM module.) The Windows application stub without payloads was a mere 40KB.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	-->
+
+	<a id="cryptoload"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3">
+				</div>
+				<div class="col-md-9">
+					<h2>Case study: <em>Over-the-air secure bootloader</em></h2>
+					<small>Designed by Logiblock for Apigy, Inc., 2013</small>
+					<hr/>
+					<p>Lockitron needed the ability to re-program one of its application processors, an AVR chip, from an Electric Imp Wifi module on-board. Additionally, the mechanism had to be secure against tampering or bus-probing.  A cryptographic bootloader was developed for the AVR using the AES block cipher that could program the application firmware and contained multiple failsafes to allow recovery from any failure mode.</p>
+				</div>
+			</div>
+		</div>
+		<hr/>
+	</div>
+
+	<a id="oat"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9">
+					<h2>Case study: <em>Silent Involuntary Bluetooth Low Energy OTA</em></h2>
+					<small>Designed by Logiblock for <em>[undisclosed client]</em>, 2014</small>
+					<hr/>
+					<p><em>[A home-automation product]</em> needed efficient over-the-air firmware updates over a very-low-bandwidth, unreliable BLE channel.  Furthermore, firmware downloads had to occur without inconveniencing the user because communication would only occur in proximity to the device and a full download could take several weeks. A self-healing communications scheme was designed, simulated and applied that was robust against communication loss yet would guarantee the integrity of the payload.  Due to code size constraints the new firmware had to be stored compressed and could not be executed directly, so a high-reliability unified verification, <a href="/ip-portfolio/etc#gzip">decompression</a> and self-programming step was used to complete the update.</p>
+				</div>
+				<div class="col-md-3">
+				</div>
+			</div>
+		</div>
+		<hr/>
+	</div>

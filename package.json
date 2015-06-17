@@ -1,0 +1,21 @@
+{
+	"name": "GalagoSite",
+	"version": "0.0.1",
+	"private": true,
+	"description": "Test backend",
+	"main": "backend.js",
+	"dependencies":
+	{
+		"dagger": ">0",
+		"redis": ">0"
+	},
+	"scripts":
+	{
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node backend/server.js"
+	},
+	"license": "Proprietary",
+	"devDependencies":
+	{
+	}
+}
