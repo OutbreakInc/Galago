@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Logiblock Mesh networking</title>
+		<title>Logiblock Mesh-networking</title>
 		
 		<meta name="description" content="Logiblock accelerates electronic product development."/>
 		<meta name="copyright" content="Logiblock"/>
@@ -43,8 +43,8 @@
 					<li><a href="/">Home</a></li>
 					<li><a href="/services/consulting">Consulting</a></li>
 					<li><a href="/ip-portfolio">IP Portfolio</a></li>
-					<li><a href="/#contact">Contact</a></li>
-					<li><a href="/#about">About</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/about">About</a></li>
 				</ul>
 			</div><!--/.navbar-collapse -->
 		</div>
@@ -61,13 +61,13 @@
 			<p>While that's happening you may find empty pages and broken links. Please check back later!</p>
 		</div>
 	</div>-->
-<!-- @meta {title="Mesh networking"} -->
+<!-- @meta {title="Mesh-networking"} -->
 
 	<script type="application/javascript">
 		if(logiblockSettings)
 		{
 			logiblockSettings.namingRules["ip-portfolio"] = "IP Portfolio";
-			logiblockSettings.namingRules["mesh-networking"] = "Mesh Networking";
+			logiblockSettings.namingRules["mesh-networking"] = "Mesh-networking";
 		}
 	</script>
 
@@ -75,17 +75,50 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-3">
-					<a class="thumbnail pull-right" href="/products/galago">
-						<img src="/static/galago-hero-512-D5E4FF.jpg" width="256" height="256" alt="Photo of Galago board"/>
-					</a>
+					<img class="thumbnail" src="/static/mesh.jpg" width="300" height="300" alt="Mesh networking illustration"/>
 				</div>
 				<div class="col-md-9">
-					Logiblock is currently developing a mesh-networking technology running on a well-known commercial protocol concurrently with Bluetooth Low Energy.  Our proprietary high-level mesh-forming and routing combined with the reliability of the commercial protocol stack demonstrate effective, reliable communication at under 20µA per graph edge at 10m radius.
+					<h2>Low-energy wireless mesh networks</h2>
+					<p>Logiblock developed and maintains a mesh-networking technology that is designed to run concurrently with the <a href="/ip-portfolio/bluetooth">Bluetooth Low Energy</a> stack on <a href="/ip-portfolio/bluetooth/#nordic-ble">chips from Nordic Semiconductor</a>.  Our system is built on a well-known commercial protocol and operates concurrently with the Bluetooth Low Energy stack.  Our proprietary high-level mesh-forming, auto-balancing and packet routing logic demonstrates effective, reliable communication that consumes under 20µA per graph edge at 10-meter edge radius.</p>
 				</div>
 			</div>
 		</div>
 	</div>
 
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>Concept: <em>Invisible networks</em></h3>
+				</div>
+				<div class="col-md-3 pull-right">
+					<blockquote><p><em>A properly-designed mesh network can make a product appear to operate magically.</em></p></blockquote>
+				</div>
+				<div class="col-md-9">
+					<p>Mesh networks are a special kind of network with unique characteristics and design constraints. While they don't need to interoperate with third-party routers or smartphones, mesh networks need special attention to make set-up easy which maintains a great user experience for the product.</p>
+					<p>Logiblock's mesh-networking is designed to auto-assemble and auto-balance a network with no user interaction required. See the <a href="#intro">introduction</a> for why this is important.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<a id="intro"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9 col-md-offset-3">
+					<h3>Concept: <em>Introduction to mesh networks</em></h3>
+				</div>
+				<div class="col-md-3">
+					<blockquote><p><em>Many conventional networks operate in a 'star' topology (USB, <a href="/ip-portfolio/bluetooth">BLE</a>, <a href="/ip-portfolio/wifi">Wi-Fi</a>.) The Internet itself is a type of mesh network.</em></p></blockquote>
+				</div>
+				<div class="col-md-9">
+					<p>A mesh network is a network topology in which multiple nodes are sparsely connected to various other nodes, the number of which is called its <em>'degree'.</em> </p>
+					<p>In low-energy wireless mesh networks, <em>'assembly'</em> refers to devices discovering one another and forming a network, and <em>'balancing'</em> describes creating and breaking links so that connections between nodes are evenly distributed.</p>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="container">
 		<hr/>
 		<p>Copyright &copy; 2015 Logiblock / Outbreak, Inc.</p>

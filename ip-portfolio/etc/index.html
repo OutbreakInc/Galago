@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Logiblock Other</title>
+		<title>Logiblock Other Technologies</title>
 		
 		<meta name="description" content="Logiblock accelerates electronic product development."/>
 		<meta name="copyright" content="Logiblock"/>
@@ -43,8 +43,8 @@
 					<li><a href="/">Home</a></li>
 					<li><a href="/services/consulting">Consulting</a></li>
 					<li><a href="/ip-portfolio">IP Portfolio</a></li>
-					<li><a href="/#contact">Contact</a></li>
-					<li><a href="/#about">About</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/about">About</a></li>
 				</ul>
 			</div><!--/.navbar-collapse -->
 		</div>
@@ -61,24 +61,41 @@
 			<p>While that's happening you may find empty pages and broken links. Please check back later!</p>
 		</div>
 	</div>-->
-<!-- @meta {title="Other"} -->
+<!-- @meta {title="Other Technologies"} -->
 
 	<script type="application/javascript">
 		if(logiblockSettings)
+		{
 			logiblockSettings.namingRules["ip-portfolio"] = "IP Portfolio";
+			logiblockSettings.namingRules["etc"] = "Other Technologies";
+		}
 	</script>
 	
-	<a id="gzip"/>
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-3">
-					<a class="thumbnail pull-right" href="/products/galago">
-						<img src="/static/galago-hero-512-D5E4FF.jpg" width="256" height="256" alt="Photo of Galago board"/>
-					</a>
+					<img class="thumbnail" src="/static/logiblock-512.png" width="300" height="300" alt="Logiblock logo"/>
 				</div>
 				<div class="col-md-9">
-					<h2>GZIP on-chip</h2>
+					<h2>Other technologies</h2>
+					<p>Logiblock offers a wide array of other technologies to enrich and accelerate product development.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<a id="gzip"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>GZIP on-chip</h3>
+				</div>
+				<div class="col-md-3 pull-right">
+					<blockquote><p><em>An embedded gzip decompressor on low-power, low-cost embedded hardware opens up surprising possibilities.</em></p></blockquote>
+				</div>
+				<div class="col-md-9">
 					<p>Compression technology is the underlying magic upon which virtually every rich digital experience we have is based. Without it, we would not have the proliferation of digital video, audio, apps and web content, much of which is compressed with gzip or its underlying algorithm, DEFLATE.</p>
 					<p>Logiblock designed <strong>a gzip/DEFLATE decoder which requires only 750 bytes of RAM and about 1.5KB of code</strong>, a miniscule footprint compared to the reference zlib library.  This advancement makes possible practical compressed firmware updates, large geo datasets, animations, on-board documentation and other exciting applications. Additionally, the decoder can be used to implement <strong>extremely efficient <a href="/ip-portfolio/ota#delta">firmware delta-updates</a></strong> - which store only the changes from one version to another - with no additional software complexity by exploiting tricks in the decompressor state.</p>
 				</div>
@@ -86,6 +103,40 @@
 		</div>
 	</div>
 
+	<a id="audio"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9 col-md-offset-3">
+					<h3>Audio DSP and compression/decompression</h3>
+				</div>
+				<div class="col-md-3">
+					<blockquote><p><em>Sound effects can really give a product soul, particularly if it has no screen.</em></p></blockquote>
+				</div>
+				<div class="col-md-9">
+					<p>Logiblock has experience with analog- and digital-path (I<sup>2</sup>S or SPI) audio in embedded devices, as well as with G.711 compression, antialiasing, band pass and other DSP required to get the best sound effects from low-power and low-complexity embedded systems.</p>
+					<p>One of the challenges with audio is that it's a <em>"hard real-time"</em> feature, as variations in the playback timebase, gaps or duplicated sections of the audio are very easily noticed as "glitches" by the listener. The conventional way to implement digital audio on microcontrollers is with DMA or interrupts, though Logiblock has employed clever solutions to generate I<sup>2</sup>S from chips without hardware support using just an SPI FIFO.  If you need audio in your product, we can find a way to do it.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<a id="fs"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>Custom Filesystems</h3>
+				</div>
+				<div class="col-md-3 pull-right">
+					<blockquote><p><em>Filesystems are the best way to store all manner of information on a device, including that which is downloaded, uploaded or retained.</em></p></blockquote>
+				</div>
+				<div class="col-md-9">
+					<p>Most products need a simple filesystem or at least a key-value store which is retained in Flash or EEPROM memory. Logiblock has turn-key solutions for both which can be customized for your application. If you need to store <a href="/ip-portfolio/ota">firmware updates</a>, perhaps using <a href="#gzip">differential-patching</a>, a filesystem will do that. We can also implement a key-value parameter store that can be used to run A/B tests (or multivariant tests) on hardware in the field. A filesystem can also be used to compress and accumulate telemetry for periodic <a href="/ip-portfolio/wifi">Wi-Fi</a> uploads, allowing data to be collected continuously even if <a href="/ip-portfolio/low-energy">WiFi is only active occasionally</a>.</p>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="container">
 		<hr/>
 		<p>Copyright &copy; 2015 Logiblock / Outbreak, Inc.</p>

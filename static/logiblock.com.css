@@ -1,7 +1,8 @@
 body{margin:50px 0 0 0;padding:0}
 sup{font-size:.6em}
 .moot{font-family:"myriad pro",tahoma,verdana,arial,sans-serif;font-size:18px}
-.jumbotron{margin-bottom:0}.jumbotron.jumbo-white{background-color:#fff}.jumbotron.jumbo-white h1 a{color:inherit}.jumbotron.jumbo-white h1 a.thumbnail{background-color:transparent;border-color:#fff}.jumbotron.jumbo-white h1 a.thumbnail:hover{border-color:#999}
+.jumbotron{margin-bottom:0}.jumbotron.jumbo-white{background-color:#fff}.jumbotron.jumbo-white img.thumbnail{background-color:transparent;border:none}
+.jumbotron.jumbo-white h1 a{color:inherit}.jumbotron.jumbo-white h1 a.thumbnail{background-color:transparent;border-color:#fff}.jumbotron.jumbo-white h1 a.thumbnail:hover{border-color:#999}
 .jumbotron.jumbo-blue{background-color:#d5e4ff}.jumbotron.jumbo-blue p,.jumbotron.jumbo-blue h1,.jumbotron.jumbo-blue h2{text-shadow:#fff 0 1px 2px}
 .jumbotron.jumbo-blue hr{border-top:1px solid #333}
 .jumbotron.jumbo-blue h1 a,.jumbotron.jumbo-blue h2 a{color:inherit}
@@ -31,6 +32,7 @@ sup{font-size:.6em}
 @media (min-width:992px){.jumbotron .padding{padding-left:30px} .jumbotron .stripe{margin-bottom:0}}@media (min-width:768px){.jumbotron{}}.jumbotron ul.animateActive{padding-left:0}
 .jumbotron ul.animateActive li{list-style:disc inside;padding-left:.2em;-webkit-transition:background-color linear .3s;-moz-transition:background-color linear .3s;transition:background-color linear .3s}
 .jumbotron ul.animateActive li.active{background-color:#eee}
+blockquote{border-left-color:#ddd;background-color:#f0f0f0}
 .blog{font-size:150%;font-family:"ff-tisa-web-pro",Georgia,Cambria,"Times New Roman",Times,serif}
 .blog .date{color:#999;float:right}
 .blog p{color:#333;text-indent:1em;line-height:1.45;word-wrap:break-word;text-align:justify}

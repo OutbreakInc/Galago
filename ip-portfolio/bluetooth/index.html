@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Logiblock Bluetooth</title>
+		<title>Logiblock Bluetooth(R)</title>
 		
 		<meta name="description" content="Logiblock accelerates electronic product development."/>
 		<meta name="copyright" content="Logiblock"/>
@@ -43,8 +43,8 @@
 					<li><a href="/">Home</a></li>
 					<li><a href="/services/consulting">Consulting</a></li>
 					<li><a href="/ip-portfolio">IP Portfolio</a></li>
-					<li><a href="/#contact">Contact</a></li>
-					<li><a href="/#about">About</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/about">About</a></li>
 				</ul>
 			</div><!--/.navbar-collapse -->
 		</div>
@@ -61,74 +61,91 @@
 			<p>While that's happening you may find empty pages and broken links. Please check back later!</p>
 		</div>
 	</div>-->
-<!-- @meta {title="Bluetooth"} -->
+<!-- @meta {title="Bluetooth(R)"} -->
 
 	<script type="application/javascript">
 		if(logiblockSettings)
+		{
 			logiblockSettings.namingRules["ip-portfolio"] = "IP Portfolio";
+			logiblockSettings.namingRules["bluetooth"] = "Bluetooth<sup>&reg;</sup>";
+		}
 	</script>
 
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-3">
-					<a class="thumbnail pull-right" href="/products/galago">
-						<img src="/static/galago-hero-512-D5E4FF.jpg" width="256" height="256" alt="Photo of Galago board"/>
-					</a>
+					<img class="thumbnail" src="/static/ble.jpg" width="300" height="300" alt="Bluetooth(R) Low Energy logo"/>
 				</div>
 				<div class="col-md-9">
-					<h2>Bluetooth 4.0 Low Energy (BLE)</h2>
-					<p>The proliferation of Bluetooth Low Energy devices is driving a fundamental shift in embedded intelligence, connectivity and a new kind of human interface. Logiblock offers BLE design expertise for  BLE hardware, firmware, apps and user interaction.</p>
+					<h2>Bluetooth<sup>&reg;</sup> 4.0 Low Energy (BLE)</h2>
+					<p>The proliferation of Bluetooth<sup>&reg;</sup> Low Energy devices is driving a fundamental shift in embedded intelligence, connectivity and a new kind of human interface. Logiblock offers BLE design expertise for BLE hardware, firmware, apps and user interaction.</p>
 				</div>
 			</div>
 		</div>
-		<hr/>
 	</div>
+	<hr/>
 
 	<a id="ble-ui"></a>
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
+				<div class="col-md-12">
+					<h3>Concept: <em>BLE as the new user interface</em></h3>
+				</div>
 				<div class="col-md-9">
-					<h3>Concept: <em>BLE as the new universal user interface</em></h3>
-					<p>Bluetooth Low Energy is a lower-cost, lower-power and more flexible option than designing a display or buttons into a product. Its pervasive, always-on low-energy wireless link allows graceful, uncomplicated integration into smartphone apps.  As such, those become the user interface for a new generation of products in the wearable, consumable, positional and deeply-integrated spaces.  Logiblock has experience developing these products and can help you design your product to maximize this new UI paradigm.</p>
+					<p>Bluetooth<sup>&reg;</sup> Low Energy is a lower-cost, lower-power and more flexible option than designing a display or buttons into a product. Its pervasive, always-on low-energy wireless link allows graceful, uncomplicated integration into smartphone apps.</p>
+					<p>As such, those become the user interface for a new generation of products in the wearable, consumable, positional and deeply-integrated spaces.  <strong>Logiblock has experience developing products in this class</strong> and can help you design yours to maximize the benefits of this new UI paradigm.</p>
 				</div>
 				<div class="col-md-3">
+					<blockquote><p><em>Watch out! It's much easier to build a bad BLE implementation in your app than a good one.</em></p></blockquote>
 				</div>
 			</div>
 		</div>
-		<hr/>
 	</div>
-
+	<hr/>
+	
 	<a id="apple-ibeacon"></a>
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
+				<div class="col-md-9 col-md-offset-3">
+					<h3>Technology: <em>Apple iBeacon Implementations</em></h3>
+				</div>
 				<div class="col-md-3">
+					<blockquote><p><em>Implementing Apple iBeacon makes your app launchable directly from the lock screen on iOS when near your product.</em></p></blockquote>
 				</div>
 				<div class="col-md-9">
-					<h3>Standard: <em>Apple iBeacon</em></h3>
-					<p>Apple introduced iBeacon, a specification built on top of Bluetooth Low Energy that provides an open, vendor-independent framework for near-field geospatial positioning, physical-context-aware software experiences and some NFC-like features.  iBeacon offers a veriety of valuable benefits to iOS application developers and is currently usable with third-party libraries on Android and other operating systems, with many of the same benefits.  Logiblock was an early implementer of iBeacon and can combine a this feature with any other Bluetooth services or functionality, boosting a hardware product with the ability to dramatically enhance mobile apps.  <a href="/#contact">Talk to us</a> about how we can put Apple iBeacon into your design.</p>
+					<p>Apple's iBeacon is a specification built on top of Bluetooth<sup>&reg;</sup> Low Energy that provides an open, vendor-independent framework for near-field geospatial positioning and physical-context-aware software experiences.  iBeacon offers a veriety of valuable benefits to iOS application developers and is currently usable with third-party libraries on Android and other operating systems, with many of the same benefits.</p>
+					<p><strong>Logiblock was an early implementer of iBeacon</strong> and can combine this feature with any other Bluetooth<sup>&reg;</sup> services or functionality, boosting a hardware product with the ability to dramatically enhance mobile apps.  <a href="/contact">Talk to us</a> about how we can put Apple iBeacon into your design.</p>
 				</div>
 			</div>
 		</div>
-		<hr/>
 	</div>
+	<hr/>
 
 	<a id="nordic-ble"></a>
 	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-9">
-					<h3>Platform: <em>Nordic nRF51822/51422 SoC</em></h3>
-					<p>Logiblock is experienced with designing circuits, PCBs and firmware for the Nordic nRF51822/51422 system-on-chip.  We have applied both the QFN (chip) and WLCSP (silicon die) variants to several commercial and research projects.</p>
+					<h3>Platform: <em>Nordic Semiconductor nRF51822/51422 IC</em></h3>
+					<p>Logiblock is experienced with designing circuits, PCBs and firmware for the <a href="https://nordicsemi.com">Nordic Semiconductor</a> nRF51822/51422 Bluetooth<sup>&reg;</sup> Low Energy system-on-chip.  We have applied both the QFN (chip) and WLCSP (silicon die) variants to several commercial projects.</p>
 				</div>
 				<div class="col-md-3">
 				</div>
 			</div>
 		</div>
-		<hr/>
 	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9">
+				<p><small>Bluetooth<sup>&reg;</sup> is a registered trademark of the <a href="https://bluetooth.org">Bluetooth SIG</a>.</small></p>
+			</div>
+		</div>
+	</div>
+
 	<div class="container">
 		<hr/>
 		<p>Copyright &copy; 2015 Logiblock / Outbreak, Inc.</p>

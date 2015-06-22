@@ -43,8 +43,8 @@
 					<li><a href="/">Home</a></li>
 					<li><a href="/services/consulting">Consulting</a></li>
 					<li><a href="/ip-portfolio">IP Portfolio</a></li>
-					<li><a href="/#contact">Contact</a></li>
-					<li><a href="/#about">About</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/about">About</a></li>
 				</ul>
 			</div><!--/.navbar-collapse -->
 		</div>
@@ -76,12 +76,10 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-3">
-					<a class="thumbnail pull-right" href="/products/galago">
-						<img src="/static/galago-hero-512-D5E4FF.jpg" width="256" height="256" alt="Photo of Galago board"/>
-					</a>
+					<img class="thumbnail" src="/static/metal-plate.jpg" width="300" height="300" alt="Reinforced metal plate"/>
 				</div>
 				<div class="col-md-9">
-					<h2>Design for High Reliabiity</h2>
+					<h2>Design for High Reliability</h2>
 					<p>Logiblock has experience engineering both physical security and safety-of-life applications, where product failure or malfunction could result in theft, property damage, injury or even loss of life.  We apply rigorous static-analysis, fuzzing and simulation techniques to our firmware to discover weaknesses and fix them before they can cause unexpected failure or be exploited by attackers.</p>
 				</div>
 			</div>
@@ -108,8 +106,8 @@
 				</div>
 			</div>
 		</div>
-		<hr/>
 	</div>
+	<hr/>
 
 	<a id="oat"></a>
 	<div class="jumbotron jumbo-white">
@@ -118,14 +116,20 @@
 				<div class="col-md-3">
 				</div>
 				<div class="col-md-9">
-					<h2>Case study: <em>Maximum achievable safety</em></h2>
+					<h2>Case study: <em>Trust, but verify</em></h2>
 					<small>Designed by Logiblock for <em>[undisclosed client]</em>, 2014-2015</small>
 					<hr/>
-					<p>Part of the requirements for <em>[a smart-home product]</em> included developing firmware for one on-board microcontroller to run all safety-critical systems where the life or death of the user was quite literally at stake.  Moreover, the firmware had to operate continuously for ten years with no provision for <a href="/ip-portfolio/ota">software update</a>.  Finally, the chip had to use the absolute minimum of energy to achieve this, and was responsible for switching on and off all other power domains of the product.  Logiblock designed firmware for this application that met all the stability, reliability, performance and maintainability goals (and them some.)</p>
+					<p>Part of the requirements for <em>[a smart-home product]</em> included developing firmware for one on-board microcontroller to run all safety-critical systems where the life or death of the user was at stake.  Moreover, the firmware has to operate continuously for ten years with no provision for <a href="/ip-portfolio/ota">software update</a>.  Finally, the chip has to use the absolute minimum of energy to achieve this, and is responsible for switching on and off all other power domains of the product.</p>
+				</div>
+				<div class="col-md-3">
+					<blockquote><p><em>To be reliable, this product's firmware must completely distrust the hardware it's running on. This includes its internal RAM.</em></p></blockquote>
+				</div>
+				<div class="col-md-9">
+					<p>Logiblock's solution included a deadline scheduler and a continuous series of self-checking assertions that drive a system-health arbiter.  Too many failures in too short a time trigger a shutdown and <em>safing</em> of the system in question.  All events are recorded and periodically uploaded to the web for analysis.</p>
+					<p>PC simulation, stress tests and fuzzing were used to verify integrity of the software systems. This solution met all the stability, reliability, performance and maintainability goals of the product.</p>
 				</div>
 			</div>
 		</div>
-		<hr/>
 	</div>
 	<div class="container">
 		<hr/>

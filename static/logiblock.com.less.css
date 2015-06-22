@@ -23,6 +23,12 @@ sup
 	{
 		background-color: #FFF;
 
+		img.thumbnail
+		{
+			background-color: transparent;
+			border: none;
+		}
+
 		h1 a
 		{
 			color: inherit;
@@ -278,6 +284,13 @@ sup
 .jumbotron ul.animateActive li.active
 {
 	background-color: #EEE;
+}
+
+
+blockquote
+{
+	border-left-color: #DDDDDD;
+	background-color: #F0F0F0;
 }
 
 

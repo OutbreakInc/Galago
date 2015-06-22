@@ -43,8 +43,8 @@
 					<li><a href="/">Home</a></li>
 					<li><a href="/services/consulting">Consulting</a></li>
 					<li><a href="/ip-portfolio">IP Portfolio</a></li>
-					<li><a href="/#contact">Contact</a></li>
-					<li><a href="/#about">About</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/about">About</a></li>
 				</ul>
 			</div><!--/.navbar-collapse -->
 		</div>
@@ -75,9 +75,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-3">
-					<a class="thumbnail pull-right" href="/products/galago">
-						<img src="/static/galago-hero-512-D5E4FF.jpg" width="256" height="256" alt="Photo of Galago board"/>
-					</a>
+					<img class="thumbnail" src="/static/firmware.jpg" width="300" height="300" alt="Firmware update icon"/>
 				</div>
 				<div class="col-md-9">
 					<h2>Over the Air Updates (OTA)</h2>
@@ -95,7 +93,7 @@
 			<div class="row">
 				<div class="col-md-9">
 					<h3>Concept: Deeply-embedded firmware delta-updates</h3>
-					<p>By applying Logiblock's <a href="/ip-portfolio/etc#gzip">embedded gzip decompressor</a>, firmware updates can be sent using the minimum of space, time and bandwidth. Moreover, our gzip decoder can also be used to expand <strong>delta-updates</strong> that contain <strong>only the changes between one version and another</strong> without any dedicated differential-patching decoder.  This yields the highest compression-ratio-per-decoder-size ratio, which is a crucial factor for deeply-embedded systems, where codec size is a significant aspect of codec efficiency.</p>
+					<p>By applying Logiblock's <a href="/ip-portfolio/etc/#gzip">embedded gzip decompressor</a>, firmware updates can be sent using the minimum of space, time and bandwidth. Moreover, our gzip decoder can also be used to expand <strong>delta-updates</strong> that contain <strong>only the changes between one version and another</strong> without any dedicated differential-patching decoder.  This yields the highest compression-ratio-per-decoder-size relationship, which is a crucial factor for deeply-embedded systems where firmware size of the codec itself is a significant aspect of total compression efficiency.</p>
 				</div>
 				<div class="col-md-3">
 				</div>
@@ -143,7 +141,7 @@
 					<h2>Case study: <em>Silent Involuntary Bluetooth Low Energy OTA</em></h2>
 					<small>Designed by Logiblock for <em>[undisclosed client]</em>, 2014</small>
 					<hr/>
-					<p><em>[A home-automation product]</em> needed efficient over-the-air firmware updates over a very-low-bandwidth, unreliable BLE channel.  Furthermore, firmware downloads had to occur without inconveniencing the user because communication would only occur in proximity to the device and a full download could take several weeks. A self-healing communications scheme was designed, simulated and applied that was robust against communication loss yet would guarantee the integrity of the payload.  Due to code size constraints the new firmware had to be stored compressed and could not be executed directly, so a high-reliability unified verification, <a href="/ip-portfolio/etc#gzip">decompression</a> and self-programming step was used to complete the update.</p>
+					<p><em>[A home-automation product]</em> needed efficient over-the-air firmware updates over a very-low-bandwidth, unreliable BLE channel.  Furthermore, firmware downloads had to occur without inconveniencing the user because communication would only occur in proximity to the device and a full download could take several weeks. A self-healing communications scheme was designed, simulated and applied that was robust against communication loss yet would guarantee the integrity of the payload.  Due to code size constraints the new firmware had to be stored compressed and could not be executed directly, so a high-reliability unified verification, <a href="/ip-portfolio/etc/#gzip">decompression</a> and self-programming step was used to complete the update.</p>
 				</div>
 				<div class="col-md-3">
 				</div>

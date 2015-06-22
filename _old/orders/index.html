@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!-- ======= THIS FILE IS AUTO-GENERATED. CHANGES WILL BE OVERWRITTEN, M'KAY? ======= -->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Logiblock Store</title>
+		
+		<meta name="description" content="Logiblock accelerates electronic product development."/>
+		<meta name="copyright" content="Logiblock"/>
+		<meta name="author" content="Outbreak, Inc."/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+		<link href="http://logiblock.com/" rel="canonical"/> 
+		<link href="/static/logiblock-32.png" rel="icon" type="image/png"/>
+		<link href="/static/bootstrap-3.0.0.min.css" rel="stylesheet" type="text/css" media="all"/>
+		<link href="/static/logiblock.com.css" rel="stylesheet" type="text/css" media="all"/>
+		
+		<!-- IE6-8 support-->
+		<!--[if lt IE 9]>
+			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+
+		<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>-->
+		<script src="/static/jquery-1.10.2.min.js" type="application/javascript"></script>
+		<script src="/static/bootstrap-3.0.0.min.js" type="application/javascript"></script>
+		<script src="/static/logiblock.com.js" type="application/javascript"></script>
+	</head>
+	<body>
+
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/"><img class="logiblockLogo" src="/static/logiblock40.png" alt="logo"/>Logiblock</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="/">Home</a></li>
+					<li><a href="/services/consulting">Consulting</a></li>
+					<li><a href="/ip-portfolio">IP Portfolio</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/about">About</a></li>
+				</ul>
+			</div><!--/.navbar-collapse -->
+		</div>
+	</div>
+
+	<div class="container hide section-header">
+		<h1></h1>
+		<ol class="breadcrumb"></ol>
+	</div>
+	
+	<!--<div class="container">
+		<div class="alert alert-danger">
+			<p>Hi! This site is undergoing a quick redesign and will be ready soon.</p>
+			<p>While that's happening you may find empty pages and broken links. Please check back later!</p>
+		</div>
+	</div>-->
+<!-- @meta {title="Store"} -->
+
+	<script type="application/javascript">
+		if(logiblockSettings)
+			logiblockSettings.namingRules["order"] = "Current Order";
+		
+		function populateOrder(order)
+		{
+			location.hash = "#" + order.id;
+			store.updateCart(order);
+
+			var $table = $("table.order"), $summary = $("tr.summary", $table), $checkoutButton = $("button.checkoutButton"), subtotal = 0;
+
+			$("tr.orderRow", $table).remove();
+
+			var items = Object.keys(order.items);
+			for(var i = 0; i < items.length; i++)
+			{
+				var o = order.items[items[i]];
+				subtotal = o.qty * o.price;
+				$summary.before($('<tr class="orderRow"><td>' + (i + 1) + '.</td><td><a href="' + o.url + '">' + o.desc + '</a></td><td>' + o.qty + '</td><td>$' + (subtotal / 100) + '</td></tr>'));
+			}
+
+			$checkoutButton.html("Buy ($" + (store.getTotal() / 100) + ")");
+			if(store.getTotal() <= 0)	$checkoutButton.addClass("disabled");
+			else						$checkoutButton.removeClass("disabled");
+		}
+		
+		$.then(function()
+		{
+			var stripeCheckoutHandler = StripeCheckout.configure(
+			{
+				key: "pk_test_6pRNASCoBOKtIshFeQd4XMUh",
+				image: "/static/logiblock-checkout.png",
+				shippingAddress: true,
+				token: function(token, args)
+				{
+					console.log("token()", arguments);
+
+					window.stripeKey = {token: token, address: args};
+
+					storeAPI.checkoutOrder(store.getOrderID(), {token: token, address: args}, function(err, response)
+					{
+						console.log(err, response);
+
+						//navigate
+					});
+				}
+			});
+			
+			$("button.checkoutButton").click(function(e)
+			{
+				if(store.getTotal() > 0)
+				{
+					stripeCheckoutHandler.open(
+					{
+						name: "Logiblock Store",
+						description: "Cart contents ($" + (store.getTotal() / 100) + ")",
+						amount: store.getTotal()
+					});
+				}
+				e.preventDefault();
+			});
+			
+
+
+			if(location.hash)
+			{
+				storeAPI.getOrder(location.hash.substr(1), function(err, order)
+				{
+					if(err)
+						storeAPI.createOrder(function(err, order)
+						{
+							populateOrder(order);
+						});
+					else
+						populateOrder(order);
+				});
+			}
+			else
+				storeAPI.createOrder(function(err, order)
+				{
+					populateOrder(order);
+				});
+		});
+	</script>
+	<script src="https://checkout.stripe.com/checkout.js"></script>
+	
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<table class="table order">
+						<tr><th> </th><th>Description</th><th>Qty.</th><th>Subtotal</th></tr>
+
+						<tr class="summary"><td></td><td>Total</td><td></td><td>
+							<button class="btn btn-primary btn-lg checkoutButton disabled">Buy</button>
+						</td></tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<hr/>
+		<p>Copyright &copy; 2015 Logiblock / Outbreak, Inc.</p>
+	</div>
+	</body>
+</html>

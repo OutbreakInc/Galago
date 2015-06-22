@@ -8,18 +8,85 @@
 		}
 	</script>
 
-	<div class="jumbotron jumbo-blue">
+	<div class="jumbotron jumbo-white">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-3">
-					<a class="thumbnail pull-right" href="/products/galago">
-						<img src="/static/galago-hero-512-D5E4FF.jpg" width="256" height="256" alt="Photo of Galago board"/>
-					</a>
+					
+						<img class="thumbnail pull-right" src="/static/cr2032.jpg" width="300" height="300" alt="CR2032 coin cell"/>
+					
 				</div>
 				<div class="col-md-9">
-					Logiblock specializes in low energy design for both firmware and circuits. By applying our proprietary demand/deadline scheduler nOS, the microcontoller can be constrined to execute only precisely what code it must to make your product work most efficiently.
+					<h2>Engineered for Extreme Low Energy</h2>
+					<p>Logiblock specializes in low energy design at the schematic and firmware levels. Our libLogiC rapid-development framework implements a deadline-scheduling RTOS <em>(realtime operating system)</em> which means that a microcontroller runs only exactly the code necessary to make your product run most efficiently.</p>
 				</div>
 			</div>
 		</div>
 	</div>
 
+	<a id="deadline"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>Concept: Deadline scheduling for embedded applications</h3>
+				</div>
+				<div class="col-md-3 pull-right">
+					<blockquote><p><em>The most energy-efficient chip <br class="hidden-lg"/> is a chip that's powered off.</em></p></blockquote>
+				</div>
+				<div class="col-md-9">
+					<p>To conserve energy, Logiblock designs embedded systems that are only powered-on and running software when they need to be. Supporting this design in firmware while multitasking and remaining responsive is tricky, but Logiblock's deadline-scheduling RTOS is up to the task.</p>
+					<p>A cooperative multitasking design also makes software development efficient, predictable and low-risk.  At run-time, the scheduler will go so far as to cluster events with nearby deadlines to minimize wakeups and maximize overall efficiency.</p>
+				</div>
+			</div>
+		</div>
+		<hr/>
+	</div>
+
+	<a id="wireless"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9 col-md-offset-3">
+					<h3>Concept: Low-energy wireless latency</h3>
+				</div>
+				<div class="col-md-3">
+					<blockquote><p><em>There's inevitable latency in remote actuation, not in sensing, but it can be hidden with good design.</em></p></blockquote>
+				</div>
+				<div class="col-md-9">
+					<p>When designing wireless features for a low-energy device, there is a near-universal compromise between energy consumption and latency.  As a device is required to use less energy, typically the period between data transmission/reception events becomes longer and its responsiveness decreases.</p>
+					<hr/>
+					<h4>Example: Window-bot</h4>
+				</div>
+				<div class="col-md-3">
+					<blockquote><p><em>Remote actuation of a product is best when it's truly remote.</em></p></blockquote>
+				</div>
+				<div class="col-md-9">
+					<p>Take, for example, a device that can remotely open and close a window to let fresh air into a home. This device runs on batteries and uses Wi-Fi to report the current open or closed state and to receive actuation commands. Because it runs on batteries, the device can't be connected to Wi-Fi very often or for very long.  When the window is manually opened or closed, the device can immediately wake up and update the web tier. Receiving commands to remotely open or close the window, however, cannot happen instantaneously.</p>
+					<p>The latency associated with remote control is completely acceptable in this case if the product is designed such that the window is primarily operated manually, with automatic operation reserved for when nobody is home.  With that expectation, the device could check in via Wi-Fi every 30 minutes to learn if there is a state change requested.</p>
+					<p>The actuation latency in this case is hidden behind the fact that nobody is home to observe it, and that neither weather nor indoor air quality usually change dramatically enough in thirty minutes to be a problem (though a rain sensor may make for an appealing defense against that condition.)</p>
+				</div>
+			</div>
+		</div>
+		<hr/>
+	</div>
+
+	<a id="bridges"></a>
+	<div class="jumbotron jumbo-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>Concept: Wireless protocol bridges for low-energy</h3>
+				</div>
+				<div class="col-md-3 pull-right">
+					<blockquote><p><em>Protocol bridges can be a handy solution, but are best avoided unless absolutely required.</em></p></blockquote>
+				</div>
+				<div class="col-md-9">
+					<p>Selecting the right wireless protocol, parameters and expectations are crucial to building a usable low-energy product.  Sometimes it's not possible to find an acceptable compromise between all three, and in those cases the best solution may be a wireless bridge device.</p>
+					<p>Wireless (and wired) bridges are devices which adapt one kind of network to another, like a Wi-Fi access point/router.  The bridge for the Philips Hue system is an example which bridges Wi-Fi and Ethernet to Hue's closed 802.15.4 mesh network.  The August Connect is an equivalent that bridges Wi-Fi to the Bluetooth Low Energy protocol.</p>
+					<p>Bridges usually incur a cost in building, certifying, selling and supporting an additional device, plus they burden customers with additional setup and run the risk of being unplugged by users who, over time, forget what it's needed for.  If the benefits of the bridge outweigh these factors then they can be a sensible design investment.</p>
+				</div>
+			</div>
+		</div>
+		<hr/>
+	</div>
